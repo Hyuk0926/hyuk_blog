@@ -13,6 +13,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 공개된 게시글만 조회
     List<Post> findByPublishedOrderByCreatedAtDesc(boolean published);
     
+    // 공개된 게시글만 조회 (오름차순)
+    List<Post> findByPublishedOrderByCreatedAtAsc(boolean published);
+    
     // 제목으로 검색 (공개된 게시글만)
     List<Post> findByTitleContainingAndPublishedOrderByCreatedAtDesc(String title, boolean published);
     

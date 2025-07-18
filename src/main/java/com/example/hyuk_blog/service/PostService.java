@@ -18,7 +18,7 @@ public class PostService {
     
     // 모든 공개 게시글 조회
     public List<PostDto> getAllPublishedPosts() {
-        return postRepository.findByPublishedOrderByCreatedAtDesc(true)
+        return postRepository.findByPublishedOrderByCreatedAtAsc(true)
                 .stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());

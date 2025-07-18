@@ -9,7 +9,7 @@
 </head>
 <body>
     <div th:replace="~{fragments/visitor :: widget}"></div>
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <div class="page-header">
         <h1>Takahara의 블로그</h1>
         <p class="lead">백엔드란 무엇인가</p>
@@ -23,7 +23,7 @@
         </form>
     </div>
     
-    <div class="post-grid">
+    <div class="post-grid" style="display:flex; flex-direction:row; gap:24px; overflow-x:auto;">
         <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
             <p>등록된 게시글이 없습니다.</p>
         </div>
