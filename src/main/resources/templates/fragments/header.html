@@ -1,4 +1,4 @@
-<header class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header" style="position: sticky; top: 0; z-index: 1000; width: 100%;">
+<header th:fragment="header" class="navbar navbar-expand-lg navbar-light bg-light" style="position: sticky; top: 0; z-index: 1000; width: 100%;">
     <link rel="stylesheet" href="/css/header.css">
     <div class="container">
         <a class="navbar-brand" th:href="@{/}">Takahara's Blog</a>
@@ -11,6 +11,10 @@
             </ul>
         </nav>
         <button id="darkModeToggle" title="다크모드 토글">🌙</button>
+        <div id="langToggle" style="display:inline-block; margin-left:18px; font-size:1.08rem; font-weight:600;">
+          <span id="lang-ko" style="cursor:pointer; color:#007bff;">KO</span> |
+          <span id="lang-jp" style="cursor:pointer; color:#888;">JP</span>
+        </div>
     </div>
     <script>
         // 다크모드 적용 함수
@@ -39,6 +43,22 @@
                 const enabled = !document.body.classList.contains('dark-mode');
                 setDarkMode(enabled);
             });
+        });
+        // 언어 토글
+        function setLang(lang) {
+            localStorage.setItem('lang', lang);
+            document.documentElement.setAttribute('lang', lang === 'jp' ? 'ja' : 'ko');
+            document.getElementById('lang-ko').style.color = lang === 'ko' ? '#007bff' : '#888';
+            document.getElementById('lang-jp').style.color = lang === 'jp' ? '#007bff' : '#888';
+            // 페이지 내 텍스트 교체(간단 예시, 실제는 각 페이지별로 구현 필요)
+            if(window.applyLang) window.applyLang(lang);
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // 언어 토글 이벤트
+            document.getElementById('lang-ko').onclick = function() { setLang('ko'); };
+            document.getElementById('lang-jp').onclick = function() { setLang('jp'); };
+            // 초기 언어
+            setLang(localStorage.getItem('lang') || 'ko');
         });
     </script>
 </header>

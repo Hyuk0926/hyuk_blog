@@ -1,0 +1,26 @@
+<div th:fragment="widget">
+  <div id="visitor-widget" style="position:fixed; left:18px; bottom:18px; z-index:3000; background:#23272a; border-radius:8px; box-shadow:0 1px 4px rgba(0,0,0,0.18); padding:10px 16px 8px 16px; min-width:110px; max-width:140px; border:1px solid #222; font-family:'Malgun Gothic',Dotum,Arial,sans-serif; font-size:13px; color:#e0e0e0; line-height:1.5;">
+    <div style="color:#7fffd4; font-weight:bold; font-size:13px; margin-bottom:2px; letter-spacing:0.5px;">방문자수</div>
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; margin-top:2px;">
+      <span style="font-weight:bold;">TODAY</span>
+      <span id="visitor-today" style="color:#ff5252; font-weight:bold;">-</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+      <span style="font-weight:bold;">TOTAL</span>
+      <span id="visitor-total" style="color:#ffd700; font-weight:bold;">-</span>
+    </div>
+  </div>
+  <script>
+    function fetchVisitorStatsMini() {
+      fetch('/visitor/today').then(r=>r.json()).then(v=>{
+        document.getElementById('visitor-today').textContent = v;
+      });
+      fetch('/visitor/stats/daily?days=365').then(r=>r.json()).then(data=>{
+        let total = 0; Object.values(data).forEach(v=>total+=v);
+        document.getElementById('visitor-total').textContent = total.toLocaleString();
+      });
+    }
+    fetchVisitorStatsMini();
+    fetch('/visitor/increase', {method:'POST'}).then(()=>fetchVisitorStatsMini());
+  </script>
+</div> 

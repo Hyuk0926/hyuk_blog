@@ -15,9 +15,10 @@
     </style>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/visitor :: widget}"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="contact-container">
-    <h2>Contact Me</h2>
+    <h2 style="font-family:'Montserrat',sans-serif; font-weight:700; letter-spacing:1px; margin-top:0; margin-bottom:18px;">Contact Me</h2>
     <div th:if="${successMessage}" style="background:#e6ffe6; color:#1a7f1a; border:1px solid #b2e6b2; padding:0.8rem 1rem; border-radius:5px; margin-bottom:1.2rem;">
         <span th:text="${successMessage}"></span>
     </div>
