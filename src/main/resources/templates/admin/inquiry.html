@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>문의 관리</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .inquiry-container { max-width: 1000px; margin: 40px auto; padding: 30px 40px; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+        .inquiry-title { font-size: 2rem; font-weight: bold; margin-bottom: 30px; color: #333; }
+        .inquiry-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .inquiry-table th, .inquiry-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .inquiry-table th { background-color: #f8f9fa; font-weight: bold; }
+        .inquiry-table tr:hover { background-color: #f5f5f5; }
+        .no-inquiry { text-align: center; padding: 50px; color: #666; }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="inquiry-container">
+    <h1 class="inquiry-title">문의 관리</h1>
+    <table class="inquiry-table" th:if="${!#lists.isEmpty(inquiries)}">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>제목</th>
+                <th>내용</th>
+                <th>날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="inq : ${inquiries}">
+                <td th:text="${inq.id}">1</td>
+                <td th:text="${inq.name}">이름</td>
+                <td th:text="${inq.email}">이메일</td>
+                <td th:text="${inq.subject}">제목</td>
+                <td th:text="${inq.message}">내용</td>
+                <td th:text="${#temporals.format(inq.createdAt, 'yyyy-MM-dd HH:mm')}">날짜</td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:if="${#lists.isEmpty(inquiries)}" class="no-inquiry">문의가 없습니다.</div>
+</div>
+</body>
+</html> 

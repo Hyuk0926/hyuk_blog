@@ -5,6 +5,8 @@ import com.example.hyuk_blog.dto.PostDto;
 import com.example.hyuk_blog.dto.ResumeDto;
 import com.example.hyuk_blog.service.PostService;
 import com.example.hyuk_blog.service.ResumeService;
+import com.example.hyuk_blog.service.InquiryService;
+import com.example.hyuk_blog.dto.InquiryDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +32,16 @@ public class AdminController {
     @Autowired
     private ResumeService resumeService;
 
+    @Autowired
+    private InquiryService inquiryService;
+
     // 관리자 대시보드
     @GetMapping("")
-    public String dashboard(Model model, HttpSession session) {
+    public String adminDashboard(Model model) {
         List<PostDto> posts = postService.getAllPosts();
-        AdminDto admin = (AdminDto) session.getAttribute("admin");
-        
         model.addAttribute("posts", posts);
-        model.addAttribute("admin", admin);
+        model.addAttribute("inquiryCount", inquiryService.getUnreadCount());
+        model.addAttribute("inquiries", inquiryService.getAllInquiries());
         return "admin/dashboard";
     }
     
@@ -116,5 +120,29 @@ public class AdminController {
     // 이력서 조회 (외부에서 호출 가능)
     public ResumeDto getResume() {
         return resumeService.loadResume();
+    }
+
+    @GetMapping("/inquiry")
+    public String inquiryManage(Model model) {
+        model.addAttribute("inquiries", inquiryService.getAllInquiries());
+        return "admin/inquiry";
+    }
+
+    @GetMapping("/admin/inquiries")
+    @ResponseBody
+    public List<InquiryDto> getInquiries() {
+        return inquiryService.getAllInquiries();
+    }
+
+    @PostMapping("/admin/inquiries/read")
+    @ResponseBody
+    public void markInquiriesRead() {
+        inquiryService.markAllRead();
+    }
+
+    @GetMapping("/admin/inquiries/recent")
+    @ResponseBody
+    public List<InquiryDto> getRecentInquiries() {
+        return inquiryService.getRecentInquiries(5);
     }
 } 

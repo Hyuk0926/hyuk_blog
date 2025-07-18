@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Takahara's Blog - Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans KR', sans-serif;
+      /* 원하는 이미지 URL로 아래를 변경하세요 */
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
+      display: flex;
+      flex-direction: column;
+    }
+    .home-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .home-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 18px;
+      letter-spacing: 2px;
+    }
+    .home-subtitle {
+      font-size: 1.3rem;
+      color: #555;
+      margin-bottom: 40px;
+    }
+    .home-nav {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .home-btn {
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+      outline: none;
+    }
+    .home-btn:hover {
+      background: #0056b3;
+      transform: translateY(-2px) scale(1.04);
+    }
+    .home-footer {
+      margin-top: 60px;
+      color: #222;
+      font-size: 0.95rem;
+    }
+    @media (max-width: 600px) {
+      .home-title { font-size: 2rem; }
+      .home-btn { padding: 12px 20px; font-size: 1rem; }
+      .home-nav { gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div th:replace="fragments/header :: header"></div>
+    <!-- 원하는 이미지 URL로 아래를 변경하세요 -->
+    <style>
+      body {
+        background: url('https://i.pximg.net/img-master/img/2023/06/24/02/59/20/109286012_p1_master1200.jpg') center/cover no-repeat fixed;
+      }
+    </style>
+  <div class="home-container">
+    <div class="home-title">Takahara's Blog</div>
+    <div class="home-subtitle">기록, 성장, 그리고 도전.<br>저만의 지식과 경험을 담은 공간입니다.</div>
+    <div class="home-footer">&copy; 2025 Takahara Yuuki. All rights reserved.</div>
+  </div>
+</body>
+</html> 
