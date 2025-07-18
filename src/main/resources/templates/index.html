@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Takahara의 블로그</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    <div class="page-header">
+        <h1>Takahara의 블로그</h1>
+        <p class="lead">백엔드란 무엇인가</p>
+    </div>
+    
+    <!-- 검색 폼 -->
+    <div class="search-container">
+        <form action="/search" method="get" class="search-form">
+            <input type="text" name="q" placeholder="게시글 검색..." class="search-input">
+            <button type="submit" class="search-button">검색</button>
+        </form>
+    </div>
+    
+    <div class="post-grid">
+        <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
+            <p>등록된 게시글이 없습니다.</p>
+        </div>
+        
+        <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
+            <img th:if="${post.imageUrl != null and post.imageUrl != ''}" 
+                 th:src="${post.imageUrl}" 
+                 th:alt="${post.title}" 
+                 class="post-image" />
+            <div th:if="${post.imageUrl == null or post.imageUrl == ''}" 
+                 class="post-image-placeholder">
+                <span>이미지 없음</span>
+            </div>
+            <h2 th:text="${post.title}">지식 제목</h2>
+            <p th:if="${post.summary != null and post.summary != ''}" 
+               th:text="${post.summary}" 
+               class="post-summary">요약</p>
+            <div class="post-meta">
+                <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성일</span>
+            </div>
+        </a>
+    </div>
+    
+    <!-- 관리자 링크 (개발용) -->
+    <div class="admin-link">
+        <a href="/admin/login" class="admin-button">관리자 로그인</a>
+    </div>
+</body>
+</html>

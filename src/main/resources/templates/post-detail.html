@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.title} + ' - 블로그'">게시글 상세</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        /* 코드 복사 버튼 스타일 */
+        .code-block-wrapper {
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ffffff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            opacity: 0.85;
+            z-index: 2;
+            transition: background 0.2s, opacity 0.2s;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+            opacity: 1;
+        }
+        body.dark-mode .copy-btn {
+            background: #23272a;
+            color: #ffe082;
+            border: 1px solid #444;
+        }
+        body.dark-mode .copy-btn:hover {
+            background: #444;
+        }
+        /* Toast 알림 스타일 */
+        .copy-toast {
+            position: fixed;
+            right: 32px;
+            bottom: 32px;
+            background: #222;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+            opacity: 0.95;
+            z-index: 9999;
+            pointer-events: none;
+            animation: fadeInOut 1.5s;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            10% { opacity: 0.95; transform: translateY(0); }
+            90% { opacity: 0.95; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
+        body.dark-mode .copy-toast {
+            background: #333;
+            color: #ffe082;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="post-detail-container">
+        <div class="post-header">
+            <h1 th:text="${post.title}">게시글 제목</h1>
+            <div class="post-meta right-meta">
+                <span th:text="${#temporals.format(post.createdAt, 'yyyy년 MM월 dd일')}">작성일</span>
+                <span th:if="${post.updatedAt != post.createdAt}" th:text="'수정일: ' + ${#temporals.format(post.updatedAt, 'yyyy년 MM월 dd일')}">수정일</span>
+            </div>
+        </div>
+        <div class="post-image-container" th:if="${post.imageUrl != null and post.imageUrl != ''}">
+            <img th:src="${post.imageUrl}" th:alt="${post.title}" class="post-detail-image">
+        </div>
+        <div class="post-summary" th:if="${post.summary != null and post.summary != ''}">
+            <p th:text="${post.summary}">게시글 요약</p>
+        </div>
+        <div class="post-content" id="post-content">
+            <div th:utext="${post.content}">게시글 내용</div>
+        </div>
+        <div class="post-navigation">
+            <a href="/" class="back-button">← 목록으로 돌아가기</a>
+        </div>
+    </div>
+    <script>
+    // Toast 알림 함수
+    function showCopyToast(msg) {
+        // 이미 떠있는 토스트가 있으면 제거
+        const old = document.getElementById('copy-toast');
+        if (old) old.remove();
+        const toast = document.createElement('div');
+        toast.className = 'copy-toast';
+        toast.id = 'copy-toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 1500);
+    }
+    // 코드 복사 버튼 동적 추가 및 복사 기능
+    document.addEventListener('DOMContentLoaded', function() {
+        const content = document.getElementById('post-content');
+        if (!content) return;
+        // 모든 <pre><code>...</code></pre>를 찾아서 래핑
+        content.querySelectorAll('pre > code').forEach(function(codeElem) {
+            const pre = codeElem.parentElement;
+            // 이미 래핑되어 있으면 중복 방지
+            if (pre.parentElement.classList.contains('code-block-wrapper')) return;
+            // 래퍼 div 생성
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper';
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+            // 복사 버튼 생성
+            const btn = document.createElement('button');
+            btn.className = 'copy-btn';
+            btn.type = 'button';
+            btn.innerText = '📋';
+            btn.onclick = function() {
+                // 코드 텍스트 복사
+                const code = codeElem.innerText;
+                navigator.clipboard.writeText(code).then(function() {
+                    showCopyToast('복사 완료');
+                });
+            };
+            wrapper.appendChild(btn);
+        });
+    });
+    </script>
+</body>
+</html> 

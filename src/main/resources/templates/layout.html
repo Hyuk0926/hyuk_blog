@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:insert="~{::title}">MyPortfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/main.css" />
+</head>
+<body>
+    <header th:replace="fragments/header :: header"></header>
+    <main th:fragment="content"></main>
+</body>
+</html> 

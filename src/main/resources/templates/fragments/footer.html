@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer class="text-center py-4 bg-light">
+  <div class="container">
+    &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> My Name. All rights reserved.
+  </div>
+</footer>
+</body>
+</html>

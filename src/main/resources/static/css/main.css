@@ -1,0 +1,499 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    background: #f5f7fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.page-header {
+    margin-top: 30px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+.page-header h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #22223b;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+.page-header p {
+    font-size: 1.2rem;
+    color: #4a4e69;
+}
+
+/* 검색 폼 스타일 */
+.search-container {
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 24px 20px 24px;
+    box-sizing: border-box;
+}
+.search-form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.search-input {
+    flex: 1;
+    max-width: 400px;
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+.search-input:focus {
+    border-color: #007bff;
+}
+.search-button {
+    padding: 12px 24px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.search-button:hover {
+    background: #0056b3;
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 32px;
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 24px 60px 24px;
+    box-sizing: border-box;
+}
+.post-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(34, 34, 59, 0.08), 0 1.5px 6px rgba(74, 78, 105, 0.06);
+    padding: 0 0 24px 0;
+    text-decoration: none;
+    color: #22223b;
+    transition: transform 0.18s, box-shadow 0.18s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 260px;
+    position: relative;
+}
+.post-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 8px 32px rgba(34, 34, 59, 0.16), 0 3px 12px rgba(74, 78, 105, 0.10);
+    background: #f0efeb;
+}
+.post-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 18px;
+    background: #e0e0e0;
+    display: block;
+}
+.post-image-placeholder {
+    width: 100%;
+    height: 180px;
+    background: #f0f0f0;
+    border-radius: 12px 12px 0 0;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 0.9rem;
+}
+.post-card h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    color: #22223b;
+    text-align: center;
+    padding: 0 16px;
+}
+.post-summary {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    margin: 0 0 12px 0;
+    padding: 0 16px;
+    line-height: 1.4;
+}
+.post-meta {
+    font-size: 0.8rem;
+    color: #999;
+    text-align: center;
+}
+
+/* 관리자 링크 */
+.admin-link {
+    width: 100%;
+    max-width: 1100px;
+    padding: 0 24px 40px 24px;
+    text-align: center;
+}
+.admin-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+.admin-button:hover {
+    background: #545b62;
+}
+
+/* 게시글 상세 페이지 */
+.post-detail-container {
+    max-width: 800px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(34,34,59,0.08);
+    padding: 48px 36px;
+}
+.post-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e0e0e0;
+}
+.post-header h1 {
+    font-size: 2.2rem;
+    color: #22223b;
+    margin-bottom: 15px;
+}
+.post-header .post-meta {
+    color: #666;
+    font-size: 0.9rem;
+}
+.post-header .post-meta span {
+    margin-right: 20px;
+}
+.post-image-container {
+    margin-bottom: 30px;
+    text-align: center;
+}
+.post-detail-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.post-summary {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    border-left: 4px solid #007bff;
+}
+.post-content {
+    line-height: 1.8;
+    color: #333;
+    font-size: 1.1rem;
+}
+.post-content h1, .post-content h2, .post-content h3 {
+    color: #22223b;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+.post-content p {
+    margin-bottom: 15px;
+}
+.post-content code {
+    background: #f1f3f4;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+.post-content pre {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 20px 0;
+}
+.post-navigation {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+}
+.back-button {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+.back-button:hover {
+    text-decoration: underline;
+}
+
+/* 게시글이 없을 때 */
+.no-posts {
+    text-align: center;
+    padding: 50px;
+    color: #666;
+}
+
+.post-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(34,34,59,0.08);
+    padding: 48px 36px;
+}
+
+@media (max-width: 900px) {
+    .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+    .search-form {
+        flex-direction: column;
+        align-items: center;
+    }
+    .search-input {
+        max-width: 100%;
+    }
+}
+@media (max-width: 600px) {
+    .post-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, 1fr);
+    }
+    .header h1 {
+        font-size: 2rem;
+    }
+    .post-card {
+        padding: 0 0 16px 0;
+    }
+    .post-detail-container {
+        margin: 15px;
+        padding: 24px 20px;
+    }
+    .post-header h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* === 다크모드 개선 === */
+body.dark-mode {
+    background: #181a1b;
+    color: #e0e0e0;
+}
+body.dark-mode .page-header h1,
+body.dark-mode .page-header p {
+    color: #e0e0e0;
+}
+body.dark-mode .post-card {
+    background: #23272a;
+    color: #e0e0e0;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.12);
+}
+body.dark-mode .post-card:hover {
+    background: #2c2f34;
+}
+body.dark-mode .post-image {
+    background: #333;
+}
+body.dark-mode .post-image-placeholder {
+    background: #333;
+    color: #999;
+}
+body.dark-mode .post-card h2 {
+    color: #e0e0e0;
+}
+body.dark-mode .post-container,
+body.dark-mode .post-detail-container {
+    background: #23272a;
+    color: #e0e0e0;
+}
+body.dark-mode .search-input,
+body.dark-mode .form-input,
+body.dark-mode .form-textarea {
+    background: #23272a;
+    color: #e0e0e0;
+    border-color: #444;
+}
+body.dark-mode .form-input:focus,
+body.dark-mode .form-textarea:focus {
+    border-color: #007bff;
+}
+body.dark-mode .post-summary {
+    background: #2c2f34;
+    border-left-color: #007bff;
+    color: #e0e0e0;
+}
+body.dark-mode .post-content {
+    color: #e0e0e0;
+}
+body.dark-mode .post-content h1,
+body.dark-mode .post-content h2,
+body.dark-mode .post-content h3 {
+    color: #e0e0e0;
+}
+body.dark-mode .post-content code {
+    background: #2c2f34;
+    color: #ffecb3;
+}
+body.dark-mode .post-content pre {
+    background: #2c2f34;
+    color: #e0e0e0;
+}
+body.dark-mode .admin-button,
+body.dark-mode .new-post-btn,
+body.dark-mode .btn-edit,
+body.dark-mode .btn-delete,
+body.dark-mode .btn-preview,
+body.dark-mode .logout-btn {
+    background: #333 !important;
+    color: #fff !important;
+    border: 1px solid #444;
+}
+body.dark-mode .admin-button:hover,
+body.dark-mode .new-post-btn:hover,
+body.dark-mode .btn-edit:hover,
+body.dark-mode .btn-delete:hover,
+body.dark-mode .btn-preview:hover,
+body.dark-mode .logout-btn:hover {
+    background: #444 !important;
+    color: #fff !important;
+}
+body.dark-mode .posts-table {
+    background: #23272a;
+    color: #e0e0e0;
+}
+body.dark-mode .posts-table th {
+    background: #23272a;
+    color: #e0e0e0;
+}
+body.dark-mode .posts-table td {
+    background: #23272a;
+    color: #e0e0e0;
+}
+body.dark-mode .status-badge.status-published {
+    background: #225522;
+    color: #b6ffb6;
+}
+body.dark-mode .status-badge.status-draft {
+    background: #552222;
+    color: #ffb6b6;
+}
+body.dark-mode .no-posts {
+    color: #aaa;
+}
+
+/* === 대시보드 버튼 오버플로우 방지 === */
+.action-buttons {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+.btn-edit, .btn-delete, .btn-preview {
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    min-width: 56px;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    box-sizing: border-box;
+}
+.posts-table td {
+    vertical-align: middle;
+}
+
+/* 버튼 텍스트 대비 강화 (라이트/다크 모두) */
+.btn-edit, .btn-delete, .btn-preview, .new-post-btn, .logout-btn {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+/* 테이블 헤더 고정색상 */
+.posts-table th {
+    color: #22223b;
+}
+body.dark-mode .posts-table th {
+    color: #e0e0e0;
+}
+
+/* 1. post-header h1 다크모드 색상 밝게 */
+body.dark-mode .post-header h1 {
+    color: #fff !important;
+    text-shadow: 0 1px 4px #2228, 0 0px 1px #000a;
+}
+
+/* 2. preview-section(HTML 태그 예시) 다크모드 가독성 */
+body.dark-mode .preview-section {
+    background: #23272a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+body.dark-mode .preview-title {
+    color: #b6e0ff !important;
+}
+body.dark-mode .preview-section code,
+body.dark-mode .preview-section pre {
+    background: #181a1b !important;
+    color: #ffe082 !important;
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+/* 3. dashboard 상태 뱃지(임시저장) overflow 방지 및 폰트 크기/패딩 조정 */
+.status-badge {
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    min-width: 48px;
+    max-width: 80px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    text-align: center;
+    box-sizing: border-box;
+}
+.posts-table th:nth-child(4),
+.posts-table td:nth-child(4) {
+    min-width: 70px;
+    max-width: 100px;
+}
+
+/* 4. 테이블 상태 열 너비 약간 늘림 */
+@media (max-width: 900px) {
+    .posts-table th:nth-child(4),
+    .posts-table td:nth-child(4) {
+        min-width: 60px;
+        max-width: 90px;
+    }
+}
+
+/* post-detail 작성일 오른쪽 정렬 */
+.right-meta {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    font-size: 0.95rem;
+    color: #888;
+    margin-top: 8px;
+}
+body.dark-mode .right-meta {
+    color: #b6e0ff;
+}

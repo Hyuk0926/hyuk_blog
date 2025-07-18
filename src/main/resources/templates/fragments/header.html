@@ -1,0 +1,43 @@
+<header class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="header" style="position: sticky; top: 0; z-index: 1000; width: 100%;">
+    <link rel="stylesheet" href="/css/header.css">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Hyuk's Blog</a>
+        <nav>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">지식모음</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/projects}">프로젝트</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/about}">이력</a></li>
+            </ul>
+        </nav>
+        <button id="darkModeToggle" title="다크모드 토글">🌙</button>
+    </div>
+    <script>
+        // 다크모드 적용 함수
+        function setDarkMode(enabled) {
+            const btn = document.getElementById('darkModeToggle');
+            if (enabled) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+                if (btn) btn.textContent = '☀️';
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+                if (btn) btn.textContent = '🌙';
+            }
+        }
+        // 토글 버튼 이벤트
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('darkModeToggle');
+            // 초기 상태
+            if (localStorage.getItem('darkMode') === 'true') {
+                setDarkMode(true);
+            } else {
+                setDarkMode(false);
+            }
+            btn.addEventListener('click', function() {
+                const enabled = !document.body.classList.contains('dark-mode');
+                setDarkMode(enabled);
+            });
+        });
+    </script>
+</header>

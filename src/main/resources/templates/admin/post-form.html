@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${post.id != null ? '게시글 수정' : '새 게시글 작성'} + ' - 백엔드 기초부터'">게시글 작성</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .form-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .admin-welcome {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .admin-name {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+        .form-textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        .form-checkbox {
+            margin-right: 10px;
+        }
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .btn-submit, .btn-cancel {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-submit {
+            background: #007bff;
+            color: white;
+        }
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-cancel:hover {
+            background: #545b62;
+        }
+        .help-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        .preview-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        .preview-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <div class="form-container">
+        <div class="form-header">
+            <div>
+                <h1 class="form-title" th:text="${post.id != null ? '게시글 수정' : '새 게시글 작성'}">게시글 작성</h1>
+            </div>
+            <div class="admin-info">
+                <div class="admin-welcome">
+                    <span class="admin-name" th:text="${admin.name != null and admin.name != '' ? admin.name : admin.username}">관리자</span>님
+                </div>
+                <a href="/admin/logout" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+        
+        <form th:action="${post.id != null ? '/admin/post/edit/' + post.id : '/admin/post/new'}" 
+              th:object="${post}" method="post">
+            
+            <div class="form-group">
+                <label for="title" class="form-label">제목 *</label>
+                <input type="text" id="title" name="title" th:value="${post.title}" 
+                       class="form-input" required>
+                <div class="help-text">게시글의 제목을 입력하세요.</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="summary" class="form-label">요약</label>
+                <textarea id="summary" name="summary" class="form-textarea" 
+                          style="min-height: 100px;" th:text="${post.summary}"></textarea>
+                <div class="help-text">게시글의 간단한 요약을 입력하세요. (선택사항)</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="imageUrl" class="form-label">이미지 URL</label>
+                <input type="url" id="imageUrl" name="imageUrl" th:value="${post.imageUrl}" 
+                       class="form-input">
+                <div class="help-text">게시글 대표 이미지의 URL을 입력하세요. (선택사항)</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="content" class="form-label">내용 *</label>
+                <textarea id="content" name="content" class="form-textarea" 
+                          th:text="${post.content}" required></textarea>
+                <div class="help-text">게시글의 내용을 입력하세요. HTML 태그를 사용할 수 있습니다.</div>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="published" th:checked="${post.published}" 
+                           class="form-checkbox">
+                    공개하기
+                </label>
+                <div class="help-text">체크하면 게시글이 공개됩니다. 체크하지 않으면 임시저장 상태로 유지됩니다.</div>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="submit" class="btn-submit" 
+                        th:text="${post.id != null ? '수정하기' : '저장하기'}">저장하기</button>
+                <a href="/admin" class="btn-cancel">취소</a>
+            </div>
+        </form>
+        
+        <!-- 미리보기 섹션 -->
+        <div class="preview-section">
+            <div class="preview-title">HTML 태그 사용 예시:</div>
+            <ul>
+                <li><code>&lt;h2&gt;</code> - 제목 (h3, h4도 사용 가능)</li>
+                <li><code>&lt;p&gt;</code> - 단락</li>
+                <li><code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code> - 목록</li>
+                <li><code>&lt;li&gt;</code> - 목록 항목</li>
+                <li><code>&lt;code&gt;</code> - 코드</li>
+                <li><code>&lt;pre&gt;</code> - 코드 블록</li>
+                <li><code>&lt;strong&gt;</code> - 굵은 글씨</li>
+                <li><code>&lt;em&gt;</code> - 기울임 글씨</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 

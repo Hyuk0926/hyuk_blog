@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'검색 결과: ' + ${searchQuery} + ' - 백엔드 기초부터'">검색 결과</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        .search-results-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .search-header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .search-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .search-query {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .search-count {
+            color: #666;
+            font-size: 1rem;
+        }
+        .back-link {
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .no-results {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        .no-results h3 {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="fragments/header :: header"></div>
+    
+    <div class="search-results-container">
+        <div class="search-header">
+            <h1 class="search-title">
+                검색 결과: <span class="search-query" th:text="${searchQuery}">검색어</span>
+            </h1>
+            <p class="search-count" th:text="${#lists.size(posts)} + '개의 게시글을 찾았습니다.'">검색 결과 수</p>
+        </div>
+        
+        <div th:if="${#lists.isEmpty(posts)}" class="no-results">
+            <h3>검색 결과가 없습니다.</h3>
+            <p>다른 키워드로 검색해보세요.</p>
+        </div>
+        
+        <div th:if="${!#lists.isEmpty(posts)}" class="post-grid">
+            <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
+                <img th:if="${post.imageUrl != null and post.imageUrl != ''}" 
+                     th:src="${post.imageUrl}" 
+                     th:alt="${post.title}" 
+                     class="post-image" />
+                <div th:if="${post.imageUrl == null or post.imageUrl == ''}" 
+                     class="post-image-placeholder">
+                    <span>이미지 없음</span>
+                </div>
+                <h2 th:text="${post.title}">지식 제목</h2>
+                <p th:if="${post.summary != null and post.summary != ''}" 
+                   th:text="${post.summary}" 
+                   class="post-summary">요약</p>
+                <div class="post-meta">
+                    <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성일</span>
+                </div>
+            </a>
+        </div>
+        
+        <div class="back-link">
+            <a href="/">← 메인 페이지로 돌아가기</a>
+        </div>
+    </div>
+</body>
+</html> 

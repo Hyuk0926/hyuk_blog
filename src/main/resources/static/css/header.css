@@ -1,0 +1,115 @@
+.navbar {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(34,34,59,0.04);
+    padding: 0;
+    width: 100%;
+}
+.navbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 62px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+    width: 100%;
+    position: relative;
+}
+.navbar-brand {
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #22223b;
+    margin-right: 0;
+    text-decoration: none;
+    transition: color 0.18s;
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+}
+nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+.navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nav-link {
+    color: #22223b;
+    font-size: 1.08rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    transition: color 0.18s, border-bottom 0.18s, background 0.18s;
+    position: relative;
+}
+.nav-link:hover, .nav-link:focus {
+    color: #4a4e69;
+    background: #f0efeb;
+    border-bottom: 2px solid #4a4e69;
+}
+#darkModeToggle {
+    position: static;
+    margin-left: 24px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    z-index: 9999;
+    background: none;
+    border: none;
+    display: block !important;
+}
+/* 다크모드 헤더 색상 */
+body.dark-mode .navbar {
+    background: #23272a;
+}
+body.dark-mode .navbar-brand {
+    color: #e0e0e0;
+}
+body.dark-mode .nav-link {
+    color: #e0e0e0;
+}
+body.dark-mode .nav-link:hover, body.dark-mode .nav-link:focus {
+    color: #ffd700;
+    background: #2c2f34;
+    border-bottom: 2px solid #ffd700;
+}
+@media (max-width: 700px) {
+    .navbar .container {
+        flex-direction: column;
+        height: auto;
+        padding: 12px 0;
+    }
+    .navbar-nav {
+        gap: 18px;
+    }
+    .navbar-brand {
+        position: static;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+    nav {
+        margin: 0;
+    }
+    #darkModeToggle {
+        position: static;
+        right: auto;
+        top: auto;
+        transform: none;
+        margin-left: auto;
+        margin-top: 8px;
+        display: block !important;
+    }
+} 
