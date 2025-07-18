@@ -2,7 +2,9 @@ package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.dto.PostDto;
+import com.example.hyuk_blog.dto.ResumeDto;
 import com.example.hyuk_blog.service.PostService;
+import com.example.hyuk_blog.service.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin")
@@ -19,6 +27,9 @@ public class AdminController {
     @Autowired
     private PostService postService;
     
+    @Autowired
+    private ResumeService resumeService;
+
     // 관리자 대시보드
     @GetMapping("")
     public String dashboard(Model model, HttpSession session) {
@@ -83,5 +94,27 @@ public class AdminController {
             return "post-detail";
         }
         return "redirect:/admin";
+    }
+
+    // 이력서 관리 폼 (GET)
+    @GetMapping("/resume")
+    public String resumeForm(Model model, HttpSession session) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        model.addAttribute("admin", admin);
+        model.addAttribute("resume", resumeService.loadResume());
+        return "admin/resume-form";
+    }
+
+    // 이력서 저장 (POST)
+    @PostMapping("/resume")
+    public String saveResume(@ModelAttribute ResumeDto resumeDto, RedirectAttributes redirectAttributes) {
+        resumeService.saveResume(resumeDto);
+        redirectAttributes.addFlashAttribute("message", "이력서가 저장되었습니다!");
+        return "redirect:/admin";
+    }
+
+    // 이력서 조회 (외부에서 호출 가능)
+    public ResumeDto getResume() {
+        return resumeService.loadResume();
     }
 } 

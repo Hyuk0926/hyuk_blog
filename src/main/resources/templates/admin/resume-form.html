@@ -7,9 +7,10 @@
     <link rel="stylesheet" href="/css/main.css">
     <style>
         .resume-form-container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 30px 20px;
+            width: 1000px;
+            max-width: 100%;
+            margin: 40px auto;
+            padding: 30px 40px;
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
@@ -72,18 +73,21 @@
         .btn-cancel:hover {
             background: #545b62;
         }
+        body {
+            background: #f8f9fb;
+        }
     </style>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="resume-form-container">
     <h1 class="resume-form-title">이력서 관리</h1>
-    <form th:action="@{/admin/resume}" th:object="${resume}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/admin/resume}" th:object="${resume}" method="post">
         <div class="form-group">
-            <label class="form-label">사진</label>
-            <input type="file" name="photo" accept="image/*">
+            <label class="form-label">사진 URL</label>
+            <input type="text" th:field="*{photoUrl}" class="form-input" placeholder="이미지 URL을 입력하세요">
             <div class="form-photo-preview" th:if="${resume.photoUrl}">
-                <img th:src="@{${resume.photoUrl}}" alt="프로필 사진" style="max-width:120px; border-radius:8px;">
+                <img th:src="${resume.photoUrl}" alt="프로필 사진" style="max-width:120px; border-radius:8px;">
             </div>
         </div>
         <div class="form-group">
@@ -108,19 +112,73 @@
         </div>
         <div class="form-group">
             <label class="form-label">학력</label>
-            <textarea th:field="*{education}" class="form-textarea" placeholder="학교명, 전공, 기간 등"></textarea>
+            <table id="education-table" style="width:100%; margin-bottom:8px; border-collapse:collapse;">
+                <thead style="position:sticky; top:0; background:#f8f8f8;">
+                    <tr>
+                        <th style="padding:8px; border:1px solid #eee;">학교명</th>
+                        <th style="padding:8px; border:1px solid #eee;">전공/학위</th>
+                        <th style="padding:8px; border:1px solid #eee;">기간</th>
+                        <th style="padding:8px; border:1px solid #eee;">삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="education-tbody">
+                    <tr th:each="edu,stat : *{educations}" th:classappend="${stat.index % 2 == 0} ? 'even-row' : 'odd-row'">
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{educations[__${stat.index}__].school}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{educations[__${stat.index}__].degree}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{educations[__${stat.index}__].period}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee; text-align:center;"><button type="button" class="remove-btn" onclick="removeRow(this)" title="삭제"><span aria-hidden="true">🗑️</span></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="add-btn" onclick="addEducationRow()"><span aria-hidden="true">➕</span> 학력 추가</button>
         </div>
         <div class="form-group">
             <label class="form-label">경력</label>
-            <textarea th:field="*{experience}" class="form-textarea" placeholder="회사명, 직무, 기간, 주요업무 등"></textarea>
+            <table id="experience-table" style="width:100%; margin-bottom:8px; border-collapse:collapse;">
+                <thead style="position:sticky; top:0; background:#f8f8f8;">
+                    <tr>
+                        <th style="padding:8px; border:1px solid #eee;">회사명</th>
+                        <th style="padding:8px; border:1px solid #eee;">직무</th>
+                        <th style="padding:8px; border:1px solid #eee;">기간</th>
+                        <th style="padding:8px; border:1px solid #eee;">설명</th>
+                        <th style="padding:8px; border:1px solid #eee;">삭제</th>
+                    </tr>
+                </thead>
+                <tbody id="experience-tbody">
+                    <tr th:each="exp,stat : *{experiences}" th:classappend="${stat.index % 2 == 0} ? 'even-row' : 'odd-row'">
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].company}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].position}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].period}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].description}" class="form-input compact-input"></td>
+                        <td style="padding:6px; border:1px solid #eee; text-align:center;"><button type="button" class="remove-btn" onclick="removeRow(this)" title="삭제"><span aria-hidden="true">🗑️</span></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="add-btn" onclick="addExperienceRow()"><span aria-hidden="true">➕</span> 경력 추가</button>
         </div>
         <div class="form-group">
             <label class="form-label">기술스택</label>
             <input type="text" th:field="*{skills}" class="form-input" placeholder="Java, Spring, React, ...">
         </div>
         <div class="form-group">
-            <label class="form-label">자기소개</label>
-            <textarea th:field="*{summary}" class="form-textarea"></textarea>
+            <label class="form-label">학생생활(성장과정)</label>
+            <textarea th:field="*{studentLife}" class="form-textarea" placeholder="성장과정, 학교생활 등"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">장점과 단점</label>
+            <textarea th:field="*{strengthsWeaknesses}" class="form-textarea" placeholder="본인의 장점과 단점"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">인생에서 노력했던 경험</label>
+            <textarea th:field="*{effortExperience}" class="form-textarea" placeholder="가장 노력했던 경험"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">일본 IT 취업 지망동기</label>
+            <textarea th:field="*{japanItMotivation}" class="form-textarea" placeholder="일본 IT 취업을 희망하는 이유"></textarea>
+        </div>
+        <div class="form-group">
+            <label class="form-label">장래의 계획 및 포부</label>
+            <textarea th:field="*{futurePlan}" class="form-textarea" placeholder="장래의 계획 및 포부"></textarea>
         </div>
         <div class="form-buttons">
             <button type="submit" class="btn-submit">저장</button>
@@ -128,5 +186,35 @@
         </div>
     </form>
 </div>
+<script>
+function addEducationRow() {
+    const tbody = document.getElementById('education-tbody');
+    const idx = tbody.children.length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><input type="text" name="educations[${idx}].school" class="form-input"></td>
+        <td><input type="text" name="educations[${idx}].degree" class="form-input"></td>
+        <td><input type="text" name="educations[${idx}].period" class="form-input"></td>
+        <td><button type="button" onclick="removeRow(this)">삭제</button></td>
+    `;
+    tbody.appendChild(tr);
+}
+function addExperienceRow() {
+    const tbody = document.getElementById('experience-tbody');
+    const idx = tbody.children.length;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><input type="text" name="experiences[${idx}].company" class="form-input"></td>
+        <td><input type="text" name="experiences[${idx}].position" class="form-input"></td>
+        <td><input type="text" name="experiences[${idx}].period" class="form-input"></td>
+        <td><input type="text" name="experiences[${idx}].description" class="form-input"></td>
+        <td><button type="button" onclick="removeRow(this)">삭제</button></td>
+    `;
+    tbody.appendChild(tr);
+}
+function removeRow(btn) {
+    btn.closest('tr').remove();
+}
+</script>
 </body>
 </html> 

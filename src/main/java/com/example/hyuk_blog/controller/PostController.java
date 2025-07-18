@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.example.hyuk_blog.dto.ResumeDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,15 @@ public class PostController {
     
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private AdminController adminController;
+
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("resume", adminController.getResume());
+        return "about";
+    }
     
     @GetMapping("/")
     public String index(Model model) {
@@ -39,11 +49,6 @@ public class PostController {
     public String projects() {
         return "projects";
     }
-
-    @GetMapping("/about")
-    public String about() {
-        return "about";
-    }
     
     @GetMapping("/search")
     public String search(@RequestParam String q, Model model) {
@@ -52,4 +57,12 @@ public class PostController {
         model.addAttribute("searchQuery", q);
         return "search";
     }
+
+    @GetMapping("/resume")
+    public String resume(Model model) {
+        ResumeDto resume = new ResumeDto();
+        model.addAttribute("resume", resume);
+        return "resume";
+    }
+
 } 

@@ -145,7 +145,6 @@
 </head>
 <body>
     <div th:replace="fragments/header :: header"></div>
-    
     <div class="admin-container">
         <div class="admin-header">
             <h1 class="admin-title">관리자 대시보드</h1>
@@ -154,6 +153,7 @@
                     안녕하세요, <span class="admin-name" th:text="${admin.name != null and admin.name != '' ? admin.name : admin.username}">관리자</span>님
                 </div>
                 <a href="/admin/post/new" class="new-post-btn">새 게시글 작성</a>
+                <a href="/admin/resume" class="new-post-btn" style="background:#17a2b8;">이력서 관리</a>
                 <a href="/admin/logout" class="logout-btn">로그아웃</a>
             </div>
         </div>
@@ -216,5 +216,8 @@
             </tbody>
         </table>
     </div>
+    <script th:if="${message != null}" th:inline="javascript">
+        alert([[${message}]].toString());
+    </script>
 </body>
 </html> 

@@ -26,7 +26,8 @@ public class AdminAuthController {
         return "admin/login";
     }
     
-    // 로그인 처리
+    // 로그인
+
     @PostMapping("/login")
     public String login(@RequestParam String username, 
                        @RequestParam String password, 
