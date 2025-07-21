@@ -738,3 +738,9 @@ body.dark-mode .post-content strong,
 body.dark-mode .post-content em {
     color: #f5f7fa !important;
 }
+
+.project-title {
+    text-align: left;
+    margin-left: 32px;
+    width: 100%;
+}

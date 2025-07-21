@@ -4,70 +4,361 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Takahara의 블로그</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/header.css">
     <style>
-    .post-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-        margin-bottom: 32px;
-    }
-    @media (max-width: 900px) {
-        .post-grid {
-            grid-template-columns: repeat(2, 1fr);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
         }
-    }
-    @media (max-width: 600px) {
-        .post-grid {
-            grid-template-columns: 1fr;
+        .hero-section {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 48px 0;
         }
-    }
+        .hero-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #5c6a7a;
+            margin-bottom: 32px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 48px;
+        }
+        .search-container {
+            max-width: 500px;
+            width: 100%;
+        }
+        .search-form {
+            display: flex;
+            gap: 12px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 8px;
+            border: 1px solid #edf2f7;
+        }
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: #2c3e50;
+            background: transparent;
+            outline: none;
+        }
+        .search-input::placeholder {
+            color: #a0aec0;
+        }
+        .search-button {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .search-button:hover {
+            background: #34495e;
+            transform: translateY(-1px);
+        }
+        .content-section {
+            margin-bottom: 48px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .post-count {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .post-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .post-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .post-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+        .post-image-placeholder {
+            width: 100%;
+            height: 160px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+        .post-content {
+            padding: 8px 10px 10px 10px;
+            height: 210px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .post-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .post-summary {
+            color: #4a5568;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 2.4em;
+        }
+        .post-meta {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #718096;
+        }
+        .post-date {
+            font-weight: 500;
+        }
+        .post-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-published {
+            background: #ebf7ed;
+            color: #276749;
+        }
+        .status-draft {
+            background: #f7f0ea;
+            color: #c05621;
+        }
+        .no-posts {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #edf2f7;
+        }
+        .no-posts h3 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+        .admin-link {
+            text-align: center;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid #edf2f7;
+        }
+        .admin-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #f8fafc;
+            color: #718096;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        .admin-button:hover {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        /* 다크모드 지원 */
+        body.dark-mode .hero-title {
+            color: #f7fafc;
+        }
+        body.dark-mode .hero-subtitle {
+            color: #a0aec0;
+        }
+        body.dark-mode .search-form {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        body.dark-mode .search-input {
+            color: #e2e8f0;
+        }
+        body.dark-mode .search-input::placeholder {
+            color: #718096;
+        }
+        body.dark-mode .section-title {
+            color: #f7fafc;
+        }
+        body.dark-mode .section-header {
+            border-bottom-color: #4a5568;
+        }
+        body.dark-mode .post-card {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        body.dark-mode .post-title {
+            color: #f7fafc;
+        }
+        body.dark-mode .post-summary {
+            color: #e2e8f0;
+        }
+        body.dark-mode .post-image-placeholder {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: #a0aec0;
+        }
+        body.dark-mode .no-posts {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        body.dark-mode .no-posts h3 {
+            color: #f7fafc;
+        }
+        body.dark-mode .admin-link {
+            border-top-color: #4a5568;
+        }
+        body.dark-mode .admin-button {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #a0aec0;
+        }
+        body.dark-mode .admin-button:hover {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            .post-grid {
+                grid-template-columns: 1fr;
+            }
+            .search-form {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .search-button {
+                width: 100%;
+            }
+        }
+        @media (max-width: 1200px) and (min-width: 769px) {
+            .post-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
     <div th:replace="~{fragments/visitor :: widget}"></div>
     <div th:replace="~{fragments/header :: header}"></div>
-    <div class="page-header">
-      <h1>Takahara의 블로그</h1>
-      <p class="lead">백엔드란 무엇인가</p>
-    </div>
-    <div class="search-container right-half">
-      <form action="/search" method="get" class="search-form">
-        <input type="text" name="q" placeholder="게시글 검색..." class="search-input">
-        <button type="submit" class="search-button">검색</button>
-      </form>
-    </div>
     
-    <div class="post-grid">
-        <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
-            <p>등록된 게시글이 없습니다.</p>
+    <div class="container">
+        <div class="hero-section">
+            <h1 class="hero-title">Takahara의 블로그</h1>
+            <p class="hero-subtitle">백엔드란 무엇인가</p>
         </div>
         
-        <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
-            <img th:if="${post.imageUrl != null and post.imageUrl != ''}" 
-                 th:src="${post.imageUrl}" 
-                 th:alt="${post.title}" 
-                 class="post-image" />
-            <div th:if="${post.imageUrl == null or post.imageUrl == ''}" 
-                 class="post-image-placeholder">
-                <span>이미지 없음</span>
+        <div class="search-section">
+            <div class="search-container">
+                <form action="/search" method="get" class="search-form">
+                    <input type="text" name="q" placeholder="게시글 검색..." class="search-input">
+                    <button type="submit" class="search-button">검색</button>
+                </form>
             </div>
-            <h2 th:text="${post.title}">지식 제목</h2>
-            <p th:if="${post.summary != null and post.summary != ''}" 
-               th:text="${post.summary}" 
-               class="post-summary">요약</p>
-            <div class="post-meta">
-                <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성일</span>
+        </div>
+        
+        <div class="content-section">
+            <div class="section-header">
+                <h2 class="section-title">최신 게시글</h2>
+                <span class="post-count" th:text="${#lists.size(posts)} + '개의 게시글'">0개의 게시글</span>
             </div>
-        </a>
+            
+            <div class="post-grid">
+                <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
+                    <h3>등록된 게시글이 없습니다</h3>
+                    <p>첫 번째 게시글을 작성해보세요!</p>
+                </div>
+                
+                <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
+                    <img th:if="${post.imageUrl != null and post.imageUrl != ''}" 
+                         th:src="${post.imageUrl}" 
+                         th:alt="${post.title}" 
+                         class="post-image" />
+                    <div th:if="${post.imageUrl == null or post.imageUrl == ''}" 
+                         class="post-image-placeholder">
+                        <span>이미지 없음</span>
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title" th:text="${post.title}">지식 제목</h3>
+                        <p th:if="${post.summary != null and post.summary != ''}" 
+                           th:text="${post.summary}" 
+                           class="post-summary">요약</p>
+                        <div class="post-meta">
+                            <span class="post-date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성일</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="admin-link">
+            <a href="/admin/login" class="admin-button">관리자 로그인</a>
+        </div>
     </div>
     
-    <!-- 관리자 링크 (개발용) -->
-    <div class="admin-link">
-        <a href="/admin/login" class="admin-button">관리자 로그인</a>
-    </div>
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

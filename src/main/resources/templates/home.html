@@ -12,10 +12,13 @@
       margin: 0;
       padding: 0;
       font-family: 'Noto Sans KR', sans-serif;
-      /* 원하는 이미지 URL로 아래를 변경하세요 */
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
+      background: url('https://w.wallhaven.cc/full/6o/wallhaven-6oxwpx.jpg') center/cover no-repeat fixed;
       display: flex;
       flex-direction: column;
+      transition: background-image 0.5s ease;
+    }
+    body.dark-mode {
+      background: url('https://c.wallhere.com/photos/bc/c8/blue_archive_beach-2148707.jpg!d') center/cover no-repeat fixed;
     }
     .home-container {
       flex: 1;
@@ -32,11 +35,19 @@
       color: #222;
       margin-bottom: 18px;
       letter-spacing: 2px;
+      transition: color 0.5s ease;
+    }
+    body.dark-mode .home-title {
+      color: #fff;
     }
     .home-subtitle {
       font-size: 1.3rem;
       color: #555;
       margin-bottom: 40px;
+      transition: color 0.5s ease;
+    }
+    body.dark-mode .home-subtitle {
+      color: #e0e0e0;
     }
     .home-nav {
       display: flex;
@@ -67,6 +78,10 @@
       margin-top: 60px;
       color: #222;
       font-size: 0.95rem;
+      transition: color 0.5s ease;
+    }
+    body.dark-mode .home-footer {
+      color: #e0e0e0;
     }
     @media (max-width: 600px) {
       .home-title { font-size: 2rem; }
@@ -77,15 +92,9 @@
 </head>
 <body>
   <div th:replace="~{fragments/header :: header}"></div>
-    <!-- 원하는 이미지 URL로 아래를 변경하세요 -->
-    <style>
-      body {
-        background: url('https://i.pximg.net/img-master/img/2023/06/24/02/59/20/109286012_p1_master1200.jpg') center/cover no-repeat fixed;
-      }
-    </style>
   <div class="home-container">
     <div class="home-title">Takahara's Blog</div>
-    <div class="home-subtitle">기록, 성장, 그리고 도전.<br>저만의 지식과 경험을 담은 공간입니다.</div>
+    <div class="home-subtitle">스스로 배우고, 정리하며 성장하는 여정을 공유합니다.</div>
     <div class="home-footer">&copy; 2025 Takahara Yuuki. All rights reserved.</div>
   </div>
 </body>

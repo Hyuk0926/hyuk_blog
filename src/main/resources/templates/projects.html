@@ -7,98 +7,241 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/header.css">
     <style>
-        .project-section { margin-bottom: 48px; }
-        .project-section h2 { font-size: 1.5rem; margin-bottom: 16px; }
-        .project-list { display: flex; flex-wrap: wrap; gap: 32px; }
-        .project-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            padding: 40px;
-            width: 98vw;
-            max-width: 1600px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .project-section {
+            margin-bottom: 64px;
+        }
+        .project-section h2 {
+            font-size: 1.75rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .project-list {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            margin: 0 auto;
+            gap: 40px;
         }
-        .project-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 12px; }
-        .tech-stack { display: flex; gap: 8px; margin-bottom: 8px; }
-        .tech-icon { width: 28px; height: 28px; }
-        .project-links { margin-top: 12px; display: flex; gap: 12px; }
-        .project-links a { color: #1976d2; text-decoration: underline; font-weight: 500; }
-        .project-meta { font-size: 0.95rem; color: #888; margin-bottom: 8px; }
-        .project-role, .project-result { font-size: 0.98rem; margin-bottom: 6px; }
+        .project-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 32px;
+            border: 1px solid #edf2f7;
+        }
+        .project-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .project-logo {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+        .project-info {
+            flex: 1;
+        }
+        .project-meta {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .project-title {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .tech-stack {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .tech-icon {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.2s ease;
+        }
+        .tech-icon:hover {
+            transform: translateY(-2px);
+        }
+        .project-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .project-description ul {
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+        .project-description li {
+            margin-bottom: 8px;
+        }
+        .project-role, 
+        .project-result {
+            font-size: 0.95rem;
+            color: #4a5568;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .project-role b, 
+        .project-result b {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .project-links {
+            margin-top: 24px;
+            display: flex;
+            gap: 16px;
+        }
+        .project-links a {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+        .project-links a:hover {
+            color: #2c5282;
+        }
         .project-demo-slider {
-            width: 98vw;
-            max-width: 1600px;
-            height: 280px;
+            width: 100%;
+            max-width: 800px;
+            height: 240px;
             overflow: hidden;
-            margin: 24px 0 0 0;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin: 32px auto 0;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .slider-track {
             display: flex;
-            width: calc(98vw * 7);
-            max-width: calc(1600px * 7);
-            animation: slideLeft 56s linear infinite;
+            animation: slideLeft 40s linear infinite;
+            gap: 20px;
+            padding: 0 10px;
+        }
+        .slider-track:hover {
+            animation-play-state: paused;
         }
         .slider-track img {
-            width: 98vw;
-            max-width: 1600px;
-            height: 280px;
+            width: 320px;
+            height: 240px;
             object-fit: cover;
+            border-radius: 8px;
             flex-shrink: 0;
-            margin-right: 4px;
+            transition: transform 0.3s ease;
         }
-        .slider-track img:last-child {
-            margin-right: 0;
+        .slider-track img:hover {
+            transform: scale(1.02);
         }
         @keyframes slideLeft {
             0% { transform: translateX(0); }
-            85.7% { transform: translateX(calc(-98vw * 6)); }
-            100% { transform: translateX(0); }
+            100% { transform: translateX(calc(-340px * 6)); }
+        }
+        .team-info {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #edf2f7;
+        }
+        .team-info b {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* 다크모드 지원 */
+        body.dark-mode .project-section h2 {
+            color: #f7fafc;
+            border-bottom-color: #4a5568;
+        }
+        body.dark-mode .project-card {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        body.dark-mode .project-title {
+            color: #f7fafc;
+        }
+        body.dark-mode .project-meta {
+            color: #a0aec0;
+        }
+        body.dark-mode .project-description,
+        body.dark-mode .project-role,
+        body.dark-mode .project-result {
+            color: #e2e8f0;
+        }
+        body.dark-mode .project-role b,
+        body.dark-mode .project-result b,
+        body.dark-mode .team-info b {
+            color: #f7fafc;
+        }
+        body.dark-mode .team-info {
+            color: #a0aec0;
+            border-top-color: #4a5568;
+        }
+        body.dark-mode .project-links a {
+            color: #63b3ed;
+        }
+        body.dark-mode .project-links a:hover {
+            color: #90cdf4;
         }
     </style>
 </head>
 <body>
     <div th:replace="~{fragments/visitor :: widget}"></div>
     <div th:replace="~{fragments/header :: header}"></div>
-    <div class="container" style="margin-top:30px;">
+    <div class="container">
         <!-- 개인 프로젝트 섹션 -->
         <div class="project-section">
             <h2>개인 프로젝트</h2>
             <div class="project-list">
                 <div class="project-card">
-                    <img class="project-logo" src="/static/img/blog_logo.png" alt="Hyuk Blog 로고" onerror="this.style.display='none'">
-                    <div class="project-meta">2025.06 ~ 진행중</div>
-                    <h3>Takahara's Blog (개인 기술 블로그)</h3>
-                    <div class="tech-stack">
-                        <img class="tech-icon" src="https://spring.io/img/spring.svg" alt="Spring Boot" title="Spring Boot">
-                        <img class="tech-icon" src="https://img.icons8.com/color/48/000000/amazon-web-services.png" alt="AWS" title="AWS" />
+                    <div class="project-header">
+                        <img class="project-logo" src="/img/blog_logo.png" alt="Hyuk Blog 로고" onerror="this.style.display='none'">
+                        <div class="project-info">
+                            <div class="project-meta">2025.06 ~ 진행중</div>
+                            <h3 class="project-title">Takahara's Blog (개인 기술 블로그)</h3>
+                            <div class="tech-stack">
+                                <img class="tech-icon" src="https://spring.io/img/spring.svg" alt="Spring Boot" title="Spring Boot">
+                                <img class="tech-icon" src="https://img.icons8.com/color/48/000000/amazon-web-services.png" alt="AWS" title="AWS" />
+                            </div>
+                        </div>
                     </div>
-                    <ul>
-                        <li>이력서/소개, 게시글 CRUD, 관리자 대시보드, 방문자수 통계, 다국어 지원, 문의 관리 등 다양한 기능</li>
-                        <li>최신 웹 트렌드 반영, 실시간 개선 및 유지보수</li>
-                        <li>데이터 영구 저장, 반응형 UI/UX, fragment 구조화</li>
-                    </ul>
-                    <div class="project-role"><b></b> 전체 설계, 개발, 배포, 유지보수</div>
+                    <div class="project-description">
+                        <ul>
+                            <li>이력서/소개, 게시글 CRUD, 관리자 대시보드, 방문자수 통계, 다국어 지원, 문의 관리 등 다양한 기능</li>
+                            <li>데이터 영구 저장, 반응형 UI/UX, fragment 구조화</li>
+                            <li>최신 웹 트렌드 반영, 실시간 개선 및 유지보수</li>
+                        </ul>
+                    </div>
+                    <div class="project-role"><b>진행한 것:</b> 전체 설계, 개발, 배포, 유지보수</div>
                     <div class="project-result"><b>성과/배운점:</b> Spring/Thymeleaf 실전 경험, 웹 아키텍처 설계, 실시간 피드백 반영, 유지보수성 높은 코드 작성</div>
                     <div class="project-links">
-                        <a href="https://github.com/hyuk0926/hyuk_blog" target="_blank">깃허브</a>
-                        <!-- <a href="https://your-blog-demo.com" target="_blank">데모</a> -->
+                        <a href="https://github.com/hyuk0926/hyuk_blog" target="_blank">Github 보기</a>
                     </div>
                     <!-- 시연 이미지 슬라이더 -->
                     <div class="project-demo-slider">
                         <div class="slider-track">
-                            <img src="/static/img/blog_demo1.png" alt="Hyuk Blog 시연1">
-                            <img src="/static/img/blog_demo2.png" alt="Hyuk Blog 시연2">
-                            <img src="/static/img/blog_demo3.png" alt="Hyuk Blog 시연3">
-                            <img src="/static/img/blog_demo4.png" alt="Hyuk Blog 시연4">
-                            <img src="/static/img/blog_demo5.png" alt="Hyuk Blog 시연5">
-                            <img src="/static/img/blog_demo6.png" alt="Hyuk Blog 시연6">
-                            <img src="/static/img/blog_demo1.png" alt="Hyuk Blog 시연1 복제"> <!-- seamless loop -->
+                            <img src="/img/blog_demo1.png" alt="Hyuk Blog 시연1">
+                            <img src="/img/blog_demo2.png" alt="Hyuk Blog 시연2">
+                            <img src="/img/blog_demo3.png" alt="Hyuk Blog 시연3">
+                            <img src="/img/blog_demo4.png" alt="Hyuk Blog 시연4">
+                            <img src="/img/blog_demo5.png" alt="Hyuk Blog 시연5">
+                            <img src="/img/blog_demo6.png" alt="Hyuk Blog 시연6">
+                            <img src="/img/blog_demo1.png" alt="Hyuk Blog 시연1">
+                            <img src="/img/blog_demo2.png" alt="Hyuk Blog 시연2">
+                            <img src="/img/blog_demo3.png" alt="Hyuk Blog 시연3">
+                            <img src="/img/blog_demo4.png" alt="Hyuk Blog 시연4">
+                            <img src="/img/blog_demo5.png" alt="Hyuk Blog 시연5">
+                            <img src="/img/blog_demo6.png" alt="Hyuk Blog 시연6">
                         </div>
                     </div>
                 </div>
@@ -109,28 +252,31 @@
             <h2>팀 프로젝트</h2>
             <div class="project-list">
                 <div class="project-card">
-                    <img class="project-logo" src="/static/img/team_logo.png" alt="TeamCollab 로고" onerror="this.style.display='none'">
-                    <div class="project-meta">2025.09 ~ 2025.12</div>
-                    <h3>TeamCollab (팀 협업 플랫폼)</h3>
-                    <div class="tech-stack">
-                        <img class="tech-icon" src="https://spring.io/img/spring.svg" alt="Spring Boot" title="Spring Boot">
-                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" title="React" />
-                        <img class="tech-icon" src="https://www.vectorlogo.zone/logos/mysql/mysql-icon.svg" alt="MySQL" title="MySQL">
-                        <img class="tech-icon" src="https://img.icons8.com/color/48/000000/amazon-web-services.png" alt="AWS" title="AWS" />
-
-
+                    <div class="project-header">
+                        <img class="project-logo" src="/img/team_logo.png" alt="TeamCollab 로고" onerror="this.style.display='none'">
+                        <div class="project-info">
+                            <div class="project-meta">2025.09 ~ 2025.12</div>
+                            <h3 class="project-title">TeamCollaboration (팀 협업 플랫폼)</h3>
+                            <div class="tech-stack">
+                                <img class="tech-icon" src="https://spring.io/img/spring.svg" alt="Spring Boot" title="Spring Boot">
+                                <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" title="React" />
+                                <img class="tech-icon" src="https://www.vectorlogo.zone/logos/mysql/mysql-icon.svg" alt="MySQL" title="MySQL">
+                                <img class="tech-icon" src="https://img.icons8.com/color/48/000000/amazon-web-services.png" alt="AWS" title="AWS" />
+                            </div>
+                        </div>
                     </div>
-                    <ul>
-                        <li>실시간 협업/채팅, 프로젝트 관리(이슈, 일정), 파일 공유, 알림 시스템</li>
-                        <li>CI/CD, 클라우드 배포, 코드 리뷰 및 협업 경험</li>
-                    </ul>
-                    <div class="project-role"><b>내 역할:</b> 백엔드 API 설계/구현, DB 모델링, 배포 자동화</div>
+                    <div class="project-description">
+                        <ul>
+                            <li>실시간 협업/채팅, 프로젝트 관리(이슈, 일정), 파일 공유, 알림 시스템</li>
+                            <li>CI/CD, 클라우드 배포, 코드 리뷰 및 협업 경험</li>
+                        </ul>
+                    </div>
+                    <div class="project-role"><b>저의 역할:</b> 백엔드 API 설계/구현, DB 모델링, 배포 자동화</div>
                     <div class="project-result"><b>성과/배운점:</b> 협업 경험, 코드 리뷰, CI/CD, 실무 프로세스 경험, 커뮤니케이션 능력 향상</div>
                     <div class="project-links">
-                        <a href="#" target="_blank">깃허브</a>
-                        <!-- <a href="#" target="_blank">데모</a> -->
+                        <a href="#" target="_blank">Github 보기</a>
                     </div>
-                    <div style="font-size:0.95rem; color:#666; margin-top:8px;">
+                    <div class="team-info">
                         <b>팀원:</b> 4명 (백엔드 2, 프론트엔드 1, 기획 1) / <b>협업툴:</b> GitHub, Notion, Slack 등
                     </div>
                 </div>
@@ -138,5 +284,43 @@
         </div>
     </div>
     <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sliders = document.querySelectorAll('.project-demo-slider');
+        
+        sliders.forEach(slider => {
+            const track = slider.querySelector('.slider-track');
+            const dots = slider.querySelectorAll('.slider-dot');
+            let currentIndex = 0;
+            
+            // 도트 클릭 이벤트
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.dataset.index);
+                    currentIndex = index;
+                    updateSlider();
+                });
+            });
+
+            function updateSlider() {
+                // 슬라이드 이동
+                const offset = currentIndex * -100;
+                track.style.transform = `translateX(${offset}%)`;
+                
+                // 도트 상태 업데이트
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+
+            // 자동 슬라이드 (5초마다)
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % dots.length;
+                updateSlider();
+            }, 5000);
+        });
+    });
+    </script>
 </body>
 </html> 

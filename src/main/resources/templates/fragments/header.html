@@ -9,53 +9,151 @@
                 <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
             </ul>
         </nav>
-        <button id="darkModeToggle" title="다크모드 토글">🌙</button>
-        <div id="langToggle" style="display:inline-block; margin-left:18px; font-size:1.08rem; font-weight:600;">
-          <span id="lang-ko" style="cursor:pointer; color:#007bff;">KO</span> |
-          <span id="lang-jp" style="cursor:pointer; color:#888;">JP</span>
+        <div class="header-controls">
+            <button id="darkModeToggle" class="control-btn dark-mode-btn" title="다크모드 전환">
+                <span class="dark-icon">🌙</span>
+                <span class="light-icon" style="display:none;">☀️</span>
+            </button>
+            <div id="langToggle" class="lang-toggle">
+                <span id="lang-ko" class="lang-btn active">KO</span>
+                <span class="lang-separator">|</span>
+                <span id="lang-jp" class="lang-btn">JP</span>
+            </div>
         </div>
     </div>
+    <style>
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 1.1rem;
+        }
+        .control-btn:hover {
+            background: rgba(0,0,0,0.05);
+            transform: translateY(-1px);
+        }
+        .dark-mode-btn {
+            position: relative;
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lang-toggle {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.03);
+            border-radius: 20px;
+            padding: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .lang-btn {
+            padding: 6px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #666;
+        }
+        .lang-btn.active {
+            background: #2c3e50;
+            color: white;
+        }
+        .lang-btn:hover:not(.active) {
+            background: rgba(0,0,0,0.05);
+            color: #333;
+        }
+        .lang-separator {
+            color: #ccc;
+            margin: 0 4px;
+        }
+        
+        /* 다크모드 스타일 */
+        body.dark-mode .control-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        body.dark-mode .lang-toggle {
+            background: rgba(255,255,255,0.1);
+        }
+        body.dark-mode .lang-btn {
+            color: #a0aec0;
+        }
+        body.dark-mode .lang-btn.active {
+            background: #63b3ed;
+            color: white;
+        }
+        body.dark-mode .lang-btn:hover:not(.active) {
+            background: rgba(255,255,255,0.1);
+            color: #e2e8f0;
+        }
+        body.dark-mode .lang-separator {
+            color: #4a5568;
+        }
+    </style>
     <script>
         // 다크모드 적용 함수
         function setDarkMode(enabled) {
             const btn = document.getElementById('darkModeToggle');
+            const darkIcon = btn.querySelector('.dark-icon');
+            const lightIcon = btn.querySelector('.light-icon');
+            
             if (enabled) {
                 document.body.classList.add('dark-mode');
                 localStorage.setItem('darkMode', 'true');
-                if (btn) btn.textContent = '☀️';
+                darkIcon.style.display = 'none';
+                lightIcon.style.display = 'block';
             } else {
                 document.body.classList.remove('dark-mode');
                 localStorage.setItem('darkMode', 'false');
-                if (btn) btn.textContent = '🌙';
+                darkIcon.style.display = 'block';
+                lightIcon.style.display = 'none';
             }
         }
+        
         // 토글 버튼 이벤트
         document.addEventListener('DOMContentLoaded', function() {
             const btn = document.getElementById('darkModeToggle');
+            
             // 초기 상태
             if (localStorage.getItem('darkMode') === 'true') {
                 setDarkMode(true);
             } else {
                 setDarkMode(false);
             }
+            
             btn.addEventListener('click', function() {
                 const enabled = !document.body.classList.contains('dark-mode');
                 setDarkMode(enabled);
             });
         });
+        
         // 언어 토글
         function setLang(lang) {
             localStorage.setItem('lang', lang);
             document.documentElement.setAttribute('lang', lang === 'jp' ? 'ja' : 'ko');
-            document.getElementById('lang-ko').style.color = lang === 'ko' ? '#007bff' : '#888';
-            document.getElementById('lang-jp').style.color = lang === 'jp' ? '#007bff' : '#888';
+            
+            // 활성 상태 업데이트
+            document.getElementById('lang-ko').classList.toggle('active', lang === 'ko');
+            document.getElementById('lang-jp').classList.toggle('active', lang === 'jp');
+            
             // 페이지 내 텍스트 교체(간단 예시, 실제는 각 페이지별로 구현 필요)
             if(window.applyLang) window.applyLang(lang);
         }
+        
         document.addEventListener('DOMContentLoaded', function() {
             // 언어 토글 이벤트
             document.getElementById('lang-ko').onclick = function() { setLang('ko'); };
             document.getElementById('lang-jp').onclick = function() { setLang('jp'); };
+            
             // 초기 언어
             setLang(localStorage.getItem('lang') || 'ko');
         });

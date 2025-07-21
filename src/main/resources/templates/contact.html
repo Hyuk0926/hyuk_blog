@@ -3,45 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact Me</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/header.css">
     <style>
-        .contact-container { max-width: 500px; margin: 40px auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .contact-container h2 { margin-bottom: 1.5rem; }
-        .contact-container label { display: block; margin-top: 1rem; }
-        .contact-container input, .contact-container textarea { width: 100%; padding: 0.5rem; margin-top: 0.3rem; border: 1px solid #ccc; border-radius: 4px; }
-        .contact-container button { margin-top: 1.5rem; width: 100%; padding: 0.7rem; background: #007bff; color: #fff; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; }
-        .contact-container button:hover { background: #0056b3; }
-        .contact-container .info { margin-top: 1.5rem; color: #1f1e33; font-size: 0.95rem; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .contact-main {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .page-title {
+            font-size: 1.75rem;
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 32px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e0e0e0;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.5px;
+        }
+        .contact-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 32px;
+            border: 1px solid #edf2f7;
+        }
+        .success-message {
+            background: #ebf7ed;
+            color: #276749;
+            border: 1px solid #c6f6d5;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+        }
+        .success-message::before {
+            content: "✓";
+            font-weight: bold;
+            margin-right: 12px;
+            background: #48bb78;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            color: #2c3e50;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: #2c3e50;
+            transition: all 0.2s ease;
+            background: #f8fafc;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .form-input::placeholder {
+            color: #a0aec0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
+            background: white;
+        }
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .submit-button:hover {
+            background: #34495e;
+            transform: translateY(-1px);
+        }
+        .contact-info {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #edf2f7;
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .contact-info a {
+            color: #3182ce;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .contact-info a:hover {
+            color: #2c5282;
+        }
+        .contact-info b {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* 다크모드 지원 */
+        body.dark-mode .page-title {
+            color: #f7fafc;
+            border-bottom-color: #4a5568;
+        }
+        body.dark-mode .contact-card {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        body.dark-mode .form-label {
+            color: #e2e8f0;
+        }
+        body.dark-mode .form-input {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        body.dark-mode .form-input:focus {
+            border-color: #63b3ed;
+            background: #2d3748;
+        }
+        body.dark-mode .submit-button {
+            background: #63b3ed;
+        }
+        body.dark-mode .submit-button:hover {
+            background: #4299e1;
+        }
+        body.dark-mode .contact-info {
+            border-top-color: #4a5568;
+            color: #e2e8f0;
+        }
+        body.dark-mode .contact-info b {
+            color: #f7fafc;
+        }
+        body.dark-mode .contact-info a {
+            color: #63b3ed;
+        }
+        body.dark-mode .contact-info a:hover {
+            color: #90cdf4;
+        }
+        body.dark-mode .success-message {
+            background: #1c4532;
+            border-color: #276749;
+            color: #9ae6b4;
+        }
     </style>
 </head>
 <body>
-<div th:replace="~{fragments/visitor :: widget}"></div>
-<div th:replace="~{fragments/header :: header}"></div>
-<div class="container">
-  <div class="contact-container">
-      <h2 style="font-family:'Montserrat',sans-serif; font-weight:700; letter-spacing:1px; margin-top:0; margin-bottom:18px;">Contact Me</h2>
-      <div th:if="${successMessage}" style="background:#e6ffe6; color:#1a7f1a; border:1px solid #b2e6b2; padding:0.8rem 1rem; border-radius:5px; margin-bottom:1.2rem;">
-          <span th:text="${successMessage}"></span>
-      </div>
-      <form method="post" th:action="@{/contact}">
-          <label for="name">이름</label>
-          <input type="text" id="name" name="name" required>
-          <label for="email">이메일</label>
-          <input type="email" id="email" name="email" required>
-          <label for="subject">제목</label>
-          <input type="text" id="subject" name="subject" required>
-          <label for="message">문의 내용</label>
-          <textarea id="message" name="message" rows="5" required></textarea>
-          <button type="submit">문의 보내기</button>
-      </form>
-      <div class="info">
-          문의하신 내용은 저에게 전달됩니다. 메일 주소 첨부시 빠른 시일 내에 답변드리겠습니다.<br>
-          <b>이메일:</b> <a href="mailto:ehc28260@gmail.com">ehc28260@gmail.com</a>
-      </div>
-  </div>
-</div>
-<div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/visitor :: widget}"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
+    <div class="container">
+        <div class="contact-main">
+            <h1 class="page-title">Contact Me</h1>
+            <div class="contact-card">
+                <div th:if="${successMessage}" class="success-message">
+                    <span th:text="${successMessage}"></span>
+                </div>
+                <form method="post" th:action="@{/contact}">
+                    <div class="form-group">
+                        <label class="form-label" for="name">이름</label>
+                        <input type="text" id="name" name="name" class="form-input" required
+                               placeholder="이름을 입력해주세요">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">이메일</label>
+                        <input type="email" id="email" name="email" class="form-input" required
+                               placeholder="연락받으실 이메일 주소를 입력해주세요">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="subject">제목</label>
+                        <input type="text" id="subject" name="subject" class="form-input" required
+                               placeholder="문의 제목을 입력해주세요">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">문의 내용</label>
+                        <textarea id="message" name="message" class="form-input" required
+                                  placeholder="문의하실 내용을 자세히 적어주세요"></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">문의 보내기</button>
+                </form>
+                <div class="contact-info">
+                    문의하신 내용은 저에게 전달됩니다. 메일 주소 첨부시 빠른 시일 내에 답변드리겠습니다.<br>
+                    <b>이메일:</b> <a href="mailto:ehc28260@gmail.com">ehc28260@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html> 
