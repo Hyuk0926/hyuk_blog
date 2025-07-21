@@ -30,16 +30,14 @@
     <div th:replace="~{fragments/visitor :: widget}"></div>
     <div th:replace="~{fragments/header :: header}"></div>
     <div class="page-header">
-        <h1>Takahara의 블로그</h1>
-        <p class="lead">백엔드란 무엇인가</p>
+      <h1>Takahara의 블로그</h1>
+      <p class="lead">백엔드란 무엇인가</p>
     </div>
-    
-    <!-- 검색 폼 -->
-    <div class="search-container">
-        <form action="/search" method="get" class="search-form">
-            <input type="text" name="q" placeholder="게시글 검색..." class="search-input">
-            <button type="submit" class="search-button">검색</button>
-        </form>
+    <div class="search-container right-half">
+      <form action="/search" method="get" class="search-form">
+        <input type="text" name="q" placeholder="게시글 검색..." class="search-input">
+        <button type="submit" class="search-button">검색</button>
+      </form>
     </div>
     
     <div class="post-grid">
