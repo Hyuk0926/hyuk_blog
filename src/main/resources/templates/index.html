@@ -6,6 +6,25 @@
     <title>Takahara의 블로그</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <style>
+    .post-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+    @media (max-width: 900px) {
+        .post-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 600px) {
+        .post-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+    </style>
 </head>
 <body>
     <div th:replace="~{fragments/visitor :: widget}"></div>
@@ -23,7 +42,7 @@
         </form>
     </div>
     
-    <div class="post-grid" style="display:flex; flex-direction:row; gap:24px; overflow-x:auto;">
+    <div class="post-grid">
         <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
             <p>등록된 게시글이 없습니다.</p>
         </div>
@@ -51,6 +70,6 @@
     <div class="admin-link">
         <a href="/admin/login" class="admin-button">관리자 로그인</a>
     </div>
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

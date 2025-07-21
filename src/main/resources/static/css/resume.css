@@ -1,0 +1,128 @@
+/* 이력서(about) 페이지 전용 스타일 - resume-content 범위로 한정 */
+.resume-content .resume-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.resume-content .profile-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+}
+.resume-content .resume-header h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  margin: 0 0 8px;
+}
+.resume-content .intro {
+  color: #666;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+.resume-content .contact {
+  font-size: 14px;
+  color: #444;
+}
+.resume-content section {
+  margin-bottom: 32px;
+}
+.resume-content section h2 {
+  font-size: 20px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+}
+.resume-content .exp-desc {
+  font-size: 14px;
+  color: #555;
+  margin-top: 4px;
+}
+.resume-content .skills {
+  display: flex;
+  flex-wrap: wrap;
+}
+.resume-content .skill-tag {
+  background: #f3f3f3;
+  border-radius: 12px;
+  padding: 4px 12px;
+  margin: 4px 6px 0 0;
+  font-size: 14px;
+}
+.resume-content .self-intro {
+  white-space: pre-line;
+  line-height: 1.6;
+  font-size: 15px;
+}
+@media print {
+  .resume-content .container {
+    box-shadow: none;
+    padding: 0;
+  }
+  .resume-content .profile-photo {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  .resume-content .resume-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+} 
+/* 가독성 강화 스타일 */
+.resume-content p {
+  font-size: 1.08rem;
+  line-height: 1.7;
+  margin-bottom: 1em;
+  color: #222;
+}
+.resume-content ul, .resume-content ol {
+  margin-left: 24px;
+  margin-bottom: 1em;
+  line-height: 1.7;
+}
+.resume-content li {
+  margin-bottom: 0.5em;
+  font-size: 1.05rem;
+}
+.resume-content section h2 {
+  font-size: 1.25rem;
+  color: #1a237e;
+  margin-top: 2em;
+  margin-bottom: 0.7em;
+  font-weight: 700;
+}
+.resume-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5em;
+  font-size: 1.02rem;
+}
+.resume-content th, .resume-content td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  text-align: left;
+} 
+/* 이력서 템플릿 - 중앙정렬, 최대폭, 배경, 그림자, 여백 */
+.resume-content {
+  max-width: 820px;
+  margin: 40px auto 48px auto;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 40px 36px 36px 36px;
+}
+@media (max-width: 900px) {
+  .resume-content {
+    padding: 18px 6vw 24px 6vw;
+  }
+}
+@media (max-width: 600px) {
+  .resume-content {
+    padding: 8px 2vw 12px 2vw;
+  }
+} 

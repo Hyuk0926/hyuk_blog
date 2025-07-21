@@ -79,7 +79,6 @@
     </style>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
 <div class="resume-form-container">
     <h1 class="resume-form-title">이력서 관리</h1>
     <form th:action="@{/admin/resume}" th:object="${resume}" method="post">

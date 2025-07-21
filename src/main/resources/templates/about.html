@@ -5,147 +5,14 @@
   <title>이력서</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    /* (기존 스타일 그대로) */
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      color: #333;
-      margin: 0;
-      padding: 20px;
-      background: #fafafa;
-    }
-    body.dark-mode {
-      background: #181a1b;
-      color: #e0e0e0;
-    }
-    body.dark-mode .container {
-      background: #23272a;
-      color: #e0e0e0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-    body.dark-mode .resume-header h1,
-    body.dark-mode .intro,
-    body.dark-mode .contact,
-    body.dark-mode section h2,
-    body.dark-mode .exp-desc,
-    body.dark-mode .skills,
-    body.dark-mode .skill-tag,
-    body.dark-mode .self-intro {
-      color: #e0e0e0 !important;
-    }
-    body.dark-mode table {
-      background: #23272a;
-      color: #e0e0e0;
-    }
-    body.dark-mode th, body.dark-mode td {
-      background: #23272a;
-      color: #e0e0e0;
-      border-color: #444;
-    }
-    body.dark-mode .skill-tag {
-      background: #2c2f34;
-      color: #e0e0e0;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 32px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-      border-radius: 12px;
-    }
-    .resume-header {
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-    .profile-photo {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 50%;
-      border: 1px solid #ccc;
-    }
-    .resume-header h1 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 28px;
-      margin: 0 0 8px;
-    }
-    .intro {
-      color: #666;
-      margin-bottom: 8px;
-      font-size: 15px;
-    }
-    .contact {
-      font-size: 14px;
-      color: #444;
-    }
-    section {
-      margin-bottom: 32px;
-    }
-    section h2 {
-      font-size: 20px;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 6px;
-      margin-bottom: 16px;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    li {
-      margin-bottom: 12px;
-    }
-    .exp-desc {
-      font-size: 14px;
-      color: #555;
-      margin-top: 4px;
-    }
-    .skills {
-      display: flex;
-      flex-wrap: wrap;
-    }
-    .skill-tag {
-      background: #f3f3f3;
-      border-radius: 12px;
-      padding: 4px 12px;
-      margin: 4px 6px 0 0;
-      font-size: 14px;
-    }
-    .self-intro {
-      white-space: pre-line;
-      line-height: 1.6;
-      font-size: 15px;
-    }
-    @media print {
-      body {
-        background: none;
-        margin: 0;
-        padding: 0;
-      }
-      .container {
-        box-shadow: none;
-        padding: 0;
-      }
-      .profile-photo {
-        display: none;
-      }
-    }
-    @media (max-width: 600px) {
-      .resume-header {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/resume.css">
+  <link rel="stylesheet" href="/css/header.css">
 </head>
 <body>
   <div th:replace="~{fragments/visitor :: widget}"></div>
   <div th:replace="~{fragments/header :: header}"></div>
-  <div class="container" style="margin-top:0;">
+  <div class="resume-content container" style="margin-top:0;">
     <header class="resume-header" style="margin-bottom:18px;">
       <img th:src="@{${resume.photoUrl}}" alt="프로필 사진" class="profile-photo" th:if="${resume.photoUrl != null}">
       <div>
@@ -230,6 +97,6 @@
       </section>
     </main>
   </div>
-  <div th:replace="fragments/footer :: footer"></div>
+  <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html> 

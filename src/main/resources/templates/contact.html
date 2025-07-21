@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Contact Me</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/header.css">
     <style>
         .contact-container { max-width: 500px; margin: 40px auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
         .contact-container h2 { margin-bottom: 1.5rem; }
@@ -17,27 +19,29 @@
 <body>
 <div th:replace="~{fragments/visitor :: widget}"></div>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="contact-container">
-    <h2 style="font-family:'Montserrat',sans-serif; font-weight:700; letter-spacing:1px; margin-top:0; margin-bottom:18px;">Contact Me</h2>
-    <div th:if="${successMessage}" style="background:#e6ffe6; color:#1a7f1a; border:1px solid #b2e6b2; padding:0.8rem 1rem; border-radius:5px; margin-bottom:1.2rem;">
-        <span th:text="${successMessage}"></span>
-    </div>
-    <form method="post" th:action="@{/contact}">
-        <label for="name">이름</label>
-        <input type="text" id="name" name="name" required>
-        <label for="email">이메일</label>
-        <input type="email" id="email" name="email" required>
-        <label for="subject">제목</label>
-        <input type="text" id="subject" name="subject" required>
-        <label for="message">문의 내용</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
-        <button type="submit">문의 보내기</button>
-    </form>
-    <div class="info">
-        문의하신 내용은 메일로 전달됩니다. 빠른 시일 내에 답변드리겠습니다.<br>
-        <b>이메일:</b> <a href="mailto:ehc28260@gmail.com">ehc28260@gmail.com</a>
-    </div>
+<div class="container">
+  <div class="contact-container">
+      <h2 style="font-family:'Montserrat',sans-serif; font-weight:700; letter-spacing:1px; margin-top:0; margin-bottom:18px;">Contact Me</h2>
+      <div th:if="${successMessage}" style="background:#e6ffe6; color:#1a7f1a; border:1px solid #b2e6b2; padding:0.8rem 1rem; border-radius:5px; margin-bottom:1.2rem;">
+          <span th:text="${successMessage}"></span>
+      </div>
+      <form method="post" th:action="@{/contact}">
+          <label for="name">이름</label>
+          <input type="text" id="name" name="name" required>
+          <label for="email">이메일</label>
+          <input type="email" id="email" name="email" required>
+          <label for="subject">제목</label>
+          <input type="text" id="subject" name="subject" required>
+          <label for="message">문의 내용</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+          <button type="submit">문의 보내기</button>
+      </form>
+      <div class="info">
+          문의하신 내용은 저에게 전달됩니다. 메일 주소 첨부시 빠른 시일 내에 답변드리겠습니다.<br>
+          <b>이메일:</b> <a href="mailto:ehc28260@gmail.com">ehc28260@gmail.com</a>
+      </div>
+  </div>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html> 

@@ -5,6 +5,7 @@
   <title>Takahara's Blog - Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/header.css">
   <style>
     body {
       min-height: 100vh;
@@ -75,7 +76,7 @@
   </style>
 </head>
 <body>
-  <div th:replace="fragments/header :: header"></div>
+  <div th:replace="~{fragments/header :: header}"></div>
     <!-- 원하는 이미지 URL로 아래를 변경하세요 -->
     <style>
       body {

@@ -6,6 +6,8 @@
     <title th:text="${post.title} + ' - 블로그'">게시글 상세</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/post.css">
+    <link rel="stylesheet" href="/css/header.css">
     <style>
         /* 코드 복사 버튼 스타일 */
         .code-block-wrapper {
@@ -83,7 +85,7 @@
             <p th:text="${post.summary}">게시글 요약</p>
         </div>
         <div class="post-content" id="post-content">
-            <div th:utext="${post.content}">게시글 내용</div>
+            <div th:utext="${post.content}"></div>
         </div>
         <div class="post-navigation">
             <a href="/" class="back-button">← 목록으로 돌아가기</a>
@@ -134,5 +136,6 @@
         });
     });
     </script>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html> 

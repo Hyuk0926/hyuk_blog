@@ -15,7 +15,6 @@
     </style>
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
 <div class="inquiry-container">
     <h1 class="inquiry-title">문의 관리</h1>
     <table class="inquiry-table" th:if="${!#lists.isEmpty(inquiries)}">

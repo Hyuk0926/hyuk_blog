@@ -5,6 +5,7 @@
     <title>프로젝트</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/header.css">
     <style>
         .project-section { margin-bottom: 48px; }
         .project-section h2 { font-size: 1.5rem; margin-bottom: 16px; }
@@ -63,7 +64,7 @@
 </head>
 <body>
     <div th:replace="~{fragments/visitor :: widget}"></div>
-    <div th:replace="fragments/header :: header"></div>
+    <div th:replace="~{fragments/header :: header}"></div>
     <div class="container" style="margin-top:30px;">
         <!-- 개인 프로젝트 섹션 -->
         <div class="project-section">
@@ -75,14 +76,14 @@
                     <h3>Takahara's Blog (개인 기술 블로그)</h3>
                     <div class="tech-stack">
                         <img class="tech-icon" src="https://spring.io/img/spring.svg" alt="Spring Boot" title="Spring Boot">
-                        <img class="tech-icon" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Amazon_Web_Services_Logo.svg" alt="AWS" title="AWS">
+                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" alt="AWS" title="AWS" />
                     </div>
                     <ul>
                         <li>이력서/소개, 게시글 CRUD, 관리자 대시보드, 방문자수 통계, 다국어 지원, 문의 관리 등 다양한 기능</li>
                         <li>최신 웹 트렌드 반영, 실시간 개선 및 유지보수</li>
                         <li>데이터 영구 저장, 반응형 UI/UX, fragment 구조화</li>
                     </ul>
-                    <div class="project-role"><b>내 역할:</b> 전체 설계, 개발, 배포, 유지보수</div>
+                    <div class="project-role"><b></b> 전체 설계, 개발, 배포, 유지보수</div>
                     <div class="project-result"><b>성과/배운점:</b> Spring/Thymeleaf 실전 경험, 웹 아키텍처 설계, 실시간 피드백 반영, 유지보수성 높은 코드 작성</div>
                     <div class="project-links">
                         <a href="https://github.com/your-github/hyuk_blog" target="_blank">깃허브</a>
@@ -113,9 +114,10 @@
                     <h3>TeamCollab (팀 협업 플랫폼)</h3>
                     <div class="tech-stack">
                         <img class="tech-icon" src="https://spring.io/img/spring.svg" alt="Spring Boot" title="Spring Boot">
-                        <img class="tech-icon" src="https://raw.githubusercontent.com/reactjs/reactjs.org/main/src/icons/logo.svg" alt="React" title="React">
+                        <img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" title="React" />
                         <img class="tech-icon" src="https://www.vectorlogo.zone/logos/mysql/mysql-icon.svg" alt="MySQL" title="MySQL">
-                        <img class="tech-icon" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Amazon_Web_Services_Logo.svg" alt="AWS" title="AWS">
+                        <<img class="tech-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-original.svg" alt="AWS" title="AWS" />
+
 
                     </div>
                     <ul>
@@ -135,6 +137,6 @@
             </div>
         </div>
     </div>
-    <div th:replace="fragments/footer :: footer"></div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html> 

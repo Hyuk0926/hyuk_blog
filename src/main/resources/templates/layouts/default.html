@@ -8,8 +8,8 @@
   <script th:src="@{/js/main.js}" defer></script>
 </head>
 <body>
-<div th:replace="fragments/header :: body"></div>
+<div th:replace="fragments/header :: header"></div>
 <main class="container my-5" th:insert="${content}"></main>
-<div th:replace="fragments/footer :: body"></div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
