@@ -8,7 +8,7 @@ public enum Category {
     SQL,
     JAVA,
     PYTHON,
-    BLOG_CODING("블로그 코딩");
+    BLOG_CODING("BlogBuild");
 
     private final String displayName;
 

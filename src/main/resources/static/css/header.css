@@ -45,7 +45,7 @@
 }
 
 .navbar-brand:hover {
-    color: #007bff;
+    color: #1a202c;
 }
 
 .navbar-nav {
@@ -141,7 +141,7 @@ body.dark-mode .navbar-brand {
 }
 
 body.dark-mode .navbar-brand:hover {
-    color: #63b3ed;
+    color: #f0f0f0ee;
 }
 
 body.dark-mode .nav-link {

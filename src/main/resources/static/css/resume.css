@@ -126,3 +126,58 @@
     padding: 8px 2vw 12px 2vw;
   }
 } 
+
+/* =========================================
+   이력서 페이지 다크 모드 스타일
+   ========================================= */
+
+/* body의 기본 다크모드 색상 상속 */
+body.dark-mode .resume-content {
+  color: #e0e0e0;
+}
+
+/* 섹션 제목 (h2) */
+body.dark-mode .resume-content h2 {
+  color: #f7fafc;
+  border-bottom-color: #4a5568;
+}
+
+/* 테이블 (학력, 경력) */
+body.dark-mode .custom-table thead th {
+  color: #f7fafc; /* 헤더 글자색도 밝게 */
+}
+
+body.dark-mode .custom-table tbody td {
+  /* 요청사항: 배경은 어둡게, 글자는 밝게 */
+  background-color: #2d3748;
+  color: #e0e0e0;
+  border-color: #4a5568;
+}
+
+/* 자기소개 문단 (성장과정, 장단점 등) */
+body.dark-mode .self-intro {
+  color: #e0e0e0;
+}
+
+/* 기술 스택 (예외 처리) */
+body.dark-mode .skills .skill-tag {
+  /* 요청사항: 배경은 밝게, 글자는 어둡게 */
+  background-color: #e2e8f0;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+body.dark-mode .resume-content {
+  background-color: #181a1b;
+  color: #e0e0e0;
+  /* 기존의 밝은 배경을 어둡게 변경 */
+  box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  border-radius: 12px;
+  /* 필요시 테두리 추가 */
+  border: 1px solid #23272b;
+}
+/* 이메일, 전화번호(연락처) 밝은 글씨로 */
+body.dark-mode .resume-content .contact span {
+  color: #f7fafc;
+}
+
