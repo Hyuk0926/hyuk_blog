@@ -1,5 +1,6 @@
 package com.example.hyuk_blog.dto;
 
+import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.entity.Post;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class PostDto {
     private String content;
     private String imageUrl;
     private boolean published;
+    private Category category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     
@@ -31,6 +33,7 @@ public class PostDto {
         dto.setContent(post.getContent());
         dto.setImageUrl(post.getImageUrl());
         dto.setPublished(post.isPublished());
+        dto.setCategory(post.getCategory());
         dto.setCreatedAt(post.getCreatedAt());
         dto.setUpdatedAt(post.getUpdatedAt());
         return dto;
@@ -45,6 +48,7 @@ public class PostDto {
         post.setContent(this.content);
         post.setImageUrl(this.imageUrl);
         post.setPublished(this.published);
+        post.setCategory(this.category);
         return post;
     }
 }

@@ -58,7 +58,7 @@
             font-weight: bold;
             color: #333;
         }
-        .form-input, .form-textarea {
+        .form-input, .form-textarea, .form-select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -140,21 +140,33 @@
             
             <div class="form-group">
                 <label for="title" class="form-label">제목 *</label>
-                <input type="text" id="title" name="title" th:value="${post.title}" 
+                <input type="text" id="title" name="title" th:value="*{title}" 
                        class="form-input" required>
                 <div class="help-text">게시글의 제목을 입력하세요.</div>
             </div>
             
             <div class="form-group">
+                <label for="category" class="form-label">카테고리 *</label>
+                <select id="category" name="category" class="form-select" required>
+                    <option value="">카테고리를 선택하세요</option>
+                    <option th:each="cat : ${categories}" 
+                            th:value="${cat}" 
+                            th:text="${cat.displayName}"
+                            th:selected="${post.category == cat}"></option>
+                </select>
+                <div class="help-text">게시글의 카테고리를 선택하세요.</div>
+            </div>
+
+            <div class="form-group">
                 <label for="summary" class="form-label">요약</label>
                 <textarea id="summary" name="summary" class="form-textarea" 
-                          style="min-height: 100px;" th:text="${post.summary}"></textarea>
+                          style="min-height: 100px;" th:text="*{summary}"></textarea>
                 <div class="help-text">게시글의 간단한 요약을 입력하세요. (선택사항)</div>
             </div>
             
             <div class="form-group">
                 <label for="imageUrl" class="form-label">이미지 URL</label>
-                <input type="url" id="imageUrl" name="imageUrl" th:value="${post.imageUrl}" 
+                <input type="url" id="imageUrl" name="imageUrl" th:value="*{imageUrl}" 
                        class="form-input">
                 <div class="help-text">게시글 대표 이미지의 URL을 입력하세요. (선택사항)</div>
             </div>
@@ -162,13 +174,13 @@
             <div class="form-group">
                 <label for="content" class="form-label">내용 *</label>
                 <textarea id="content" name="content" class="form-textarea" 
-                          th:text="${post.content}" required></textarea>
+                          th:text="*{content}" required></textarea>
                 <div class="help-text">게시글의 내용을 입력하세요. HTML 태그를 사용할 수 있습니다.</div>
             </div>
             
             <div class="form-group">
                 <label>
-                    <input type="checkbox" name="published" th:checked="${post.published}" 
+                    <input type="checkbox" name="published" th:checked="*{published}" 
                            class="form-checkbox">
                     공개하기
                 </label>

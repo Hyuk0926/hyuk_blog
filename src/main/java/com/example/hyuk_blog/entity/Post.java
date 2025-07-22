@@ -36,6 +36,10 @@ public class Post {
     
     @Column(nullable = false)
     private boolean published = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
+    private Category category;
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

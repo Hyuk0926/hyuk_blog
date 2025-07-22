@@ -3,6 +3,7 @@ package com.example.hyuk_blog.controller;
 import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.dto.PostDto;
 import com.example.hyuk_blog.dto.ResumeDto;
+import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.service.PostService;
 import com.example.hyuk_blog.service.ResumeService;
 import com.example.hyuk_blog.service.InquiryService;
@@ -51,6 +52,7 @@ public class AdminController {
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         model.addAttribute("post", new PostDto());
         model.addAttribute("admin", admin);
+        model.addAttribute("categories", Category.values());
         return "admin/post-form";
     }
     
@@ -70,6 +72,7 @@ public class AdminController {
         if (post.isPresent()) {
             model.addAttribute("post", post.get());
             model.addAttribute("admin", admin);
+            model.addAttribute("categories", Category.values());
             return "admin/post-form";
         }
         return "redirect:/admin";

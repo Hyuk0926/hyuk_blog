@@ -1,6 +1,7 @@
 package com.example.hyuk_blog.service;
 
 import com.example.hyuk_blog.dto.PostDto;
+import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.entity.Post;
 import com.example.hyuk_blog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class PostService {
     
     // 모든 공개 게시글 조회
     public List<PostDto> getAllPublishedPosts() {
-        return postRepository.findByPublishedOrderByCreatedAtAsc(true)
+        return postRepository.findByPublishedOrderByCreatedAtDesc(true)
                 .stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());
@@ -54,6 +55,7 @@ public class PostService {
                     existingPost.setContent(postDto.getContent());
                     existingPost.setImageUrl(postDto.getImageUrl());
                     existingPost.setPublished(postDto.isPublished());
+                    existingPost.setCategory(postDto.getCategory());
                     return PostDto.fromEntity(postRepository.save(existingPost));
                 });
     }
@@ -70,6 +72,14 @@ public class PostService {
     // 제목으로 검색 (공개된 게시글만)
     public List<PostDto> searchPublishedPosts(String title) {
         return postRepository.findByTitleContainingAndPublishedOrderByCreatedAtDesc(title, true)
+                .stream()
+                .map(PostDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    // 카테고리로 공개된 게시글 조회
+    public List<PostDto> getPublishedPostsByCategory(Category category) {
+        return postRepository.findByCategoryAndPublishedOrderByCreatedAtDesc(category, true)
                 .stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());

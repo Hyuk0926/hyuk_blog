@@ -1,5 +1,6 @@
 package com.example.hyuk_blog.repository;
 
+import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 모든 게시글을 생성일 기준 내림차순으로 조회
     @Query("SELECT p FROM Post p ORDER BY p.createdAt DESC")
     List<Post> findAllOrderByCreatedAtDesc();
+
+    List<Post> findByCategoryAndPublishedOrderByCreatedAtDesc(Category category, boolean published);
 } 

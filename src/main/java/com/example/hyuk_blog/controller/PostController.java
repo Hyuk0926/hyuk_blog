@@ -1,15 +1,13 @@
 package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.PostDto;
+import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import com.example.hyuk_blog.dto.ResumeDto;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +41,7 @@ public class PostController {
     public String index(Model model) {
         List<PostDto> posts = postService.getAllPublishedPosts();
         model.addAttribute("posts", posts);
+        model.addAttribute("categories", Category.values());
         return "index";
     }
 
@@ -98,4 +97,18 @@ public class PostController {
         return "contact";
     }
 
-} 
+    @GetMapping("/api/search")
+    @ResponseBody
+    public List<PostDto> searchApi(@RequestParam String q) {
+        return postService.searchPublishedPosts(q);
+    }
+
+    @GetMapping("/api/posts")
+    @ResponseBody
+    public List<PostDto> getPostsByCategory(@RequestParam(required = false) Category category) {
+        if (category == null) {
+            return postService.getAllPublishedPosts();
+        }
+        return postService.getPublishedPostsByCategory(category);
+    }
+}
