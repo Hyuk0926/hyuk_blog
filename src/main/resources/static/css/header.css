@@ -19,31 +19,36 @@
     width: 100%;
     position: relative;
 }
-.navbar-brand {
-    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: #22223b;
-    margin-right: 0;
-    text-decoration: none;
-    transition: color 0.18s;
-    position: static;
-    left: auto;
-    top: auto;
-    transform: none;
-}
-nav {
-    flex: 1;
+.header-flex {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-direction: row !important;
+}
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-direction: row !important;
+}
+.navbar-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #23272a;
+    letter-spacing: -1px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.navbar-brand:hover {
+    color: #007bff;
 }
 .navbar-nav {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    flex-direction: row !important;
     align-items: center;
-    gap: 36px;
-    list-style: none;
+    gap: 24px;
     margin: 0;
     padding: 0;
 }
@@ -62,15 +67,37 @@ nav {
     background: #f0efeb;
     border-bottom: 2px solid #4a4e69;
 }
-#darkModeToggle {
-    position: static;
-    margin-left: 24px;
-    font-size: 1.3rem;
-    cursor: pointer;
-    z-index: 9999;
-    background: none;
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-direction: row !important;
+}
+.dark-mode-btn {
+    background: #f4f4f4;
     border: none;
-    display: block !important;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: background 0.2s, box-shadow 0.2s;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+}
+.dark-mode-btn:hover {
+    background: #e0e7ef;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+body.dark-mode .dark-mode-btn {
+    background: #23272a;
+    color: #ffd700;
+}
+body.dark-mode .dark-mode-btn:hover {
+    background: #2c2f34;
 }
 /* 다크모드 헤더 색상 */
 body.dark-mode .navbar {
@@ -86,6 +113,9 @@ body.dark-mode .nav-link:hover, body.dark-mode .nav-link:focus {
     color: #ffd700;
     background: #2c2f34;
     border-bottom: 2px solid #ffd700;
+}
+body.dark-mode .light-icon svg {
+    stroke: #fff !important;
 }
 /* header에만 적용되는 폰트와 여백 */
 header.navbar {
@@ -122,5 +152,16 @@ header.navbar {
         margin-left: auto;
         margin-top: 8px;
         display: block !important;
+    }
+    .header-flex, .header-right {
+        flex-direction: column !important;
+        align-items: stretch;
+        gap: 0;
+    }
+    .navbar-nav {
+        gap: 12px;
+    }
+    .header-controls {
+        gap: 10px;
     }
 } 

@@ -1,27 +1,80 @@
 <header th:fragment="header" class="navbar navbar-expand-lg navbar-light bg-light" style="position: sticky; top: 0; z-index: 1000; width: 100%;">
-    <div class="container">
+    <div class="container header-flex">
         <a class="navbar-brand" th:href="@{/}">Takahara's Blog</a>
-        <nav>
-            <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link" th:href="@{/index}">지식모음</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/projects}">프로젝트</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/about}">이력</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
-            </ul>
-        </nav>
-        <div class="header-controls">
-            <button id="darkModeToggle" class="control-btn dark-mode-btn" title="다크모드 전환">
-                <span class="dark-icon">🌙</span>
-                <span class="light-icon" style="display:none;">☀️</span>
-            </button>
-            <div id="langToggle" class="lang-toggle">
-                <span id="lang-ko" class="lang-btn active">KO</span>
-                <span class="lang-separator">|</span>
-                <span id="lang-jp" class="lang-btn">JP</span>
+        <div class="header-right" style="display: flex; flex-direction: row; align-items: center; gap: 36px;">
+            <nav>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/index}">지식모음</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/projects}">프로젝트</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about}">이력</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-controls">
+                <button id="darkModeToggle" class="control-btn dark-mode-btn" title="다크모드 전환">
+                    <span class="dark-icon" style="display: block;">
+                        <!-- 모던 다크모드 SVG 아이콘 -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path></svg>
+                    </span>
+                    <span class="light-icon" style="display:none;">
+                        <!-- 모던 라이트모드 SVG 아이콘 -->
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    </span>
+                </button>
+                <div id="langToggle" class="lang-toggle">
+                    <span id="lang-ko" class="lang-btn active">KO</span>
+                    <span class="lang-separator">|</span>
+                    <span id="lang-jp" class="lang-btn">JP</span>
+                </div>
             </div>
         </div>
     </div>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+        @font-face {
+            font-family: 'Spoqa Han Sans Neo';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Spoqa Han Sans Neo'), url('https://cdn.jsdelivr.net/gh/webfontworld/SpoqaHanSansNeo/SpoqaHanSansNeo-Regular.woff2') format('woff2');
+        }
+        body {
+            font-family: 'Spoqa Han Sans Neo', 'Noto Sans KR', Arial, sans-serif;
+        }
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .navbar-brand {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .navbar-brand:hover {
+            color: #007bff;
+        }
+        .navbar-nav {
+            display: flex;
+            gap: 20px;
+            margin-left: 20px;
+        }
+        .nav-item {
+            list-style: none;
+        }
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #007bff;
+        }
         .header-controls {
             display: flex;
             align-items: center;
