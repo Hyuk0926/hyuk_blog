@@ -33,7 +33,7 @@ body {
 
 .hero-section {
     /* 기본(라이트모드) 이미지 */
-    background-image: url('https://w.wallhaven.cc/full/6o/wallhaven-6oxwpx.jpg');
+    background-image: url('/img/dark_mode_bg.jpg'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -42,7 +42,7 @@ body {
 
 /* 다크모드일 때 hero-section 이미지 변경 */
 body.dark-mode .hero-section {
-    background-image: url('https://c.wallhere.com/photos/bc/c8/blue_archive_beach-2148707.jpg!d');
+    background-image: url('/img/dark_mode_bg.jpg');
 }
 
 .hero-title {
