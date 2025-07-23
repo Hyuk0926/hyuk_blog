@@ -1,3 +1,0 @@
-2025-07-21 13:03:38.574350+09:00 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLDataException: Value too long for column "EFFORT_EXPERIENCE CHARACTER VARYING(255)": "U&'\\c81c\\ac00 \\c778\\c0dd\\c5d0\\c11c \\ac00\\c7a5 \\c5f4\\c2ec\\d788 \\b178\\b825\\d588\\b3... (1177)"; SQL statement:
-insert into resume (address,birth,effort_experience,email,future_plan,introduction,japan_it_motivation,name,phone,photo_url,skills,strengths_weaknesses,student_life,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,default) [22001-232]
