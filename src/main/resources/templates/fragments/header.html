@@ -1,6 +1,6 @@
 <header th:fragment="header" class="navbar">
     <div class="container header-flex">
-        <a class="navbar-brand" th:href="@{/}">Takahara's Blog</a>
+        <a class="navbar-brand" th:href="@{/}" th:text="#{header.title}">Takahara's Blog</a>
         <div class="header-right">
             <nav>
                 <ul class="navbar-nav">
