@@ -15,14 +15,17 @@
         <h1 class="hero-title">Takahara Yuuki</h1>
     </div>
     
-    <div class="page-container">
+    <div class="page-container"
+         th:data-post-count-msg="#{index.posts.count}"
+         th:data-no-posts-msg="#{index.posts.empty.title}"
+         th:data-no-image-msg="#{index.image.none}">
         <aside class="sidebar">
             <div class="category-list-wrapper">
-                <h3 class="category-list-title">카테고리</h3>
+                <h3 class="category-list-title" th:text="#{index.category.title}">카테고리</h3>
                 <ul class="category-list">
-                    <li class="category-item active" data-category="">전체보기</li>
-                    <li th:each="cat : ${categories}" 
-                        class="category-item" 
+                    <li class="category-item active" data-category="" th:text="#{index.category.all}">전체보기</li>
+                    <li th:each="cat : ${categories}"
+                        class="category-item"
                         th:data-category="${cat}"
                         th:text="${cat.displayName}">
                     </li>
@@ -34,11 +37,11 @@
             <div class="content-section">
                 <div class="section-header">
                     <div class="section-header-title">
-                        <h2 class="section-title">최신 게시글</h2>
-                        <span class="post-count" th:text="${#lists.size(posts)} + '개의 게시글'">0개</span>
+                        <h2 class="section-title" th:text="#{index.posts.latest}">최신 게시글</h2>
+                        <span class="post-count" th:text="${#lists.size(posts)} + ' ' + #{index.posts.count.unit}">0개</span>
                     </div>
                     <div class="search-form">
-                        <input type="text" id="search-input" placeholder="게시글 검색..." class="search-input">
+                        <input type="text" id="search-input" th:placeholder="#{index.search.placeholder}" class="search-input">
                         <button type="button" class="search-button">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path></svg>
                         </button>
@@ -47,15 +50,15 @@
                 
                 <div class="post-grid" id="post-grid">
                     <div th:if="${#lists.isEmpty(posts)}" class="no-posts">
-                        <h3>등록된 게시글이 없습니다</h3>
-                        <p>첫 번째 게시글을 작성해보세요!</p>
+                        <h3 th:text="#{index.posts.empty.title}">등록된 게시글이 없습니다</h3>
+                        <p th:text="#{index.posts.empty.description}">첫 번째 게시글을 작성해보세요!</p>
                     </div>
                     
                     <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
                         <div class="post-image-wrapper">
                             <img th:if="${post.imageUrl != null and post.imageUrl != ''}" th:src="${post.imageUrl}" th:alt="${post.title}" class="post-image" />
                             <div th:if="${post.imageUrl == null or post.imageUrl == ''}" class="post-image-placeholder">
-                                <span>이미지 없음</span>
+                                <span th:text="#{index.image.none}">이미지 없음</span>
                             </div>
                         </div>
                         <div class="post-content">
@@ -73,8 +76,13 @@
     
     <div th:replace="~{fragments/footer :: footer}"></div>
 
-    <script>
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.page-container');
+            const postCountMsg = container.dataset.postCountMsg;
+            const noPostsMsg = container.dataset.noPostsMsg;
+            const noImageMsg = container.dataset.noImageMsg;
+
             const searchInput = document.getElementById('search-input');
             const postGrid = document.getElementById('post-grid');
             const postCount = document.querySelector('.post-count');
@@ -91,10 +99,10 @@
 
             function updatePostGrid(posts) {
                 postGrid.innerHTML = '';
-                postCount.textContent = `${posts.length}개의 게시글`;
+                postCount.textContent = postCountMsg.replace('{0}', posts.length);
 
                 if (posts.length === 0) {
-                    postGrid.innerHTML = `<div class="no-posts"><h3>게시글이 없습니다</h3></div>`;
+                    postGrid.innerHTML = `<div class="no-posts"><h3>${noPostsMsg}</h3></div>`;
                     return;
                 }
 
@@ -105,7 +113,7 @@
 
                     const imageHtml = post.imageUrl
                         ? `<img src="${post.imageUrl}" alt="${post.title}" class="post-image" />`
-                        : `<div class="post-image-placeholder"><span>이미지 없음</span></div>`;
+                        : `<div class="post-image-placeholder"><span>${noImageMsg}</span></div>`;
 
                     const summaryHtml = post.summary ? `<p class="post-summary">${post.summary}</p>` : '';
                     

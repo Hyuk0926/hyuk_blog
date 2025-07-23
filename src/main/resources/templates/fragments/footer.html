@@ -8,14 +8,14 @@
       <a href="https://x.com/prushka124?t=-v8uSthnnekV76nHJoP_lg&s=09" target="_blank" class="sns-btn" title="X(Twitter)"><svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="12" fill="#f1f3f6"/><path d="M17.53 7.47h-1.41l-3.12 3.97-3.12-3.97H6.47l3.97 5.03-4.13 5.5h1.41l3.28-4.37 3.28 4.37h1.41l-4.13-5.5 3.97-5.03z" fill="#222"/></svg></a>
     </div>
     <div style="color:#888; font-size:0.98rem; margin-bottom:6px;">
-      블로그에 방문해주셔서 감사합니다.
-      <span style="font-size:0.93em;">문의, 제안, 협업은 언제든 연락 주세요.</span>
+      <span th:text="#{footer.description1}">블로그에 방문해주셔서 감사합니다.</span>
+      <span style="font-size:0.93em;" th:text="#{footer.description2}">문의, 제안, 협업은 언제든 연락 주세요.</span>
     </div>
     <div style="color:#aaa; font-size:0.95rem;">
-      &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Takahara Yuuki. All rights reserved.
+      &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> <span th:text="#{footer.copyrights}">Takahara Yuuki. All rights reserved.</span>
     </div>
     <div class="admin-link" style="margin-top: 16px;">
-      <a th:href="@{/admin/login}" class="admin-button">관리자 로그인</a>
+      <a th:href="@{/admin/login}" class="admin-button" th:text="#{footer.adminLogin}">관리자 로그인</a>
     </div>
   </div>
 </footer>

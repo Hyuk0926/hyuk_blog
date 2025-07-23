@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>프로젝트</title>
+    <title th:text="#{project.title}">프로젝트</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/header.css">
@@ -201,14 +201,14 @@
     <div class="container">
         <!-- 개인 프로젝트 섹션 -->
         <div class="project-section">
-            <h2>개인 프로젝트</h2>
+            <h2 th:text="#{project.personal.title}">개인 프로젝트</h2>
             <div class="project-list">
                 <div class="project-card">
                     <div class="project-header">
                         <img class="project-logo" src="/img/blog_logo.png" alt="Hyuk Blog 로고" onerror="this.style.display='none'">
                         <div class="project-info">
-                            <div class="project-meta">2025.06 ~ 진행중</div>
-                            <h3 class="project-title">Takahara's Blog (개인 기술 블로그)</h3>
+                            <div class="project-meta" th:text="#{project.personal.blog.period}">2025.06 ~ 진행중</div>
+                            <h3 class="project-title" th:text="#{project.personal.blog.title}">Takahara's Blog (개인 기술 블로그)</h3>
                             <div class="tech-stack">
                                 <img class="tech-icon" src="/svg/java.svg" alt="Java" title="Java">
                                 <img class="tech-icon" src="/svg/spring.svg" alt="Spring Boot" title="Spring Boot">
@@ -219,15 +219,15 @@
                     </div>
                     <div class="project-description">
                         <ul>
-                            <li>이력서/소개, 게시글 CRUD, 관리자 대시보드, 방문자수 통계, 다국어 지원, 문의 관리 등 다양한 기능</li>
-                            <li>데이터 영구 저장, 반응형 UI/UX, fragment 구조화</li>
-                            <li>최신 웹 트렌드 반영, 실시간 개선 및 유지보수</li>
+                            <li th:text="#{project.personal.blog.desc.1}">이력서/소개, 게시글 CRUD, 관리자 대시보드, 방문자수 통계, 다국어 지원, 문의 관리 등 다양한 기능</li>
+                            <li th:text="#{project.personal.blog.desc.2}">데이터 영구 저장, 반응형 UI/UX, fragment 구조화</li>
+                            <li th:text="#{project.personal.blog.desc.3}">최신 웹 트렌드 반영, 실시간 개선 및 유지보수</li>
                         </ul>
                     </div>
-                    <div class="project-role"><b>진행한 것:</b> 전체 설계, 개발, 배포, 유지보수</div>
-                    <div class="project-result"><b>성과/배운점:</b> Spring/Thymeleaf 실전 경험, 웹 아키텍처 설계, 실시간 피드백 반영, 유지보수성 높은 코드 작성</div>
+                    <div class="project-role" th:utext="#{project.personal.blog.role}"><b>진행한 것:</b> 전체 설계, 개발, 배포, 유지보수</div>
+                    <div class="project-result" th:utext="#{project.personal.blog.result}"><b>성과/배운점:</b> Spring/Thymeleaf 실전 경험, 웹 아키텍처 설계, 실시간 피드백 반영, 유지보수성 높은 코드 작성</div>
                     <div class="project-links">
-                        <a href="https://github.com/hyuk0926/hyuk_blog" target="_blank">Github 보기</a>
+                        <a href="https://github.com/hyuk0926/hyuk_blog" target="_blank" th:text="#{project.link.github}">Github 보기</a>
                     </div>
                     <!-- 시연 이미지 슬라이더 -->
                     <div class="project-demo-slider">
@@ -251,14 +251,14 @@
         </div>
         <!-- 팀 프로젝트 섹션 -->
         <div class="project-section">
-            <h2>팀 프로젝트</h2>
+            <h2 th:text="#{project.team.title}">팀 프로젝트</h2>
             <div class="project-list">
                 <div class="project-card">
                     <div class="project-header">
                         <img class="project-logo" src="/img/team_logo.png" alt="TeamCollab 로고" onerror="this.style.display='none'">
                         <div class="project-info">
-                            <div class="project-meta">2025.09 ~ 2025.12</div>
-                            <h3 class="project-title">TeamCollaboration (팀 협업 플랫폼)</h3>
+                            <div class="project-meta" th:text="#{project.team.collab.period}">2025.09 ~ 2025.12</div>
+                            <h3 class="project-title" th:text="#{project.team.collab.title}">TeamCollaboration (팀 협업 플랫폼)</h3>
                             <div class="tech-stack">
                                 <img class="tech-icon" src="/svg/react.svg" alt="React" title="React" />
                                 <img class="tech-icon" src="/svg/java.svg" alt="Java" title="Java">
@@ -270,16 +270,16 @@
                     </div>
                     <div class="project-description">
                         <ul>
-                            <li>실시간 협업/채팅, 프로젝트 관리(이슈, 일정), 파일 공유, 알림 시스템</li>
-                            <li>CI/CD, 클라우드 배포, 코드 리뷰 및 협업 경험</li>
+                            <li th:text="#{project.team.collab.desc.1}">실시간 협업/채팅, 프로젝트 관리(이슈, 일정), 파일 공유, 알림 시스템</li>
+                            <li th:text="#{project.team.collab.desc.2}">CI/CD, 클라우드 배포, 코드 리뷰 및 협업 경험</li>
                         </ul>
                     </div>
-                    <div class="project-role"><b>저의 역할:</b> 백엔드 API 설계/구현, DB 모델링, 배포 자동화</div>
-                    <div class="project-result"><b>성과/배운점:</b> 협업 경험, 코드 리뷰, CI/CD, 실무 프로세스 경험, 커뮤니케이션 능력 향상</div>
+                    <div class="project-role" th:utext="#{project.team.collab.role}"><b>저의 역할:</b> 백엔드 API 설계/구현, DB 모델링, 배포 자동화</div>
+                    <div class="project-result" th:utext="#{project.team.collab.result}"><b>성과/배운점:</b> 협업 경험, 코드 리뷰, CI/CD, 실무 프로세스 경험, 커뮤니케이션 능력 향상</div>
                     <div class="project-links">
-                        <a href="#" target="_blank">Github 보기</a>
+                        <a href="#" target="_blank" th:text="#{project.link.github}">Github 보기</a>
                     </div>
-                    <div class="team-info">
+                    <div class="team-info" th:utext="#{project.team.collab.info}">
                         <b>팀원:</b> 4명 (백엔드 2, 프론트엔드 1, 기획 1) / <b>협업툴:</b> GitHub, Notion, Slack 등
                     </div>
                 </div>

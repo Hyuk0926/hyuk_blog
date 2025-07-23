@@ -33,7 +33,7 @@ body {
 
 .hero-section {
     /* 기본(라이트모드) 이미지 */
-    background-image: url('/img/dark_mode_bg.jpg'); 
+    background-image: url('/img/light_mode_bg.jpg'); 
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

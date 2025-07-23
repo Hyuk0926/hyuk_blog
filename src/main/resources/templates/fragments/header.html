@@ -4,10 +4,10 @@
         <div class="header-right">
             <nav>
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/index}">지식모음</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/projects}">프로젝트</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/about}">이력</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/index}" th:text="#{header.nav.knowledge}">지식모음</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/projects}" th:text="#{header.nav.projects}">프로젝트</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about}" th:text="#{header.nav.resume}">이력</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/contact}" th:text="#{header.nav.contact}">Contact</a></li>
                 </ul>
             </nav>
             <div class="header-controls">
@@ -20,9 +20,9 @@
                     </span>
                 </button>
                 <div id="langToggle" class="lang-toggle">
-                    <span id="lang-ko" class="lang-btn active">KO</span>
+                    <a id="lang-ko" class="lang-btn" th:classappend="${#locale.language == 'ko' ? 'active' : ''}" th:href="@{?lang=ko}">KO</a>
                     <span class="lang-separator">|</span>
-                    <span id="lang-jp" class="lang-btn">JP</span>
+                    <a id="lang-jp" class="lang-btn" th:classappend="${#locale.language == 'ja' ? 'active' : ''}" th:href="@{?lang=ja}">JP</a>
                 </div>
             </div>
         </div>
@@ -64,34 +64,6 @@
                     setDarkMode(enabled);
                 });
             }
-
-            // 언어 토글 이벤트
-            const langKo = document.getElementById('lang-ko');
-            const langJp = document.getElementById('lang-jp');
-            if(langKo && langJp) {
-                langKo.onclick = function() { setLang('ko'); };
-                langJp.onclick = function() { setLang('jp'); };
-                
-                // 초기 언어
-                setLang(localStorage.getItem('lang') || 'ko');
-            }
         });
-        
-        // 언어 토글
-        function setLang(lang) {
-            localStorage.setItem('lang', lang);
-            document.documentElement.setAttribute('lang', lang === 'jp' ? 'ja' : 'ko');
-            
-            // 활성 상태 업데이트
-            const langKo = document.getElementById('lang-ko');
-            const langJp = document.getElementById('lang-jp');
-            if(langKo && langJp) {
-                langKo.classList.toggle('active', lang === 'ko');
-                langJp.classList.toggle('active', lang === 'jp');
-            }
-            
-            // 페이지 내 텍스트 교체(간단 예시, 실제는 각 페이지별로 구현 필요)
-            if(window.applyLang) window.applyLang(lang);
-        }
     </script>
 </header>

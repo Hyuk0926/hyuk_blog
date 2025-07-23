@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Contact Me</title>
+    <title th:text="#{contact.title}">Contact Me</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/header.css">
@@ -184,37 +184,37 @@
     <div th:replace="~{fragments/header :: header}"></div>
     <div class="container">
         <div class="contact-main">
-            <h1 class="page-title">Contact Me</h1>
+            <h1 class="page-title" th:text="#{contact.title}">Contact Me</h1>
             <div class="contact-card">
                 <div th:if="${successMessage}" class="success-message">
                     <span th:text="${successMessage}"></span>
                 </div>
                 <form method="post" th:action="@{/contact}">
                     <div class="form-group">
-                        <label class="form-label" for="name">이름</label>
+                        <label class="form-label" for="name" th:text="#{contact.form.name}">이름</label>
                         <input type="text" id="name" name="name" class="form-input" required
-                               placeholder="이름을 입력해주세요">
+                               th:placeholder="#{contact.form.name.placeholder}">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="email">이메일</label>
+                        <label class="form-label" for="email" th:text="#{contact.form.email}">이메일</label>
                         <input type="email" id="email" name="email" class="form-input" required
-                               placeholder="연락받으실 이메일 주소를 입력해주세요">
+                               th:placeholder="#{contact.form.email.placeholder}">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="subject">제목</label>
+                        <label class="form-label" for="subject" th:text="#{contact.form.subject}">제목</label>
                         <input type="text" id="subject" name="subject" class="form-input" required
-                               placeholder="문의 제목을 입력해주세요">
+                               th:placeholder="#{contact.form.subject.placeholder}">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="message">문의 내용</label>
+                        <label class="form-label" for="message" th:text="#{contact.form.message}">문의 내용</label>
                         <textarea id="message" name="message" class="form-input" required
-                                  placeholder="문의하실 내용을 자세히 적어주세요"></textarea>
+                                  th:placeholder="#{contact.form.message.placeholder}"></textarea>
                     </div>
-                    <button type="submit" class="submit-button">문의 보내기</button>
+                    <button type="submit" class="submit-button" th:text="#{contact.form.submit}">문의 보내기</button>
                 </form>
                 <div class="contact-info">
-                    문의하신 내용은 저에게 전달됩니다. 메일 주소 첨부시 빠른 시일 내에 답변드리겠습니다.<br>
-                    <b>이메일:</b> <a href="mailto:ehc28260@gmail.com">ehc28260@gmail.com</a>
+                    <span th:text="#{contact.info}">문의하신 내용은 저에게 전달됩니다. 메일 주소 첨부시 빠른 시일 내에 답변드리겠습니다.</span><br>
+                    <b th:utext="#{contact.info.email}">이메일:</b> <a href="mailto:ehc28260@gmail.com">ehc28260@gmail.com</a>
                 </div>
             </div>
         </div>

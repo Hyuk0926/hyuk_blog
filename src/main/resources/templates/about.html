@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>이력서</title>
+  <title th:text="#{resume.title}">이력서</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
@@ -28,13 +28,13 @@
 
     <main>
       <section th:if="${resume.educations != null and !#lists.isEmpty(resume.educations)}">
-        <h2>학력</h2>
+        <h2 th:text="#{resume.education}">학력</h2>
         <table class="custom-table">
           <thead>
             <tr>
-              <th>학교명</th>
-              <th>전공/학위</th>
-              <th>기간</th>
+              <th th:text="#{resume.table.school}">학교명</th>
+              <th th:text="#{resume.table.major}">전공/학위</th>
+              <th th:text="#{resume.table.period}">기간</th>
             </tr>
           </thead>
           <tbody>
@@ -48,14 +48,14 @@
       </section>
 
       <section th:if="${resume.experiences != null and !#lists.isEmpty(resume.experiences)}">
-        <h2>경력</h2>
+        <h2 th:text="#{resume.experience}">경력</h2>
         <table class="custom-table">
           <thead>
             <tr>
-              <th>회사명</th>
-              <th>직무</th>
-              <th>기간</th>
-              <th>설명</th>
+              <th th:text="#{resume.table.company}">회사명</th>
+              <th th:text="#{resume.table.position}">직무</th>
+              <th th:text="#{resume.table.period}">기간</th>
+              <th th:text="#{resume.table.description}">설명</th>
             </tr>
           </thead>
           <tbody>
@@ -70,29 +70,29 @@
       </section>
 
       <section th:if="${resume.skills != null and !#lists.isEmpty(resume.skills)}">
-        <h2>기술스택</h2>
+        <h2 th:text="#{resume.skills}">기술스택</h2>
         <div class="skills">
           <span class="skill-tag" th:each="skill : ${resume.skills}" th:text="${skill}">기술</span>
         </div>
       </section>
       <section th:if="${resume.studentLife}">
-        <h2>학생생활(성장과정)</h2>
+        <h2 th:text="#{resume.studentLife}">학생생활(성장과정)</h2>
         <p class="self-intro" th:text="${resume.studentLife}"></p>
       </section>
       <section th:if="${resume.strengthsWeaknesses}">
-        <h2>장점과 단점</h2>
+        <h2 th:text="#{resume.strengthsWeaknesses}">장점과 단점</h2>
         <p class="self-intro" th:text="${resume.strengthsWeaknesses}"></p>
       </section>
       <section th:if="${resume.effortExperience}">
-        <h2>인생에서 노력했던 경험</h2>
+        <h2 th:text="#{resume.effortExperience}">인생에서 노력했던 경험</h2>
         <p class="self-intro" th:text="${resume.effortExperience}"></p>
       </section>
       <section th:if="${resume.japanItMotivation}">
-        <h2>일본 IT 취업 지망동기</h2>
+        <h2 th:text="#{resume.japanItMotivation}">일본 IT 취업 지망동기</h2>
         <p class="self-intro" th:text="${resume.japanItMotivation}"></p>
       </section>
       <section th:if="${resume.futurePlan}">
-        <h2>장래의 계획 및 포부</h2>
+        <h2 th:text="#{resume.futurePlan}">장래의 계획 및 포부</h2>
         <p class="self-intro" th:text="${resume.futurePlan}"></p>
       </section>
     </main>
