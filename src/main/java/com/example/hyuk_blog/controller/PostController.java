@@ -3,6 +3,7 @@ package com.example.hyuk_blog.controller;
 import com.example.hyuk_blog.dto.PostDto;
 import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.service.PostService;
+import com.example.hyuk_blog.service.ResumeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,10 @@ import java.util.Optional;
 import com.example.hyuk_blog.dto.InquiryDto;
 import com.example.hyuk_blog.service.InquiryService;
 
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Locale;
+
 @Controller
 public class PostController {
     
@@ -21,14 +26,15 @@ public class PostController {
     private PostService postService;
 
     @Autowired
-    private AdminController adminController;
+    private ResumeService resumeService;
 
     @Autowired
     private InquiryService inquiryService;
 
     @GetMapping("/about")
-    public String about(Model model) {
-        model.addAttribute("resume", adminController.getResume());
+    public String about(Model model, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        model.addAttribute("resume", resumeService.loadResume(locale));
         return "about";
     }
     
@@ -38,16 +44,18 @@ public class PostController {
     }
 
     @GetMapping("/index")
-    public String index(Model model) {
-        List<PostDto> posts = postService.getAllPublishedPosts();
+    public String index(Model model, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        List<PostDto> posts = postService.getAllPublishedPosts(locale);
         model.addAttribute("posts", posts);
         model.addAttribute("categories", Category.values());
         return "index";
     }
 
     @GetMapping("/post/{id}")
-    public String postDetail(@PathVariable Long id, Model model) {
-        Optional<PostDto> post = postService.getPostById(id);
+    public String postDetail(@PathVariable Long id, Model model, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        Optional<PostDto> post = postService.getPostById(id, locale);
         if (post.isPresent() && post.get().isPublished()) {
             model.addAttribute("post", post.get());
             return "post-detail";
@@ -61,17 +69,18 @@ public class PostController {
     }
     
     @GetMapping("/search")
-    public String search(@RequestParam String q, Model model) {
-        List<PostDto> posts = postService.searchPublishedPosts(q);
+    public String search(@RequestParam String q, Model model, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        List<PostDto> posts = postService.searchPublishedPosts(q, locale);
         model.addAttribute("posts", posts);
         model.addAttribute("searchQuery", q);
         return "search";
     }
 
     @GetMapping("/resume")
-    public String resume(Model model) {
-        ResumeDto resume = new ResumeDto();
-        model.addAttribute("resume", resume);
+    public String resume(Model model, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        model.addAttribute("resume", resumeService.loadResume(locale));
         return "resume";
     }
 
@@ -99,16 +108,18 @@ public class PostController {
 
     @GetMapping("/api/search")
     @ResponseBody
-    public List<PostDto> searchApi(@RequestParam String q) {
-        return postService.searchPublishedPosts(q);
+    public List<PostDto> searchApi(@RequestParam String q, HttpServletRequest request) {
+        Locale locale = request.getLocale();
+        return postService.searchPublishedPosts(q, locale);
     }
 
     @GetMapping("/api/posts")
     @ResponseBody
-    public List<PostDto> getPostsByCategory(@RequestParam(required = false) Category category) {
+    public List<PostDto> getPostsByCategory(@RequestParam(required = false) Category category, HttpServletRequest request) {
+        Locale locale = request.getLocale();
         if (category == null) {
-            return postService.getAllPublishedPosts();
+            return postService.getAllPublishedPosts(locale);
         }
-        return postService.getPublishedPostsByCategory(category);
+        return postService.getPublishedPostsByCategory(category, locale);
     }
 }

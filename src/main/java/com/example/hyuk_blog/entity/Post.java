@@ -24,12 +24,21 @@ public class Post {
     
     @Column(nullable = false, length = 200)
     private String title;
+
+    @Column(length = 200)
+    private String titleJp;
     
     @Column(length = 500)
     private String summary;
+
+    @Column(length = 500)
+    private String summaryJp;
     
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(columnDefinition = "TEXT")
+    private String contentJp;
     
     @Column(length = 200)
     private String imageUrl;
@@ -48,4 +57,8 @@ public class Post {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id")
+    private Admin author;
 } 

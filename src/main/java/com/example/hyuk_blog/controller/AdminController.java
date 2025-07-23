@@ -120,6 +120,62 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    // JP 이력서 관리 폼 (GET)
+    @GetMapping("/resume/jp")
+    public String resumeFormJp(Model model, HttpSession session) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        model.addAttribute("admin", admin);
+        model.addAttribute("resume", resumeService.loadResume());
+        return "admin/jp/resume-form";
+    }
+
+    // JP 이력서 저장 (POST)
+    @PostMapping("/resume/jp")
+    public String saveResumeJp(@ModelAttribute ResumeDto resumeDto, RedirectAttributes redirectAttributes) {
+        resumeService.saveResume(resumeDto);
+        redirectAttributes.addFlashAttribute("message", "일본어 이력서가 저장되었습니다!");
+        return "redirect:/admin";
+    }
+
+    // 새 JP 게시글 작성 폼
+    @GetMapping("/post/jp/new")
+    public String newPostFormJp(Model model, HttpSession session) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        model.addAttribute("post", new PostDto());
+        model.addAttribute("admin", admin);
+        model.addAttribute("categories", Category.values());
+        return "admin/jp/post-form";
+    }
+
+    // 새 JP 게시글 저장
+    @PostMapping("/post/jp/new")
+    public String createPostJp(@ModelAttribute PostDto postDto) {
+        postService.savePost(postDto);
+        return "redirect:/admin";
+    }
+
+    // JP 게시글 수정 폼
+    @GetMapping("/post/jp/edit/{id}")
+    public String editPostFormJp(@PathVariable Long id, Model model, HttpSession session) {
+        Optional<PostDto> post = postService.getPostById(id);
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+
+        if (post.isPresent()) {
+            model.addAttribute("post", post.get());
+            model.addAttribute("admin", admin);
+            model.addAttribute("categories", Category.values());
+            return "admin/jp/post-form";
+        }
+        return "redirect:/admin";
+    }
+
+    // JP 게시글 수정
+    @PostMapping("/post/jp/edit/{id}")
+    public String updatePostJp(@PathVariable Long id, @ModelAttribute PostDto postDto) {
+        postService.updatePost(id, postDto);
+        return "redirect:/admin";
+    }
+
     // 이력서 조회 (외부에서 호출 가능)
     public ResumeDto getResume() {
         return resumeService.loadResume();

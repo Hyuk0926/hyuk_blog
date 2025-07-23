@@ -98,11 +98,26 @@ public class DataLoader implements CommandLineRunner {
         admin.setCreatedAt(LocalDateTime.now());
         admin.setUpdatedAt(LocalDateTime.now());
         adminRepository.save(admin);
+
+        Admin adminJp = new Admin();
+        adminJp.setUsername("admin_jp");
+        adminJp.setPassword("Shka991204!"); 
+        adminJp.setName("Takahara Yuuki (JP)");
+        adminJp.setEmail("ehc28260@gmail.com");
+        adminJp.setActive(true);
+        adminJp.setCreatedAt(LocalDateTime.now());
+        adminJp.setUpdatedAt(LocalDateTime.now());
+        adminRepository.save(adminJp);
         
         System.out.println("기본 관리자 계정이 생성되었습니다!");
         System.out.println("아이디: admin");
         System.out.println("비밀번호: Shka991204!");
         System.out.println("이름: Takahara Yuuki");
+
+        System.out.println("일본어 컨텐츠 관리자 계정이 생성되었습니다!");
+        System.out.println("아이디: admin_jp");
+        System.out.println("비밀번호: password");
+        System.out.println("이름: Takahara Yuuki (JP)");
     }
 
     private void createInitialPosts() {

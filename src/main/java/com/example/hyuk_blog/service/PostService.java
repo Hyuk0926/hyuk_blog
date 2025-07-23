@@ -18,10 +18,10 @@ public class PostService {
     private PostRepository postRepository;
     
     // 모든 공개 게시글 조회
-    public List<PostDto> getAllPublishedPosts() {
+    public List<PostDto> getAllPublishedPosts(java.util.Locale locale) {
         return postRepository.findByPublishedOrderByCreatedAtDesc(true)
                 .stream()
-                .map(PostDto::fromEntity)
+                .map(post -> PostDto.fromEntity(post, locale))
                 .collect(Collectors.toList());
     }
     
@@ -34,6 +34,12 @@ public class PostService {
     }
     
     // ID로 게시글 조회
+    public Optional<PostDto> getPostById(Long id, java.util.Locale locale) {
+        return postRepository.findById(id)
+                .map(post -> PostDto.fromEntity(post, locale));
+    }
+
+    // ID로 게시글 조회 (관리자용)
     public Optional<PostDto> getPostById(Long id) {
         return postRepository.findById(id)
                 .map(PostDto::fromEntity);
@@ -51,8 +57,11 @@ public class PostService {
         return postRepository.findById(id)
                 .map(existingPost -> {
                     existingPost.setTitle(postDto.getTitle());
+                    existingPost.setTitleJp(postDto.getTitleJp());
                     existingPost.setSummary(postDto.getSummary());
+                    existingPost.setSummaryJp(postDto.getSummaryJp());
                     existingPost.setContent(postDto.getContent());
+                    existingPost.setContentJp(postDto.getContentJp());
                     existingPost.setImageUrl(postDto.getImageUrl());
                     existingPost.setPublished(postDto.isPublished());
                     existingPost.setCategory(postDto.getCategory());
@@ -70,18 +79,33 @@ public class PostService {
     }
     
     // 제목으로 검색 (공개된 게시글만)
-    public List<PostDto> searchPublishedPosts(String title) {
+    public List<PostDto> searchPublishedPosts(String title, java.util.Locale locale) {
+        // Note: This still searches by the Korean title. A more advanced implementation
+        // would search both title and titleJp based on the locale.
         return postRepository.findByTitleContainingAndPublishedOrderByCreatedAtDesc(title, true)
                 .stream()
-                .map(PostDto::fromEntity)
+                .map(post -> PostDto.fromEntity(post, locale))
                 .collect(Collectors.toList());
     }
 
     // 카테고리로 공개된 게시글 조회
-    public List<PostDto> getPublishedPostsByCategory(Category category) {
+    public List<PostDto> getPublishedPostsByCategory(Category category, java.util.Locale locale) {
         return postRepository.findByCategoryAndPublishedOrderByCreatedAtDesc(category, true)
                 .stream()
-                .map(PostDto::fromEntity)
+                .map(post -> PostDto.fromEntity(post, locale))
                 .collect(Collectors.toList());
+    }
+
+    // For backward compatibility
+    public List<PostDto> getAllPublishedPosts() {
+        return getAllPublishedPosts(java.util.Locale.KOREAN);
+    }
+
+    public List<PostDto> searchPublishedPosts(String title) {
+        return searchPublishedPosts(title, java.util.Locale.KOREAN);
+    }
+
+    public List<PostDto> getPublishedPostsByCategory(Category category) {
+        return getPublishedPostsByCategory(category, java.util.Locale.KOREAN);
     }
 } 

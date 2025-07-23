@@ -11,10 +11,13 @@ public class Resume {
     private String name;
     private String email;
     private String phone;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String introduction;
+    @Column(columnDefinition = "TEXT")
+    private String introductionJp;
     private String birth;
     private String address;
+    private String addressJp;
     private String skills;
 
     @ElementCollection
@@ -22,16 +25,26 @@ public class Resume {
 
     @ElementCollection
     private List<Experience> experiences;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String studentLife;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
+    private String studentLifeJp;
+    @Column(columnDefinition = "TEXT")
     private String strengthsWeaknesses;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
+    private String strengthsWeaknessesJp;
+    @Column(columnDefinition = "TEXT")
     private String effortExperience;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
+    private String effortExperienceJp;
+    @Column(columnDefinition = "TEXT")
     private String japanItMotivation;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
+    private String japanItMotivationJp;
+    @Column(columnDefinition = "TEXT")
     private String futurePlan;
+    @Column(columnDefinition = "TEXT")
+    private String futurePlanJp;
     private String photoUrl;
     // getter/setter 생략
 
@@ -41,6 +54,8 @@ public class Resume {
     public void setName(String name) { this.name = name; }
     public String getIntroduction() { return introduction; }
     public void setIntroduction(String introduction) { this.introduction = introduction; }
+    public String getIntroductionJp() { return introductionJp; }
+    public void setIntroductionJp(String introductionJp) { this.introductionJp = introductionJp; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getPhone() { return phone; }
@@ -51,6 +66,8 @@ public class Resume {
     public void setBirth(String birth) { this.birth = birth; }
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+    public String getAddressJp() { return addressJp; }
+    public void setAddressJp(String addressJp) { this.addressJp = addressJp; }
     public String getSkills() { return skills; }
     public void setSkills(String skills) { this.skills = skills; }
     public List<Education> getEducations() { return educations; }
@@ -59,12 +76,22 @@ public class Resume {
     public void setExperiences(List<Experience> experiences) { this.experiences = experiences; }
     public String getStudentLife() { return studentLife; }
     public void setStudentLife(String studentLife) { this.studentLife = studentLife; }
+    public String getStudentLifeJp() { return studentLifeJp; }
+    public void setStudentLifeJp(String studentLifeJp) { this.studentLifeJp = studentLifeJp; }
     public String getStrengthsWeaknesses() { return strengthsWeaknesses; }
     public void setStrengthsWeaknesses(String strengthsWeaknesses) { this.strengthsWeaknesses = strengthsWeaknesses; }
+    public String getStrengthsWeaknessesJp() { return strengthsWeaknessesJp; }
+    public void setStrengthsWeaknessesJp(String strengthsWeaknessesJp) { this.strengthsWeaknessesJp = strengthsWeaknessesJp; }
     public String getEffortExperience() { return effortExperience; }
     public void setEffortExperience(String effortExperience) { this.effortExperience = effortExperience; }
+    public String getEffortExperienceJp() { return effortExperienceJp; }
+    public void setEffortExperienceJp(String effortExperienceJp) { this.effortExperienceJp = effortExperienceJp; }
     public String getJapanItMotivation() { return japanItMotivation; }
     public void setJapanItMotivation(String japanItMotivation) { this.japanItMotivation = japanItMotivation; }
+    public String getJapanItMotivationJp() { return japanItMotivationJp; }
+    public void setJapanItMotivationJp(String japanItMotivationJp) { this.japanItMotivationJp = japanItMotivationJp; }
     public String getFuturePlan() { return futurePlan; }
     public void setFuturePlan(String futurePlan) { this.futurePlan = futurePlan; }
+    public String getFuturePlanJp() { return futurePlanJp; }
+    public void setFuturePlanJp(String futurePlanJp) { this.futurePlanJp = futurePlanJp; }
 } 

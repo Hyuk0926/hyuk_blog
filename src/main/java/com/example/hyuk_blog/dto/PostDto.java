@@ -16,8 +16,11 @@ import java.time.LocalDateTime;
 public class PostDto {
     private Long id;
     private String title;
+    private String titleJp;
     private String summary;
+    private String summaryJp;
     private String content;
+    private String contentJp;
     private String imageUrl;
     private boolean published;
     private Category category;
@@ -29,8 +32,11 @@ public class PostDto {
         PostDto dto = new PostDto();
         dto.setId(post.getId());
         dto.setTitle(post.getTitle());
+        dto.setTitleJp(post.getTitleJp());
         dto.setSummary(post.getSummary());
+        dto.setSummaryJp(post.getSummaryJp());
         dto.setContent(post.getContent());
+        dto.setContentJp(post.getContentJp());
         dto.setImageUrl(post.getImageUrl());
         dto.setPublished(post.isPublished());
         dto.setCategory(post.getCategory());
@@ -44,11 +50,25 @@ public class PostDto {
         Post post = new Post();
         post.setId(this.id);
         post.setTitle(this.title);
+        post.setTitleJp(this.titleJp);
         post.setSummary(this.summary);
+        post.setSummaryJp(this.summaryJp);
         post.setContent(this.content);
+        post.setContentJp(this.contentJp);
         post.setImageUrl(this.imageUrl);
         post.setPublished(this.published);
         post.setCategory(this.category);
         return post;
+    }
+
+    // Locale에 따라 DTO 생성
+    public static PostDto fromEntity(Post post, java.util.Locale locale) {
+        PostDto dto = fromEntity(post);
+        if (locale.getLanguage().equals("ja")) {
+            dto.setTitle(post.getTitleJp());
+            dto.setSummary(post.getSummaryJp());
+            dto.setContent(post.getContentJp());
+        }
+        return dto;
     }
 }
