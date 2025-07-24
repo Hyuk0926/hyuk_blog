@@ -2,7 +2,6 @@ package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.dto.PostDto;
-import com.example.hyuk_blog.dto.ResumeDto;
 import com.example.hyuk_blog.entity.Category;
 import com.example.hyuk_blog.service.PostService;
 import com.example.hyuk_blog.service.ResumeService;
@@ -16,11 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.multipart.MultipartFile;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -38,8 +33,18 @@ public class AdminController {
 
     // 관리자 대시보드
     @GetMapping("")
-    public String adminDashboard(Model model) {
-        List<PostDto> posts = postService.getAllPosts();
+    public String adminDashboard(Model model, HttpSession session) {
+        String lang = (String) session.getAttribute("lang");
+        List<PostDto> posts;
+        if ("ja".equals(lang)) {
+            posts = postService.getAllPosts().stream()
+                .filter(post -> post.getTitleJa() != null && !post.getTitleJa().isBlank())
+                .toList();
+        } else {
+            posts = postService.getAllPosts().stream()
+                .filter(post -> post.getTitleKo() != null && !post.getTitleKo().isBlank())
+                .toList();
+        }
         model.addAttribute("posts", posts);
         model.addAttribute("inquiryCount", inquiryService.getUnreadCount());
         model.addAttribute("inquiries", inquiryService.getAllInquiries());
@@ -114,26 +119,9 @@ public class AdminController {
 
     // 이력서 저장 (POST)
     @PostMapping("/resume")
-    public String saveResume(@ModelAttribute ResumeDto resumeDto, RedirectAttributes redirectAttributes) {
-        resumeService.saveResume(resumeDto);
+    public String saveResume(@ModelAttribute com.example.hyuk_blog.entity.Resume resume, RedirectAttributes redirectAttributes) {
+        resumeService.saveResume(resume);
         redirectAttributes.addFlashAttribute("message", "이력서가 저장되었습니다!");
-        return "redirect:/admin";
-    }
-
-    // JP 이력서 관리 폼 (GET)
-    @GetMapping("/resume/jp")
-    public String resumeFormJp(Model model, HttpSession session) {
-        AdminDto admin = (AdminDto) session.getAttribute("admin");
-        model.addAttribute("admin", admin);
-        model.addAttribute("resume", resumeService.loadResume());
-        return "admin/jp/resume-form";
-    }
-
-    // JP 이력서 저장 (POST)
-    @PostMapping("/resume/jp")
-    public String saveResumeJp(@ModelAttribute ResumeDto resumeDto, RedirectAttributes redirectAttributes) {
-        resumeService.saveResume(resumeDto);
-        redirectAttributes.addFlashAttribute("message", "일본어 이력서가 저장되었습니다!");
         return "redirect:/admin";
     }
 
@@ -177,7 +165,7 @@ public class AdminController {
     }
 
     // 이력서 조회 (외부에서 호출 가능)
-    public ResumeDto getResume() {
+    public com.example.hyuk_blog.entity.Resume getResume() {
         return resumeService.loadResume();
     }
 

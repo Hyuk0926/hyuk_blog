@@ -3,95 +3,79 @@ package com.example.hyuk_blog.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
+import lombok.*;
+
+
 @Entity
+@Data
+@NoArgsConstructor // Lombok 사용 시 추가
+@AllArgsConstructor // Lombok 사용 시 추가
 public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String nameKo;
+    private String nameJa;
     private String email;
     private String phone;
-    @Column(columnDefinition = "TEXT")
-    private String introduction;
-    @Column(columnDefinition = "TEXT")
-    private String introductionJp;
+    @Column(length = 2000)
+    private String introduction; // introduction 필드
+    @Column(length = 2000)
+    private String introductionKo; // introductionKo 필드
+    // introductionJa 필드 삭제
+
     private String birth;
-    private String address;
-    private String addressJp;
+    private String addressKo;
+    private String addressJa;
     private String skills;
 
     @ElementCollection
+    @CollectionTable(name = "resume_education", joinColumns = @JoinColumn(name = "resume_id"))
     private List<Education> educations;
 
     @ElementCollection
     private List<Experience> experiences;
-    @Column(columnDefinition = "TEXT")
-    private String studentLife;
-    @Column(columnDefinition = "TEXT")
-    private String studentLifeJp;
-    @Column(columnDefinition = "TEXT")
-    private String strengthsWeaknesses;
-    @Column(columnDefinition = "TEXT")
-    private String strengthsWeaknessesJp;
-    @Column(columnDefinition = "TEXT")
-    private String effortExperience;
-    @Column(columnDefinition = "TEXT")
-    private String effortExperienceJp;
-    @Column(columnDefinition = "TEXT")
-    private String japanItMotivation;
-    @Column(columnDefinition = "TEXT")
-    private String japanItMotivationJp;
-    @Column(columnDefinition = "TEXT")
-    private String futurePlan;
-    @Column(columnDefinition = "TEXT")
-    private String futurePlanJp;
-    private String photoUrl;
-    // getter/setter 생략
+    
+    @Column(length = 2000)
+    private String studentLifeKo; // studentLife -> studentLifeKo 로 변경
+    @Column(length = 2000) // 새로운 필드 추가
+    private String studentLifeJa; // 일본어 필드 추가
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getIntroduction() { return introduction; }
-    public void setIntroduction(String introduction) { this.introduction = introduction; }
-    public String getIntroductionJp() { return introductionJp; }
-    public void setIntroductionJp(String introductionJp) { this.introductionJp = introductionJp; }
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public String getPhotoUrl() { return photoUrl; }
-    public void setPhotoUrl(String photoUrl) { this.photoUrl = photoUrl; }
-    public String getBirth() { return birth; }
-    public void setBirth(String birth) { this.birth = birth; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public String getAddressJp() { return addressJp; }
-    public void setAddressJp(String addressJp) { this.addressJp = addressJp; }
-    public String getSkills() { return skills; }
-    public void setSkills(String skills) { this.skills = skills; }
-    public List<Education> getEducations() { return educations; }
-    public void setEducations(List<Education> educations) { this.educations = educations; }
-    public List<Experience> getExperiences() { return experiences; }
-    public void setExperiences(List<Experience> experiences) { this.experiences = experiences; }
-    public String getStudentLife() { return studentLife; }
-    public void setStudentLife(String studentLife) { this.studentLife = studentLife; }
-    public String getStudentLifeJp() { return studentLifeJp; }
-    public void setStudentLifeJp(String studentLifeJp) { this.studentLifeJp = studentLifeJp; }
-    public String getStrengthsWeaknesses() { return strengthsWeaknesses; }
-    public void setStrengthsWeaknesses(String strengthsWeaknesses) { this.strengthsWeaknesses = strengthsWeaknesses; }
-    public String getStrengthsWeaknessesJp() { return strengthsWeaknessesJp; }
-    public void setStrengthsWeaknessesJp(String strengthsWeaknessesJp) { this.strengthsWeaknessesJp = strengthsWeaknessesJp; }
-    public String getEffortExperience() { return effortExperience; }
-    public void setEffortExperience(String effortExperience) { this.effortExperience = effortExperience; }
-    public String getEffortExperienceJp() { return effortExperienceJp; }
-    public void setEffortExperienceJp(String effortExperienceJp) { this.effortExperienceJp = effortExperienceJp; }
-    public String getJapanItMotivation() { return japanItMotivation; }
-    public void setJapanItMotivation(String japanItMotivation) { this.japanItMotivation = japanItMotivation; }
-    public String getJapanItMotivationJp() { return japanItMotivationJp; }
-    public void setJapanItMotivationJp(String japanItMotivationJp) { this.japanItMotivationJp = japanItMotivationJp; }
-    public String getFuturePlan() { return futurePlan; }
-    public void setFuturePlan(String futurePlan) { this.futurePlan = futurePlan; }
-    public String getFuturePlanJp() { return futurePlanJp; }
-    public void setFuturePlanJp(String futurePlanJp) { this.futurePlanJp = futurePlanJp; }
-} 
+    @Column(length = 2000)
+    private String strengthsWeaknessesKo; // strengthsWeaknesses -> strengthsWeaknessesKo 로 변경
+    @Column(length = 2000) // 새로운 필드 추가
+    private String strengthsWeaknessesJa; // 일본어 필드 추가
+
+    @Column(length = 2000)
+    private String effortExperienceKo; // effortExperience -> effortExperienceKo 로 변경
+    @Column(length = 2000) // 새로운 필드 추가
+    private String effortExperienceJa; // 일본어 필드 추가
+
+    @Column(length = 2000)
+    private String japanItMotivationKo; // japanItMotivation -> japanItMotivationKo 로 변경
+    @Column(length = 2000) // 새로운 필드 추가
+    private String japanItMotivationJa; // 일본어 필드 추가
+
+    @Column(length = 2000)
+    private String futurePlanKo; // futurePlan -> futurePlanKo 로 변경
+    @Column(length = 2000) // 새로운 필드 추가
+    private String futurePlanJa; // 일본어 필드 추가
+
+    private String photoUrl;
+    private String lang; // KO/JA 이력서 구분 필드 추가
+
+    // Lombok을 사용하지 않는다면, 아래 getter/setter 들도 위 변경된 필드명에 맞춰 수동으로 변경해야 합니다.
+    // 예: getIntroduction() -> getIntroductionKo(), setIntroduction() -> setIntroductionKo() 등
+    // 또한, getIntroductionJa(), setIntroductionJa() 등 새로운 Getter/Setter도 추가해야 합니다.
+    // Lombok(@Getter, @Setter)을 사용하면 이 부분은 자동으로 처리됩니다.
+
+    @Embeddable
+    @Data
+    public static class Education {
+        private String schoolKo;
+        private String schoolJa;
+        private String degreeKo;
+        private String degreeJa;
+        private String period;
+    }
+}

@@ -90,8 +90,10 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="form-label">이름</label>
-            <input type="text" th:field="*{name}" class="form-input" required>
+            <label class="form-label" style="color:#1565c0;">이름 <span style="font-size:0.95em;">(��🇷)</span></label>
+            <input type="text" th:field="*{nameKo}" class="form-input" placeholder="예: 최은혁" required>
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">이름 <span style="font-size:0.95em;">(🇯🇵)</span></label>
+            <input type="text" th:field="*{nameJa}" class="form-input" placeholder="例: 崔恩爀(通称：高原優輝）" required>
         </div>
         <div class="form-group">
             <label class="form-label">연락처</label>
@@ -106,26 +108,32 @@
             <input type="date" th:field="*{birth}" class="form-input">
         </div>
         <div class="form-group">
-            <label class="form-label">주소</label>
-            <input type="text" th:field="*{address}" class="form-input">
+            <label class="form-label" style="color:#1565c0;">주소 <span style="font-size:0.95em;">(��🇷)</span></label>
+            <input type="text" th:field="*{addressKo}" class="form-input" placeholder="예: 대한민국 경기도 용인시 ...">
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">주소 <span style="font-size:0.95em;">(🇯🇵)</span></label>
+            <input type="text" th:field="*{addressJa}" class="form-input" placeholder="例: 韓民国 京畿道 ...">
         </div>
         <div class="form-group">
             <label class="form-label">학력</label>
             <table id="education-table" style="width:100%; margin-bottom:8px; border-collapse:collapse;">
                 <thead style="position:sticky; top:0; background:#f8f8f8;">
                     <tr>
-                        <th style="padding:8px; border:1px solid #eee;">학교명</th>
-                        <th style="padding:8px; border:1px solid #eee;">전공/학위</th>
-                        <th style="padding:8px; border:1px solid #eee;">기간</th>
-                        <th style="padding:8px; border:1px solid #eee;">삭제</th>
+                        <th style="background:#e3f2fd; color:#1565c0;">학교명 <span style="font-size:0.95em;">(🇰🇷)</span></th>
+                        <th style="background:#fffde7; color:#f9a825;">학교명 <span style="font-size:0.95em;">(🇯🇵)</span></th>
+                        <th style="background:#e3f2fd; color:#1565c0;">전공 <span style="font-size:0.95em;">(🇰🇷)</span></th>
+                        <th style="background:#fffde7; color:#f9a825;">전공 <span style="font-size:0.95em;">(🇯🇵)</span></th>
+                        <th>기간</th>
+                        <th>삭제</th>
                     </tr>
                 </thead>
                 <tbody id="education-tbody">
                     <tr th:each="edu,stat : *{educations}" th:classappend="${stat.index % 2 == 0} ? 'even-row' : 'odd-row'">
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{educations[__${stat.index}__].school}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{educations[__${stat.index}__].degree}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{educations[__${stat.index}__].period}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee; text-align:center;"><button type="button" class="remove-btn" onclick="removeRow(this)" title="삭제"><span aria-hidden="true">🗑️</span></button></td>
+                        <td><input type="text" th:field="*{educations[__${stat.index}__].schoolKo}" class="form-input compact-input" placeholder="예: 상현고등학교"></td>
+                        <td><input type="text" th:field="*{educations[__${stat.index}__].schoolJa}" class="form-input compact-input" placeholder="例: 上峴高校"></td>
+                        <td><input type="text" th:field="*{educations[__${stat.index}__].degreeKo}" class="form-input compact-input" placeholder="예: 인문계"></td>
+                        <td><input type="text" th:field="*{educations[__${stat.index}__].degreeJa}" class="form-input compact-input" placeholder="例: 人文系"></td>
+                        <td><input type="text" th:field="*{educations[__${stat.index}__].period}" class="form-input compact-input" placeholder="2015.03-2018.02"></td>
+                        <td style="text-align:center;"><button type="button" class="remove-btn" onclick="removeRow(this)" title="삭제"><span aria-hidden="true">🗑️</span></button></td>
                     </tr>
                 </tbody>
             </table>
@@ -160,24 +168,34 @@
             <input type="text" th:field="*{skills}" class="form-input" placeholder="Java, Spring, React, ...">
         </div>
         <div class="form-group">
-            <label class="form-label">학생생활(성장과정)</label>
-            <textarea th:field="*{studentLife}" class="form-textarea" placeholder="성장과정, 학교생활 등"></textarea>
+            <label class="form-label" style="color:#1565c0;">학생생활(🇰🇷)</label>
+            <textarea th:field="*{studentLifeKo}" class="form-textarea" placeholder="한국어 성장과정"></textarea>
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">学生生活(🇯🇵)</label>
+            <textarea th:field="*{studentLifeJa}" class="form-textarea" placeholder="日本語 学生生活"></textarea>
         </div>
         <div class="form-group">
-            <label class="form-label">장점과 단점</label>
-            <textarea th:field="*{strengthsWeaknesses}" class="form-textarea" placeholder="본인의 장점과 단점"></textarea>
+            <label class="form-label" style="color:#1565c0;">장점과 단점(🇰🇷)</label>
+            <textarea th:field="*{strengthsWeaknessesKo}" class="form-textarea" placeholder="한국어 장단점"></textarea>
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">長所と短所(🇯🇵)</label>
+            <textarea th:field="*{strengthsWeaknessesJa}" class="form-textarea" placeholder="日本語 長所と短所"></textarea>
         </div>
         <div class="form-group">
-            <label class="form-label">인생에서 노력했던 경험</label>
-            <textarea th:field="*{effortExperience}" class="form-textarea" placeholder="가장 노력했던 경험"></textarea>
+            <label class="form-label" style="color:#1565c0;">노력 경험(🇰🇷)</label>
+            <textarea th:field="*{effortExperienceKo}" class="form-textarea" placeholder="한국어 노력 경험"></textarea>
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">努力経験(🇯🇵)</label>
+            <textarea th:field="*{effortExperienceJa}" class="form-textarea" placeholder="日本語 努力経験"></textarea>
         </div>
         <div class="form-group">
-            <label class="form-label">일본 IT 취업 지망동기</label>
-            <textarea th:field="*{japanItMotivation}" class="form-textarea" placeholder="일본 IT 취업을 희망하는 이유"></textarea>
+            <label class="form-label" style="color:#1565c0;">일본 IT 취업 동기(🇰🇷)</label>
+            <textarea th:field="*{japanItMotivationKo}" class="form-textarea" placeholder="한국어 일본 IT 취업 동기"></textarea>
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">日本IT就職志望動機(🇯🇵)</label>
+            <textarea th:field="*{japanItMotivationJa}" class="form-textarea" placeholder="日本語 IT志望動機"></textarea>
         </div>
         <div class="form-group">
-            <label class="form-label">장래의 계획 및 포부</label>
-            <textarea th:field="*{futurePlan}" class="form-textarea" placeholder="장래의 계획 및 포부"></textarea>
+            <label class="form-label" style="color:#1565c0;">장래 계획(🇰🇷)</label>
+            <textarea th:field="*{futurePlanKo}" class="form-textarea" placeholder="한국어 장래 계획"></textarea>
+            <label class="form-label" style="color:#f9a825; margin-left:16px;">将来の計画(🇯🇵)</label>
+            <textarea th:field="*{futurePlanJa}" class="form-textarea" placeholder="日本語 将来の計画"></textarea>
         </div>
         <div class="form-buttons">
             <button type="submit" class="btn-submit">저장</button>
@@ -191,8 +209,10 @@ function addEducationRow() {
     const idx = tbody.children.length;
     const tr = document.createElement('tr');
     tr.innerHTML = `
-        <td><input type="text" name="educations[${idx}].school" class="form-input"></td>
-        <td><input type="text" name="educations[${idx}].degree" class="form-input"></td>
+        <td><input type="text" name="educations[${idx}].schoolKo" class="form-input"></td>
+        <td><input type="text" name="educations[${idx}].schoolJa" class="form-input"></td>
+        <td><input type="text" name="educations[${idx}].degreeKo" class="form-input"></td>
+        <td><input type="text" name="educations[${idx}].degreeJa" class="form-input"></td>
         <td><input type="text" name="educations[${idx}].period" class="form-input"></td>
         <td><button type="button" onclick="removeRow(this)">삭제</button></td>
     `;

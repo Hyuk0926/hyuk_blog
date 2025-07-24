@@ -1,0 +1,1 @@
+ALTER TABLE resume ADD COLUMN introduction VARCHAR(2000); 

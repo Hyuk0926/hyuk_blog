@@ -39,6 +39,12 @@ public class AdminAuthController {
         if (admin.isPresent()) {
             // 로그인 성공
             session.setAttribute("admin", admin.get());
+            // 계정에 따라 언어 세션 저장
+            if ("admin_jp".equals(username)) {
+                session.setAttribute("lang", "ja");
+            } else {
+                session.setAttribute("lang", "ko");
+            }
             return "redirect:/admin";
         } else {
             // 로그인 실패

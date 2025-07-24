@@ -16,12 +16,14 @@
     <header class="resume-header" style="margin-bottom:18px;">
       <img th:src="@{${resume.photoUrl}}" alt="프로필 사진" class="profile-photo" th:if="${resume.photoUrl != null}">
       <div>
-        <h1 th:text="${resume.name}">이름</h1>
-        <p class="intro" th:text="${resume.introduction}">간단 소개</p>
+        <h1 th:text="${lang == 'ja'} ? ${resume.nameJa} : ${resume.nameKo}">이름</h1>
+        <p class="intro" th:text="${resume.introductionKo}">간단 소개</p>
         <p class="contact">
           <span th:text="${resume.email}">이메일</span>
           <span th:if="${resume.email != null and resume.phone != null}"> | </span>
           <span th:text="${resume.phone}">연락처</span>
+          <span th:if="${lang == 'ja'} ? ${resume.addressJa != null} : ${resume.addressKo != null}"> | </span>
+          <span th:text="${lang == 'ja'} ? ${resume.addressJa} : ${resume.addressKo}">주소</span>
         </p>
       </div>
     </header>
@@ -39,8 +41,8 @@
           </thead>
           <tbody>
             <tr th:each="edu : ${resume.educations}">
-              <td th:text="${edu.school}"></td>
-              <td th:text="${edu.degree}"></td>
+              <td th:text="${lang == 'ja'} ? ${edu.schoolJa} : ${edu.schoolKo}"></td>
+              <td th:text="${lang == 'ja'} ? ${edu.degreeJa} : ${edu.degreeKo}"></td>
               <td th:text="${edu.period}"></td>
             </tr>
           </tbody>
@@ -75,25 +77,25 @@
           <span class="skill-tag" th:each="skill : ${resume.skills}" th:text="${skill}">기술</span>
         </div>
       </section>
-      <section th:if="${resume.studentLife}">
+      <section th:if="${lang == 'ja'} ? ${resume.studentLifeJa} : ${resume.studentLifeKo}">
         <h2 th:text="#{resume.studentLife}">학생생활(성장과정)</h2>
-        <p class="self-intro" th:text="${resume.studentLife}"></p>
+        <p class="self-intro" th:text="${lang == 'ja'} ? ${resume.studentLifeJa} : ${resume.studentLifeKo}"></p>
       </section>
-      <section th:if="${resume.strengthsWeaknesses}">
+      <section th:if="${lang == 'ja'} ? ${resume.strengthsWeaknessesJa} : ${resume.strengthsWeaknessesKo}">
         <h2 th:text="#{resume.strengthsWeaknesses}">장점과 단점</h2>
-        <p class="self-intro" th:text="${resume.strengthsWeaknesses}"></p>
+        <p class="self-intro" th:text="${lang == 'ja'} ? ${resume.strengthsWeaknessesJa} : ${resume.strengthsWeaknessesKo}"></p>
       </section>
-      <section th:if="${resume.effortExperience}">
+      <section th:if="${lang == 'ja'} ? ${resume.effortExperienceJa} : ${resume.effortExperienceKo}">
         <h2 th:text="#{resume.effortExperience}">인생에서 노력했던 경험</h2>
-        <p class="self-intro" th:text="${resume.effortExperience}"></p>
+        <p class="self-intro" th:text="${lang == 'ja'} ? ${resume.effortExperienceJa} : ${resume.effortExperienceKo}"></p>
       </section>
-      <section th:if="${resume.japanItMotivation}">
+      <section th:if="${lang == 'ja'} ? ${resume.japanItMotivationJa} : ${resume.japanItMotivationKo}">
         <h2 th:text="#{resume.japanItMotivation}">일본 IT 취업 지망동기</h2>
-        <p class="self-intro" th:text="${resume.japanItMotivation}"></p>
+        <p class="self-intro" th:text="${lang == 'ja'} ? ${resume.japanItMotivationJa} : ${resume.japanItMotivationKo}"></p>
       </section>
-      <section th:if="${resume.futurePlan}">
+      <section th:if="${lang == 'ja'} ? ${resume.futurePlanJa} : ${resume.futurePlanKo}">
         <h2 th:text="#{resume.futurePlan}">장래의 계획 및 포부</h2>
-        <p class="self-intro" th:text="${resume.futurePlan}"></p>
+        <p class="self-intro" th:text="${lang == 'ja'} ? ${resume.futurePlanJa} : ${resume.futurePlanKo}"></p>
       </section>
     </main>
   </div>

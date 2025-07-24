@@ -60,12 +60,21 @@ public class DataLoader implements CommandLineRunner {
             }
         }
 
-        // 2. resume.json 이관
-        File resumeFile = new File("data/resume.json");
-        if (resumeFile.exists()) {
-            Resume resume = mapper.readValue(resumeFile, Resume.class);
-            if (resumeRepository.count() == 0) {
-                resumeRepository.save(resume);
+        // 2. resumeKR.json, resumeJP.json 이관
+        File resumeKRFile = new File("data/resumeKR.json");
+        if (resumeKRFile.exists()) {
+            Resume resumeKR = mapper.readValue(resumeKRFile, Resume.class);
+            resumeKR.setLang("KO");
+            if (resumeRepository.findByLang("KO").isEmpty()) {
+                resumeRepository.save(resumeKR);
+            }
+        }
+        File resumeJPFile = new File("data/resumeJP.json");
+        if (resumeJPFile.exists()) {
+            Resume resumeJP = mapper.readValue(resumeJPFile, Resume.class);
+            resumeJP.setLang("JA");
+            if (resumeRepository.findByLang("JA").isEmpty()) {
+                resumeRepository.save(resumeJP);
             }
         }
 
