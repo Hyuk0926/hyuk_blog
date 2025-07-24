@@ -1,12 +1,10 @@
 package com.example.hyuk_blog.config;
 
 import com.example.hyuk_blog.entity.Admin;
-import com.example.hyuk_blog.entity.Post;
 import com.example.hyuk_blog.entity.Inquiry;
 import com.example.hyuk_blog.entity.Resume;
 import com.example.hyuk_blog.entity.Visitor;
 import com.example.hyuk_blog.repository.AdminRepository;
-import com.example.hyuk_blog.repository.PostRepository;
 import com.example.hyuk_blog.repository.InquiryRepository;
 import com.example.hyuk_blog.repository.ResumeRepository;
 import com.example.hyuk_blog.repository.VisitorRepository;
@@ -24,9 +22,6 @@ import java.util.Iterator;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-
-    @Autowired
-    private PostRepository postRepository;
     
     @Autowired
     private AdminRepository adminRepository;
@@ -37,10 +32,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // 기존 데이터가 없을 때만 초기 데이터 생성
-        if (postRepository.count() == 0) {
-            createInitialPosts();
-        }
+
         
         if (adminRepository.count() == 0) {
             createInitialAdmin();

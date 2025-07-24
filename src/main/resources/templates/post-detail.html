@@ -66,6 +66,135 @@
             background: #333;
             color: #ffe082;
         }
+        .post-detail-image {
+            max-width: 600px;
+            max-height: 350px;
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 12px;
+            object-fit: contain;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        body.dark-mode .post-header h1 {
+            color: #f7fafc;
+        }
+        body.dark-mode .post-content,
+        body.dark-mode .post-content p,
+        body.dark-mode .post-content li,
+        body.dark-mode .post-content ul,
+        body.dark-mode .post-content ol,
+        body.dark-mode .post-content h1,
+        body.dark-mode .post-content h2,
+        body.dark-mode .post-content h3,
+        body.dark-mode .post-content h4,
+        body.dark-mode .post-content h5,
+        body.dark-mode .post-content h6,
+        body.dark-mode .post-content th,
+        body.dark-mode .post-content td,
+        body.dark-mode .post-content span,
+        body.dark-mode .post-content strong,
+        body.dark-mode .post-content em,
+        body.dark-mode .post-content table {
+            color: #f7fafc !important;
+            background: transparent !important;
+        }
+        body.dark-mode .post-content table {
+            background: #23272a !important;
+            border-color: #444 !important;
+        }
+        body.dark-mode .post-content th, 
+        body.dark-mode .post-content td {
+            border-color: #444 !important;
+        }
+        body.dark-mode .post-content code, 
+        body.dark-mode .post-content pre {
+            color: #ffe082 !important;
+            background: #23272a !important;
+        }
+        /* 코드 블록(박스) */
+        .post-content pre {
+            background: #23272a;
+            color: #ffe082;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
+            overflow-x: auto;
+            margin: 16px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            border: 1px solid #444;
+        }
+        /* 코드 블록 내부 <code>는 배경/패딩/테두리 없음 */
+        .post-content pre code {
+            background: none;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            font-size: inherit;
+            font-family: inherit;
+        }
+        /* 인라인 코드 */
+        .post-content code {
+            background: #23272a;
+            color: #ffe082;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.98em;
+            font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
+        }
+        /* 다크모드 */
+        body.dark-mode .post-content pre,
+        body.dark-mode .post-content code {
+            background: #181c20 !important;
+            color: #ffe082 !important;
+            border-color: #333 !important;
+        }
+        body.dark-mode .post-content pre code {
+            background: none !important;
+            color: inherit !important;
+        }
+        .post-summary {
+            margin: 32px auto 36px auto;
+            max-width: 700px;
+            font-size: 1.13rem;
+            color: #222;
+            background: rgba(255,255,255,0.85);
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 28px 32px 24px 32px;
+            position: relative;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+            transition: background 0.3s, color 0.3s;
+        }
+        .post-summary::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            border-radius: 14px 14px 0 0;
+        }
+        .post-summary p {
+            margin: 0;
+            font-size: 1.13rem;
+            color: inherit;
+            font-weight: 500;
+        }
+        body.dark-mode .post-summary {
+            background: rgba(36, 41, 46, 0.95);
+            color: #f7fafc;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.22);
+        }
+        body.dark-mode .post-summary::before {
+            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
+        }
+        .post-content {
+            margin-bottom: 64px;
+        }
     </style>
 </head>
 <body>
@@ -78,11 +207,11 @@
                 <span th:if="${post.updatedAt != post.createdAt}" th:text="'수정일: ' + ${#temporals.format(post.updatedAt, 'yyyy년 MM월 dd일')}">수정일</span>
             </div>
         </div>
-        <div class="post-image-container" th:if="${post.imageUrl != null and post.imageUrl != ''}">
-            <img th:src="${post.imageUrl}" th:alt="${post.title}" class="post-detail-image">
-        </div>
         <div class="post-summary" th:if="${post.summary != null and post.summary != ''}">
             <p th:text="${post.summary}">게시글 요약</p>
+        </div>
+        <div class="post-image-container" th:if="${post.imageUrl != null and post.imageUrl != ''}">
+            <img th:src="${post.imageUrl}" th:alt="${post.title}" class="post-detail-image">
         </div>
         <div class="post-content" id="post-content">
             <div th:utext="${post.content}"></div>

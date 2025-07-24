@@ -32,13 +32,12 @@ public class AdminJpController {
     @GetMapping("")
     public String adminDashboard(Model model, HttpSession session) {
         session.setAttribute("lang", "ja"); // 무조건 일본어
-        List<PostDto> posts = postService.getAllPosts().stream()
-            .filter(post -> post.getTitleJa() != null && !post.getTitleJa().isBlank())
-            .toList();
+        List<PostDto> posts = postService.getAllPosts("ja");
         model.addAttribute("posts", posts);
         model.addAttribute("inquiryCount", inquiryService.getUnreadCount());
         model.addAttribute("inquiries", inquiryService.getAllInquiries());
         model.addAttribute("adminPrefix", "/admin_jp");
+        model.addAttribute("lang", "ja");
         return "admin/dashboard";
     }
 
@@ -58,7 +57,7 @@ public class AdminJpController {
     @PostMapping("/post/new")
     public String createPost(@ModelAttribute PostDto postDto, HttpSession session) {
         session.setAttribute("lang", "ja");
-        postService.savePost(postDto);
+        postService.savePost(postDto, "ja");
         return "redirect:/admin_jp";
     }
 
@@ -66,7 +65,7 @@ public class AdminJpController {
     @GetMapping("/post/edit/{id}")
     public String editPostForm(@PathVariable Long id, Model model, HttpSession session) {
         session.setAttribute("lang", "ja");
-        Optional<PostDto> post = postService.getPostById(id);
+        Optional<PostDto> post = postService.getPostById(id, "ja");
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         if (post.isPresent()) {
             model.addAttribute("post", post.get());
@@ -82,7 +81,7 @@ public class AdminJpController {
     @PostMapping("/post/edit/{id}")
     public String updatePost(@PathVariable Long id, @ModelAttribute PostDto postDto, HttpSession session) {
         session.setAttribute("lang", "ja");
-        postService.updatePost(id, postDto);
+        postService.updatePost(id, postDto, "ja");
         return "redirect:/admin_jp";
     }
 
@@ -90,14 +89,14 @@ public class AdminJpController {
     @PostMapping("/post/delete/{id}")
     public String deletePost(@PathVariable Long id, HttpSession session) {
         session.setAttribute("lang", "ja");
-        postService.deletePost(id);
+        postService.deletePost(id, "ja");
         return "redirect:/admin_jp";
     }
 
     // 게시글 미리보기 (일본어)
     @GetMapping("/post/preview/{id}")
     public String previewPost(@PathVariable Long id, Model model) {
-        Optional<PostDto> post = postService.getPostById(id);
+        Optional<PostDto> post = postService.getPostById(id, "ja");
         if (post.isPresent()) {
             model.addAttribute("post", post.get());
             return "post-detail";

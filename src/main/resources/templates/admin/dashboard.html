@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 대시보드 - 백엔드 기초부터</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
@@ -272,8 +272,8 @@
             <tbody>
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.id}">1</td>
-                    <td th:text="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? post.titleJa : post.titleKo}">게시글 제목</td>
-                    <td th:text="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? #strings.abbreviate(post.summaryJa, 50) : #strings.abbreviate(post.summaryKo, 50)}">요약</td>
+                    <td th:text="${lang == 'ja' ? post.titleJa : post.titleKo}">게시글 제목</td>
+                    <td th:text="${lang == 'ja' ? #strings.abbreviate(post.summaryJa, 50) : #strings.abbreviate(post.summaryKo, 50)}">요약</td>
                     <td>
                         <span th:class="${post.published ? 'status-badge status-published' : 'status-badge status-draft'}"
                               th:text="${post.published ? '공개' : '임시저장'}">상태</span>
@@ -282,9 +282,9 @@
                     <td th:text="${#temporals.format(post.updatedAt, 'yyyy-MM-dd HH:mm')}">수정일</td>
                     <td>
                         <div class="action-buttons">
-                            <a th:href="@{'/admin/post/edit/' + ${post.id}}" class="btn-action btn-edit">수정</a>
-                            <a th:href="@{'/admin/post/preview/' + ${post.id}}" class="btn-action btn-preview">미리보기</a>
-                            <form th:action="@{'/admin/post/delete/' + ${post.id}}" method="post" style="display: inline;">
+                            <a th:href="@{${adminPrefix + '/post/edit/' + post.id}}" class="btn-action btn-edit">수정</a>
+                            <a th:href="@{${adminPrefix + '/post/preview/' + post.id}}" class="btn-action btn-preview">미리보기</a>
+                            <form th:action="@{${adminPrefix + '/post/delete/' + post.id}}" method="post" style="display: inline;">
                                 <button type="submit" class="btn-action btn-delete" 
                                         onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
                             </form>

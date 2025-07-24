@@ -50,10 +50,11 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String postDetail(@PathVariable Long id, Model model) {
-        Optional<PostDto> post = postService.getPostById(id);
+    public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
+        Optional<PostDto> post = postService.getPostById(id, lang);
         if (post.isPresent() && post.get().isPublished()) {
             model.addAttribute("post", post.get());
+            model.addAttribute("lang", lang);
             return "post-detail";
         }
         return "redirect:/";
@@ -65,10 +66,11 @@ public class PostController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam String q, Model model) {
-        List<PostDto> posts = postService.searchPublishedPosts(q);
+    public String search(@RequestParam String q, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
+        List<PostDto> posts = postService.searchPublishedPosts(q, lang);
         model.addAttribute("posts", posts);
         model.addAttribute("searchQuery", q);
+        model.addAttribute("lang", lang);
         return "search";
     }
 
@@ -109,16 +111,16 @@ public class PostController {
 
     @GetMapping("/api/search")
     @ResponseBody
-    public List<PostDto> searchApi(@RequestParam String q) {
-        return postService.searchPublishedPosts(q);
+    public List<PostDto> searchApi(@RequestParam String q, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang) {
+        return postService.searchPublishedPosts(q, lang);
     }
 
     @GetMapping("/api/posts")
     @ResponseBody
-    public List<PostDto> getPostsByCategory(@RequestParam(required = false) Category category) {
+    public List<PostDto> getPostsByCategory(@RequestParam(required = false) Category category, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang) {
         if (category == null) {
-            return postService.getAllPublishedPosts();
+            return postService.getAllPublishedPosts(lang);
         }
-        return postService.getPublishedPostsByCategory(category);
+        return postService.getPublishedPostsByCategory(category, lang);
     }
 }

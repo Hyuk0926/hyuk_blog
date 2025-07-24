@@ -68,7 +68,7 @@
         </div>
         
         <div th:if="${!#lists.isEmpty(posts)}" class="post-grid">
-            <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
+            <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id} + '?lang=' + ${lang}}" class="post-card">
                 <img th:if="${post.imageUrl != null and post.imageUrl != ''}" 
                      th:src="${post.imageUrl}" 
                      th:alt="${post.title}" 
@@ -77,10 +77,9 @@
                      class="post-image-placeholder">
                     <span>이미지 없음</span>
                 </div>
-                <h2 th:text="${post.title}">지식 제목</h2>
-                <p th:if="${post.summary != null and post.summary != ''}" 
-                   th:text="${post.summary}" 
-                   class="post-summary">요약</p>
+                <h2 th:text="${lang == 'ja' ? post.titleJa : post.titleKo}">게시글 제목</h2>
+                <p th:if="${lang == 'ja' ? post.summaryJa != null and post.summaryJa != '' : post.summaryKo != null and post.summaryKo != ''}"
+                   th:text="${lang == 'ja' ? post.summaryJa : post.summaryKo}" class="post-summary">요약</p>
                 <div class="post-meta">
                     <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">작성일</span>
                 </div>

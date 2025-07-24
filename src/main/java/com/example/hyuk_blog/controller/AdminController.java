@@ -43,21 +43,13 @@ public class AdminController {
                 session.setAttribute("lang", "ko");
             }
         }
-        String lang = (String) session.getAttribute("lang");
-        List<PostDto> posts;
-        if ("ja".equals(lang)) {
-            posts = postService.getAllPosts().stream()
-                .filter(post -> post.getTitleJa() != null && !post.getTitleJa().isBlank())
-                .toList();
-        } else {
-            posts = postService.getAllPosts().stream()
-                .filter(post -> post.getTitleKo() != null && !post.getTitleKo().isBlank())
-                .toList();
-        }
+        String lang = "ko";
+        List<PostDto> posts = postService.getAllPosts(lang);
         model.addAttribute("posts", posts);
         model.addAttribute("inquiryCount", inquiryService.getUnreadCount());
         model.addAttribute("inquiries", inquiryService.getAllInquiries());
         model.addAttribute("adminPrefix", "/admin");
+        model.addAttribute("lang", "ko");
         return "admin/dashboard";
     }
     
@@ -76,14 +68,14 @@ public class AdminController {
     // 새 게시글 저장
     @PostMapping("/post/new")
     public String createPost(@ModelAttribute PostDto postDto) {
-        postService.savePost(postDto);
+        postService.savePost(postDto, "ko");
         return "redirect:/admin";
     }
     
     // 게시글 수정 폼
     @GetMapping("/post/edit/{id}")
     public String editPostForm(@PathVariable Long id, Model model, HttpSession session) {
-        Optional<PostDto> post = postService.getPostById(id);
+        Optional<PostDto> post = postService.getPostById(id, "ko");
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         
         if (post.isPresent()) {
@@ -99,21 +91,21 @@ public class AdminController {
     // 게시글 수정
     @PostMapping("/post/edit/{id}")
     public String updatePost(@PathVariable Long id, @ModelAttribute PostDto postDto) {
-        postService.updatePost(id, postDto);
+        postService.updatePost(id, postDto, "ko");
         return "redirect:/admin";
     }
     
     // 게시글 삭제
     @PostMapping("/post/delete/{id}")
     public String deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+        postService.deletePost(id, "ko");
         return "redirect:/admin";
     }
     
     // 게시글 미리보기
     @GetMapping("/post/preview/{id}")
     public String previewPost(@PathVariable Long id, Model model) {
-        Optional<PostDto> post = postService.getPostById(id);
+        Optional<PostDto> post = postService.getPostById(id, "ko");
         if (post.isPresent()) {
             model.addAttribute("post", post.get());
             return "post-detail";

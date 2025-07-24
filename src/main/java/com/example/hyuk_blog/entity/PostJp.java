@@ -2,40 +2,31 @@ package com.example.hyuk_blog.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "posts")
-@Getter
-@Setter
+@Table(name = "posts_jp")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
-
+public class PostJp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = true, length = 500)
-    private String titleKo; // 한국어 제목
     @Column(length = 500)
-    private String titleJa; // 일본어 제목
+    private String title;
 
     @Column(length = 500)
-    private String summaryKo; // 한국어 요약 추가
-    @Column(length = 500)
-    private String summaryJa; // 일본어 요약 추가
+    private String summary;
 
     @Column(columnDefinition = "TEXT")
-    private String contentKo; // 한국어 내용 추가
-    @Column(columnDefinition = "TEXT")
-    private String contentJa; // 일본어 내용 추가
+    private String content;
 
     @Column(length = 200)
     private String imageUrl;
@@ -54,4 +45,4 @@ public class Post {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-}
+} 

@@ -7,6 +7,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="/css/main.css">
         <link rel="stylesheet" href="/css/header.css">
+        <style>
+            .page-container {
+                margin-bottom: 64px;
+            }
+        </style>
     </head>
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
@@ -54,7 +59,7 @@
                         <p th:text="#{index.posts.empty.description}">첫 번째 게시글을 작성해보세요!</p>
                     </div>
                     
-                    <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id}}" class="post-card">
+                    <a th:each="post : ${posts}" th:href="@{'/post/' + ${post.id} + '?lang=' + ${lang}}" class="post-card">
                         <div class="post-image-wrapper">
                             <img th:if="${post.imageUrl != null and post.imageUrl != ''}"
                                  th:src="${post.imageUrl}"
@@ -65,10 +70,9 @@
                             </div>
                         </div>
                         <div class="post-content">
-                            <h3 class="post-title"
-                                th:text="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? post.titleJa : post.titleKo}"></h3>
-                            <p th:if="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? post.summaryJa != null and post.summaryJa != '' : post.summaryKo != null and post.summaryKo != ''}"
-                               th:text="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? post.summaryJa : post.summaryKo}"
+                            <h3 class="post-title" th:text="${lang == 'ja' ? post.titleJa : post.titleKo}"></h3>
+                            <p th:if="${lang == 'ja' ? post.summaryJa != null and post.summaryJa != '' : post.summaryKo != null and post.summaryKo != ''}"
+                               th:text="${lang == 'ja' ? post.summaryJa : post.summaryKo}"
                                class="post-summary"></p>
                             <div class="post-meta">
                                 <span class="post-date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></span>
