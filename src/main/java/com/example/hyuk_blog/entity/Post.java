@@ -22,7 +22,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = true, length = 500)
     private String titleKo; // 한국어 제목
     @Column(length = 500)
     private String titleJa; // 일본어 제목

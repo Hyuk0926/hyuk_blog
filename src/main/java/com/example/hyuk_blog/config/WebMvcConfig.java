@@ -34,7 +34,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminInterceptor)
-                .addPathPatterns("/admin/**")
+                .addPathPatterns("/admin/**", "/admin_jp/**")
                 .excludePathPatterns("/admin/login", "/admin/logout");
         registry.addInterceptor(localeChangeInterceptor());
     }

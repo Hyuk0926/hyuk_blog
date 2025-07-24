@@ -39,13 +39,14 @@ public class AdminAuthController {
         if (admin.isPresent()) {
             // 로그인 성공
             session.setAttribute("admin", admin.get());
-            // 계정에 따라 언어 세션 저장
+            // 계정에 따라 언어 세션 저장 및 리다이렉트 경로 분기
             if ("admin_jp".equals(username)) {
                 session.setAttribute("lang", "ja");
+                return "redirect:/admin_jp";
             } else {
                 session.setAttribute("lang", "ko");
+                return "redirect:/admin";
             }
-            return "redirect:/admin";
         } else {
             // 로그인 실패
             model.addAttribute("error", "아이디 또는 비밀번호가 올바르지 않습니다.");

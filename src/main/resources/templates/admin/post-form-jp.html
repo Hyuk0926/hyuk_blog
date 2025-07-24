@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${post.id != null ? '게시글 수정' : '새 게시글 작성'} + ' - 백엔드 기초부터'">게시글 작성</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <title th:text="${post.id != null ? '記事編集' : '新規記事作成'} + ' - Takahara Blog'">記事作成</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <style>
         .form-container { max-width: 800px; margin: 0 auto; padding: 20px; }
@@ -35,67 +35,67 @@
     <div class="form-container">
         <div class="form-header">
             <div>
-                <h1 class="form-title" th:text="${post.id != null ? '게시글 수정' : '새 게시글 작성'}">게시글 작성</h1>
+                <h1 class="form-title" th:text="${post.id != null ? '記事編集' : '新規記事作成'}">記事作成</h1>
             </div>
             <div class="admin-info">
                 <div class="admin-welcome">
-                    <span class="admin-name" th:text="${admin.name != null and admin.name != '' ? admin.name : admin.username}">관리자</span>님
+                    <span class="admin-name" th:text="${admin.name != null and admin.name != '' ? admin.name : admin.username}">管理者</span>さん
                 </div>
-                <a href="/admin/logout" class="logout-btn">로그아웃</a>
+                <a href="/admin_jp/logout" class="logout-btn">ログアウト</a>
             </div>
         </div>
         <form th:action="@{${formAction}}" th:object="${post}" method="post">
             <div class="form-group">
-                <label for="titleKo" class="form-label">제목 *</label>
-                <input type="text" id="titleKo" th:field="*{titleKo}" class="form-input" required>
-                <div class="help-text">게시글의 제목을 입력하세요.</div>
+                <label for="titleJa" class="form-label">タイトル *</label>
+                <input type="text" id="titleJa" th:field="*{titleJa}" class="form-input" required>
+                <div class="help-text">記事のタイトルを入力してください。</div>
             </div>
             <div class="form-group">
-                <label for="category" class="form-label">카테고리 *</label>
+                <label for="category" class="form-label">カテゴリー *</label>
                 <select id="category" name="category" class="form-select" required>
-                    <option value="">카테고리를 선택하세요</option>
-                    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat.displayName}" th:selected="${post.category == cat}"></option>
+                    <option value="">カテゴリーを選択してください</option>
+                    <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat.displayNameJp}" th:selected="${post.category == cat}"></option>
                 </select>
-                <div class="help-text">게시글의 카테고리를 선택하세요.</div>
+                <div class="help-text">記事のカテゴリーを選択してください。</div>
             </div>
             <div class="form-group">
-                <label for="summaryKo" class="form-label">요약</label>
-                <textarea id="summaryKo" th:field="*{summaryKo}" class="form-textarea" style="min-height: 100px;"></textarea>
-                <div class="help-text">게시글의 간단한 요약을 입력하세요. (선택사항)</div>
+                <label for="summaryJa" class="form-label">要約</label>
+                <textarea id="summaryJa" th:field="*{summaryJa}" class="form-textarea" style="min-height: 100px;"></textarea>
+                <div class="help-text">記事の簡単な要約を入力してください。(任意)</div>
             </div>
             <div class="form-group">
-                <label for="imageUrl" class="form-label">이미지 URL</label>
+                <label for="imageUrl" class="form-label">画像URL</label>
                 <input type="url" id="imageUrl" name="imageUrl" th:value="*{imageUrl}" class="form-input">
-                <div class="help-text">게시글 대표 이미지의 URL을 입력하세요. (선택사항)</div>
+                <div class="help-text">記事の代表画像のURLを入力してください。(任意)</div>
             </div>
             <div class="form-group">
-                <label for="contentKo" class="form-label">내용 *</label>
-                <textarea id="contentKo" th:field="*{contentKo}" class="form-textarea" required></textarea>
-                <div class="help-text">게시글의 내용을 입력하세요. HTML 태그를 사용할 수 있습니다.</div>
+                <label for="contentJa" class="form-label">内容 *</label>
+                <textarea id="contentJa" th:field="*{contentJa}" class="form-textarea" required></textarea>
+                <div class="help-text">記事の内容を入力してください。HTMLタグが利用できます。</div>
             </div>
             <div class="form-group">
                 <label>
                     <input type="checkbox" name="published" th:checked="*{published}" class="form-checkbox">
-                    공개하기
+                    公開する
                 </label>
-                <div class="help-text">체크하면 게시글이 공개됩니다. 체크하지 않으면 임시저장 상태로 유지됩니다.</div>
+                <div class="help-text">チェックすると記事が公開されます。チェックしない場合は下書きとして保存されます。</div>
             </div>
             <div class="form-buttons">
-                <button type="submit" class="btn-submit" th:text="${post.id != null ? '수정하기' : '저장하기'}">저장하기</button>
-                <a href="/admin" class="btn-cancel">취소</a>
+                <button type="submit" class="btn-submit" th:text="${post.id != null ? '更新する' : '保存する'}">保存する</button>
+                <a href="/admin_jp" class="btn-cancel">キャンセル</a>
             </div>
         </form>
         <div class="preview-section">
-            <div class="preview-title">HTML 태그 사용 예시:</div>
+            <div class="preview-title">HTMLタグ使用例:</div>
             <ul>
-                <li><code>&lt;h2&gt;</code> - 제목 (h3, h4도 사용 가능)</li>
-                <li><code>&lt;p&gt;</code> - 단락</li>
-                <li><code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code> - 목록</li>
-                <li><code>&lt;li&gt;</code> - 목록 항목</li>
-                <li><code>&lt;code&gt;</code> - 코드</li>
-                <li><code>&lt;pre&gt;</code> - 코드 블록</li>
-                <li><code>&lt;strong&gt;</code> - 굵은 글씨</li>
-                <li><code>&lt;em&gt;</code> - 기울임 글씨</li>
+                <li><code>&lt;h2&gt;</code> - 見出し (h3, h4も使用可)</li>
+                <li><code>&lt;p&gt;</code> - 段落</li>
+                <li><code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code> - リスト</li>
+                <li><code>&lt;li&gt;</code> - リスト項目</li>
+                <li><code>&lt;code&gt;</code> - コード</li>
+                <li><code>&lt;pre&gt;</code> - コードブロック</li>
+                <li><code>&lt;strong&gt;</code> - 太字</li>
+                <li><code>&lt;em&gt;</code> - 斜体</li>
             </ul>
         </div>
     </div>

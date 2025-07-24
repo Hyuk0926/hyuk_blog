@@ -230,9 +230,8 @@
                 <div class="admin-welcome">
                     안녕하세요, <span class="admin-name">관리자</span>님
                 </div>
-                <a href="/admin/post/new" class="admin-btn btn-primary">새 게시글</a>
+                <a th:href="@{${adminPrefix + '/post/new'}}" class="admin-btn btn-primary">새 게시글</a>
                 <a href="/admin/resume" class="admin-btn btn-secondary">이력서 관리</a>
-                <a href="/admin/resume/jp" class="admin-btn btn-secondary">이력서 관리 (JP)</a>
                 <a href="/admin/inquiry" class="admin-btn btn-secondary">문의 관리</a>
                 <a href="/admin/logout" class="admin-btn btn-danger">로그아웃</a>
             </div>
@@ -273,8 +272,8 @@
             <tbody>
                 <tr th:each="post : ${posts}">
                     <td th:text="${post.id}">1</td>
-                    <td th:text="${post.title}">게시글 제목</td>
-                    <td th:text="${#strings.abbreviate(post.summary, 50)}">요약</td>
+                    <td th:text="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? post.titleJa : post.titleKo}">게시글 제목</td>
+                    <td th:text="${#httpSession != null and #httpSession.getAttribute('lang') == 'ja' ? #strings.abbreviate(post.summaryJa, 50) : #strings.abbreviate(post.summaryKo, 50)}">요약</td>
                     <td>
                         <span th:class="${post.published ? 'status-badge status-published' : 'status-badge status-draft'}"
                               th:text="${post.published ? '공개' : '임시저장'}">상태</span>
@@ -284,7 +283,6 @@
                     <td>
                         <div class="action-buttons">
                             <a th:href="@{'/admin/post/edit/' + ${post.id}}" class="btn-action btn-edit">수정</a>
-                            <a th:href="@{'/admin/post/jp/edit/' + ${post.id}}" class="btn-action btn-edit">수정 (JP)</a>
                             <a th:href="@{'/admin/post/preview/' + ${post.id}}" class="btn-action btn-preview">미리보기</a>
                             <form th:action="@{'/admin/post/delete/' + ${post.id}}" method="post" style="display: inline;">
                                 <button type="submit" class="btn-action btn-delete" 

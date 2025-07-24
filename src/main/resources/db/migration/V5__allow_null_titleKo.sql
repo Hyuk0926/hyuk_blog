@@ -1,0 +1,1 @@
+ALTER TABLE posts MODIFY title_ko VARCHAR(500) NULL; 

@@ -41,10 +41,11 @@ public class PostController {
     }
 
     @GetMapping("/index")
-    public String index(Model model) {
-        List<PostDto> posts = postService.getAllPublishedPosts();
+    public String index(@RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
+        List<PostDto> posts = postService.getAllPublishedPosts(lang);
         model.addAttribute("posts", posts);
         model.addAttribute("categories", Category.values());
+        model.addAttribute("lang", lang);
         return "index";
     }
 
