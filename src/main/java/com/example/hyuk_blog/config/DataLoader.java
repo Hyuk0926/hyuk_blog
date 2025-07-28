@@ -3,32 +3,26 @@ package com.example.hyuk_blog.config;
 import com.example.hyuk_blog.entity.Admin;
 import com.example.hyuk_blog.entity.Inquiry;
 import com.example.hyuk_blog.entity.Resume;
-import com.example.hyuk_blog.entity.Visitor;
 import com.example.hyuk_blog.repository.AdminRepository;
 import com.example.hyuk_blog.repository.InquiryRepository;
 import com.example.hyuk_blog.repository.ResumeRepository;
-import com.example.hyuk_blog.repository.VisitorRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.Iterator;
 
 @Component
 public class DataLoader implements CommandLineRunner {
-    
+
     @Autowired
     private AdminRepository adminRepository;
-
     @Autowired private InquiryRepository inquiryRepository;
     @Autowired private ResumeRepository resumeRepository;
-    @Autowired private VisitorRepository visitorRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -70,23 +64,7 @@ public class DataLoader implements CommandLineRunner {
             }
         }
 
-        // 3. visitor.json 이관 (daily만 예시)
-        File visitorFile = new File("data/visitor.json");
-        if (visitorFile.exists()) {
-            JsonNode root = mapper.readTree(visitorFile);
-            JsonNode daily = root.get("daily");
-            if (daily != null) {
-                Iterator<String> dates = daily.fieldNames();
-                while (dates.hasNext()) {
-                    String date = dates.next();
-                    int count = daily.get(date).asInt();
-                    Visitor v = new Visitor();
-                    v.setDate(LocalDate.parse(date));
-                    v.setCount(count);
-                    visitorRepository.save(v);
-                }
-            }
-        }
+        // 3. visitor.json은 JSON 파일 기반으로 관리하므로 JPA Entity 사용하지 않음
     }
     
     private void createInitialAdmin() {
