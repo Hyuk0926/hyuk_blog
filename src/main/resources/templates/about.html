@@ -20,10 +20,20 @@
         <p class="intro" th:text="${resume.introductionKo}">간단 소개</p>
         <p class="contact">
           <span th:text="${resume.email}">이메일</span>
-          <span th:if="${resume.email != null and resume.phone != null}"> | </span>
-          <span th:text="${resume.phone}">연락처</span>
-          <span th:if="${lang == 'ja'} ? ${resume.addressJa != null} : ${resume.addressKo != null}"> | </span>
-          <span th:text="${lang == 'ja'} ? ${resume.addressJa} : ${resume.addressKo}">주소</span>
+          <span th:if="${resume.email != null and resume.phone != null and @environment.getProperty('app.show.phone', 'false') == 'true'}"> | </span>
+          <span th:if="${@environment.getProperty('app.show.phone', 'false') == 'true'}" th:text="${resume.phone}">연락처</span>
+          <!-- 전화번호 마스킹 처리 (보안 강화) -->
+          <span th:if="${@environment.getProperty('app.show.phone', 'false') == 'masked' and resume.phone != null}"> | </span>
+          <span th:if="${@environment.getProperty('app.show.phone', 'false') == 'masked'}" th:with="phone=${resume.phone}" th:text="${#strings.substring(phone, 0, 3)} + '-' + '****' + '-' + ${#strings.substring(phone, #strings.length(phone)-4)}">연락처</span>
+          <!-- 연락처 안내 메시지 -->
+          <span th:if="${@environment.getProperty('app.show.phone', 'false') == 'contact-info' and resume.phone != null}"> | </span>
+          <span th:if="${@environment.getProperty('app.show.phone', 'false') == 'contact-info'}" th:text="'문의 시 이메일로 연락'">연락처</span>
+          <!-- 설정에 따라 주소 표시 제어 -->
+          <span th:if="${@environment.getProperty('app.show.address', 'false') == 'true' and ((lang == 'ja' and resume.addressJa != null) or (lang != 'ja' and resume.addressKo != null))}"> | </span>
+          <span th:if="${@environment.getProperty('app.show.address', 'false') == 'true'}" th:text="${lang == 'ja'} ? ${resume.addressJa} : ${resume.addressKo}">주소</span>
+          <!-- 주소 마스킹 처리 (보안 강화) -->
+          <span th:if="${@environment.getProperty('app.show.address', 'false') == 'masked' and ((lang == 'ja' and resume.addressJa != null) or (lang != 'ja' and resume.addressKo != null))}"> | </span>
+          <span th:if="${@environment.getProperty('app.show.address', 'false') == 'masked'}" th:with="address=${lang == 'ja'} ? ${resume.addressJa} : ${resume.addressKo}" th:text="${#strings.substring(address, 0, 3)} + '***'">주소</span>
         </p>
       </div>
     </header>

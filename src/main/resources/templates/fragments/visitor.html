@@ -21,6 +21,17 @@
       });
     }
     fetchVisitorStatsMini();
-    fetch('/visitor/increase', {method:'POST'}).then(()=>fetchVisitorStatsMini());
+    
+    // 방문자 수 증가 요청 (IP 기준으로 하루에 한 번만 카운트)
+    fetch('/visitor/increase', {method:'POST'})
+      .then(response => {
+        if (response.ok) {
+          // 새로운 방문자라면 통계 업데이트
+          fetchVisitorStatsMini();
+        }
+      })
+      .catch(error => {
+        console.log('방문자 수 카운트 중 오류:', error);
+      });
   </script>
 </div> 

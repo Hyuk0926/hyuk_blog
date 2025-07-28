@@ -17,18 +17,49 @@ public class VisitorService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Map<String, Integer> dailyCounts; // yyyy-MM-dd -> count
     private Map<String, Integer> monthlyCounts; // yyyy-MM -> count
+    private Map<String, Set<String>> dailyVisitors; // yyyy-MM-dd -> Set<IP>
 
     public VisitorService() {
         objectMapper.registerModule(new JavaTimeModule());
         loadCounts();
     }
 
-    public synchronized void increaseCount() {
+    public synchronized boolean increaseCount(String ipAddress) {
+        return increaseCount(ipAddress, null);
+    }
+
+    public synchronized boolean increaseCount(String ipAddress, String userAgent) {
         String today = LocalDate.now().toString();
         String month = YearMonth.now().toString();
+        
+        // IP와 User-Agent를 조합하여 더 정확한 방문자 식별
+        String visitorKey = ipAddress;
+        if (userAgent != null && !userAgent.isEmpty()) {
+            // User-Agent의 주요 부분만 사용 (브라우저 정보)
+            String browserInfo = extractBrowserInfo(userAgent);
+            if (browserInfo != null) {
+                visitorKey = ipAddress + "|" + browserInfo;
+            }
+        }
+        
+        // 오늘 방문한 방문자 목록 가져오기
+        Set<String> todayVisitors = dailyVisitors.getOrDefault(today, new HashSet<>());
+        
+        // 이미 오늘 방문한 방문자인지 확인
+        if (todayVisitors.contains(visitorKey)) {
+            return false; // 이미 방문한 방문자
+        }
+        
+        // 새로운 방문자로 추가
+        todayVisitors.add(visitorKey);
+        dailyVisitors.put(today, todayVisitors);
+        
+        // 카운트 증가
         dailyCounts.put(today, dailyCounts.getOrDefault(today, 0) + 1);
         monthlyCounts.put(month, monthlyCounts.getOrDefault(month, 0) + 1);
+        
         saveCounts();
+        return true; // 새로운 방문자
     }
 
     public synchronized int getTodayCount() {
@@ -68,15 +99,24 @@ public class VisitorService {
         if (!file.exists()) {
             dailyCounts = new HashMap<>();
             monthlyCounts = new HashMap<>();
+            dailyVisitors = new HashMap<>();
             return;
         }
         try {
             Map<String, Object> map = objectMapper.readValue(file, new TypeReference<Map<String, Object>>(){});
             dailyCounts = (Map<String, Integer>) map.getOrDefault("daily", new HashMap<>());
             monthlyCounts = (Map<String, Integer>) map.getOrDefault("monthly", new HashMap<>());
+            
+            // IP 방문자 데이터 로드 (기존 데이터와의 호환성을 위해)
+            if (map.containsKey("dailyVisitors")) {
+                dailyVisitors = (Map<String, Set<String>>) map.get("dailyVisitors");
+            } else {
+                dailyVisitors = new HashMap<>();
+            }
         } catch (IOException e) {
             dailyCounts = new HashMap<>();
             monthlyCounts = new HashMap<>();
+            dailyVisitors = new HashMap<>();
         }
     }
 
@@ -84,10 +124,35 @@ public class VisitorService {
         Map<String, Object> map = new HashMap<>();
         map.put("daily", dailyCounts);
         map.put("monthly", monthlyCounts);
+        map.put("dailyVisitors", dailyVisitors);
         try {
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(FILE_PATH), map);
         } catch (IOException e) {
             // ignore
         }
+    }
+
+    /**
+     * User-Agent에서 브라우저 정보를 추출
+     */
+    private String extractBrowserInfo(String userAgent) {
+        if (userAgent == null || userAgent.isEmpty()) {
+            return null;
+        }
+        
+        // 주요 브라우저 정보만 추출
+        String[] browsers = {"Chrome", "Firefox", "Safari", "Edge", "Opera"};
+        for (String browser : browsers) {
+            if (userAgent.contains(browser)) {
+                return browser;
+            }
+        }
+        
+        // 모바일 브라우저 확인
+        if (userAgent.contains("Mobile")) {
+            return "Mobile";
+        }
+        
+        return "Other";
     }
 } 
