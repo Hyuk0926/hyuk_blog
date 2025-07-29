@@ -21,9 +21,11 @@
     </div>
     
     <div class="page-container"
-         th:data-post-count-msg="#{index.posts.count}"
+         th:data-post-count-msg="#{index.posts.count.unit}"
          th:data-no-posts-msg="#{index.posts.empty.title}"
-         th:data-no-image-msg="#{index.image.none}">
+         th:data-no-image-msg="#{index.image.none}"
+         th:data-post-count-ko="#{index.posts.count.unit}"
+         th:data-post-count-ja="#{index.posts.count.unit}">
         <aside class="sidebar">
             <div class="category-list-wrapper">
                 <h3 class="category-list-title" th:text="#{index.category.title}">카테고리</h3>

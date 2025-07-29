@@ -222,25 +222,160 @@
     <div th:replace="~{fragments/header :: header}"></div>
     <div class="post-detail-container">
         <div class="post-header">
-            <h1 th:text="${post.title}">게시글 제목</h1>
+            <h1 th:text="${lang == 'ja' ? post.titleJa : post.titleKo}">게시글 제목</h1>
             <div class="post-meta right-meta">
                 <span th:text="${#temporals.format(post.createdAt, 'yyyy년 MM월 dd일')}">작성일</span>
                 <span th:if="${post.updatedAt != post.createdAt}" th:text="'수정일: ' + ${#temporals.format(post.updatedAt, 'yyyy년 MM월 dd일')}">수정일</span>
             </div>
         </div>
-        <div class="post-summary" th:if="${post.summary != null and post.summary != ''}">
-            <p th:text="${post.summary}">게시글 요약</p>
+        <div class="post-summary" th:if="${lang == 'ja' ? post.summaryJa != null and post.summaryJa != '' : post.summaryKo != null and post.summaryKo != ''}">
+            <p th:text="${lang == 'ja' ? post.summaryJa : post.summaryKo}">게시글 요약</p>
         </div>
         <div class="post-image-container" th:if="${post.imageUrl != null and post.imageUrl != ''}">
-            <img th:src="${post.imageUrl}" th:alt="${post.title}" class="post-detail-image">
+            <img th:src="${post.imageUrl}" th:alt="${lang == 'ja' ? post.titleJa : post.titleKo}" class="post-detail-image">
         </div>
         <div class="post-content" id="post-content">
-            <div th:utext="${post.content}"></div>
+            <div th:utext="${lang == 'ja' ? post.contentJa : post.contentKo}"></div>
         </div>
         <div class="post-navigation">
-            <a href="/index" class="back-button" th:text="#{post.button.back_to_list}">← 목록으로 돌아가기</a>
+            <a href="/index" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
         </div>
     </div>
+    
+    <style>
+        /* 목록으로 돌아가기 버튼 스타일 개선 - 고딕 & 세련된 디자인 */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.3px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 3px 12px rgba(44, 62, 80, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .back-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        .back-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 6px 20px rgba(44, 62, 80, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: linear-gradient(145deg, #34495e 0%, #2c3e50 100%);
+            color: #ffffff;
+        }
+        
+        .back-button:hover::before {
+            left: 100%;
+        }
+        
+        .back-button:active {
+            transform: translateY(-1px) scale(1.01);
+            box-shadow: 
+                0 3px 12px rgba(44, 62, 80, 0.3),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 다크모드 */
+        body.dark-mode .back-button {
+            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: #e8e8e8;
+            box-shadow: 
+                0 3px 12px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        body.dark-mode .back-button:hover {
+            background: linear-gradient(145deg, #2d2d2d 0%, #1a1a1a 100%);
+            box-shadow: 
+                0 6px 20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+        
+        /* 화살표 아이콘 스타일 - 앞쪽에만 표시 */
+        .back-button::before {
+            content: '←';
+            position: static;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-right: 6px;
+            background: none;
+            width: auto;
+            height: auto;
+            left: auto;
+            transition: none;
+        }
+        
+        /* Footer와의 간격 확대 */
+        .post-detail-container {
+            margin-bottom: 80px;
+        }
+        
+        .post-navigation {
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+    </style>
+    
+    <script>
+        // 언어 변경 시 자연스러운 처리
+        document.addEventListener('DOMContentLoaded', function() {
+            const langLinks = document.querySelectorAll('a[href*="lang="]');
+            const currentPostId = window.location.pathname.split('/').pop().split('?')[0];
+            
+            langLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = new URL(this.href);
+                    const lang = url.searchParams.get('lang');
+                    
+                    // 현재 게시글의 해당 언어 버전이 있는지 확인
+                    fetch(`/api/post/${currentPostId}?lang=${lang}`)
+                        .then(response => {
+                            if (response.ok) {
+                                // 해당 언어 버전이 있으면 그곳으로 이동
+                                return response.json();
+                            } else {
+                                // 없으면 해당 언어의 메인 페이지로 이동
+                                throw new Error('Post not found in this language');
+                            }
+                        })
+                        .then(post => {
+                            // 해당 언어 버전으로 이동
+                            window.location.href = `/post/${currentPostId}?lang=${lang}`;
+                        })
+                        .catch(error => {
+                            // 해당 언어 버전이 없으면 메인 페이지로 이동
+                            window.location.href = `/index?lang=${lang}`;
+                        });
+                });
+            });
+        });
+    </script>
     <script src="/js/post-detail.js"></script>
     <!-- Prism.js JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
