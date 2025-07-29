@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(url)
             .then(response => response.json())
             .then(posts => {
+                console.log('Fetched posts:', posts); // 디버깅 로그
                 updatePostGrid(posts);
             })
             .catch(error => {
@@ -27,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 카운트 메시지 업데이트 - 단위 포함
         const countText = posts.length + ' ' + postCountMsg;
         postCount.textContent = countText;
+        console.log('Updated count:', countText); // 디버깅 로그
 
         if (posts.length === 0) {
             postGrid.innerHTML = `<div class="no-posts"><h3>${noPostsMsg}</h3></div>`;
@@ -83,7 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
             categoryItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             searchInput.value = ''; // Clear search input
-            fetchAndRenderPosts(category ? `/api/posts?category=${category}` : '/api/posts');
+            
+            // 카테고리별 게시물 가져오기
+            const url = category ? `/api/posts?category=${category}` : '/api/posts';
+            fetchAndRenderPosts(url);
         });
     });
 }); 

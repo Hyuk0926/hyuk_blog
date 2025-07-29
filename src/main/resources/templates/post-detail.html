@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/post.css">
     <link rel="stylesheet" href="/css/header.css">
+    <!-- Prism.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
         /* 코드 복사 버튼 스타일 */
         .code-block-wrapper {
@@ -195,6 +197,25 @@
         .post-content {
             margin-bottom: 64px;
         }
+        
+        /* Prism.js 커스텀 스타일 */
+        .post-content pre[class*="language-"] {
+            background: #2d3748;
+            border-radius: 8px;
+            margin: 16px 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+        }
+        
+        .post-content code[class*="language-"] {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Andale Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* 다크모드에서도 잘 보이도록 */
+        body.dark-mode .post-content pre[class*="language-"] {
+            background: #1a202c;
+        }
     </style>
 </head>
 <body>
@@ -221,6 +242,9 @@
         </div>
     </div>
     <script src="/js/post-detail.js"></script>
+    <!-- Prism.js JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html> 

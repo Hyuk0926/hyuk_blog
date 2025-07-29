@@ -30,6 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
         pre.parentNode.insertBefore(wrapper, pre);
         wrapper.appendChild(pre);
         
+        // 언어 감지 및 클래스 추가
+        detectAndAddLanguageClass(codeElem);
+        
         // 복사 버튼 생성
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
@@ -44,4 +47,44 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         wrapper.appendChild(btn);
     });
-}); 
+    
+    // Prism.js로 코드 하이라이팅 적용
+    if (typeof Prism !== 'undefined') {
+        Prism.highlightAll();
+    }
+});
+
+// 언어 감지 및 클래스 추가 함수
+function detectAndAddLanguageClass(codeElement) {
+    const code = codeElement.textContent || codeElement.innerText;
+    const firstLine = code.split('\n')[0].trim();
+    
+    // 언어 감지 로직
+    let language = 'text';
+    
+    if (firstLine.includes('java') || firstLine.includes('public class') || firstLine.includes('import java')) {
+        language = 'java';
+    } else if (firstLine.includes('javascript') || firstLine.includes('function') || firstLine.includes('const ') || firstLine.includes('let ')) {
+        language = 'javascript';
+    } else if (firstLine.includes('python') || firstLine.includes('def ') || firstLine.includes('import ')) {
+        language = 'python';
+    } else if (firstLine.includes('html') || firstLine.includes('<html') || firstLine.includes('<div')) {
+        language = 'html';
+    } else if (firstLine.includes('css') || firstLine.includes('{') && firstLine.includes(':')) {
+        language = 'css';
+    } else if (firstLine.includes('sql') || firstLine.includes('SELECT') || firstLine.includes('CREATE TABLE')) {
+        language = 'sql';
+    } else if (firstLine.includes('xml') || firstLine.includes('<xml')) {
+        language = 'xml';
+    } else if (firstLine.includes('json') || firstLine.includes('{') && firstLine.includes('"')) {
+        language = 'json';
+    } else if (firstLine.includes('bash') || firstLine.includes('#!/bin/bash') || firstLine.includes('curl ')) {
+        language = 'bash';
+    } else if (firstLine.includes('gradle') || firstLine.includes('build.gradle')) {
+        language = 'gradle';
+    }
+    
+    // 언어 클래스 추가
+    codeElement.className = `language-${language}`;
+    codeElement.parentElement.className = `language-${language}`;
+} 
