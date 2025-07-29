@@ -127,36 +127,6 @@
             <a href="/">← 메인 페이지로 돌아가기</a>
         </div>
     </div>
-<script>
-// 비밀번호 입력 시 영어로 자동 전환 (IME off)
-document.getElementById('password').addEventListener('focus', function() {
-    this.setAttribute('inputmode', 'latin');
-    this.style.imeMode = 'disabled';
-});
-// CapsLock 알림
-const passwordInput = document.getElementById('password');
-const capsLockMsg = document.getElementById('capsLockMsg');
-passwordInput.addEventListener('keyup', function(e) {
-    if (e.getModifierState && e.getModifierState('CapsLock')) {
-        capsLockMsg.style.display = 'block';
-    } else {
-        capsLockMsg.style.display = 'none';
-    }
-});
-passwordInput.addEventListener('keydown', function(e) {
-    if (e.getModifierState && e.getModifierState('CapsLock')) {
-        capsLockMsg.style.display = 'block';
-    } else {
-        capsLockMsg.style.display = 'none';
-    }
-});
-// 비밀번호 보기 토글
-const togglePassword = document.getElementById('togglePassword');
-togglePassword.addEventListener('click', function() {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    this.style.color = type === 'text' ? '#007bff' : '#888';
-});
-</script>
+    <script src="/js/admin-login.js"></script>
 </body>
 </html> 
