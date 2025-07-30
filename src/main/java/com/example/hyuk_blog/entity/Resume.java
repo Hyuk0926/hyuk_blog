@@ -18,9 +18,9 @@ public class Resume {
     private String nameJa;
     private String email;
     private String phone;
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String introduction; // introduction 필드
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String introductionKo; // introductionKo 필드
     // introductionJa 필드 삭제
 
@@ -36,29 +36,29 @@ public class Resume {
     @ElementCollection
     private List<Experience> experiences;
     
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String studentLifeKo; // studentLife -> studentLifeKo 로 변경
-    @Column(length = 2000) // 새로운 필드 추가
+    @Column(columnDefinition = "TEXT") // 새로운 필드 추가
     private String studentLifeJa; // 일본어 필드 추가
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String strengthsWeaknessesKo; // strengthsWeaknesses -> strengthsWeaknessesKo 로 변경
-    @Column(length = 2000) // 새로운 필드 추가
+    @Column(columnDefinition = "TEXT") // 새로운 필드 추가
     private String strengthsWeaknessesJa; // 일본어 필드 추가
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String effortExperienceKo; // effortExperience -> effortExperienceKo 로 변경
-    @Column(length = 2000) // 새로운 필드 추가
+    @Column(columnDefinition = "TEXT") // 새로운 필드 추가
     private String effortExperienceJa; // 일본어 필드 추가
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String japanItMotivationKo; // japanItMotivation -> japanItMotivationKo 로 변경
-    @Column(length = 2000) // 새로운 필드 추가
+    @Column(columnDefinition = "TEXT") // 새로운 필드 추가
     private String japanItMotivationJa; // 일본어 필드 추가
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String futurePlanKo; // futurePlan -> futurePlanKo 로 변경
-    @Column(length = 2000) // 새로운 필드 추가
+    @Column(columnDefinition = "TEXT") // 새로운 필드 추가
     private String futurePlanJa; // 일본어 필드 추가
 
     private String photoUrl;

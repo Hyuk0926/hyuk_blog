@@ -62,9 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const summary = currentLang === 'ja' ? post.summaryJa : post.summaryKo;
             const summaryHtml = summary ? `<p class="post-summary">${summary}</p>` : '';
             
-            const formattedDate = new Date(post.createdAt).toLocaleDateString('ko-KR', {
-                year: 'numeric', month: '2-digit', day: '2-digit'
-            }).replace(/\. /g, '.').slice(0, -1);
+            const date = new Date(post.createdAt);
+            const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
 
             // 좋아요와 댓글 수 가져오기 (기본값 0)
             const likeCount = post.likeCount || 0;
