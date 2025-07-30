@@ -28,6 +28,8 @@ public class PostDto {
     private Category category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private Long likeCount; // 좋아요 수 추가
+    private Long commentCount; // 댓글 수 추가
 
     // PostKr Entity를 DTO로 변환
     public static PostDto fromKrEntity(PostKr post) {

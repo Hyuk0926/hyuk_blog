@@ -66,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 year: 'numeric', month: '2-digit', day: '2-digit'
             }).replace(/\. /g, '.').slice(0, -1);
 
+            // 좋아요와 댓글 수 가져오기 (기본값 0)
+            const likeCount = post.likeCount || 0;
+            const commentCount = post.commentCount || 0;
+            
             postElement.innerHTML = `
                 <div class="post-image-wrapper">${imageHtml}</div>
                 <div class="post-content">
@@ -73,6 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${summaryHtml}
                     <div class="post-meta">
                         <span class="post-date">${formattedDate}</span>
+                        <div class="post-stats">
+                            <span class="like-count">${likeCount} ♥</span>
+                            <span class="comment-count">${commentCount} 💬</span>
+                        </div>
                     </div>
                 </div>
             `;

@@ -11,6 +11,61 @@
             .page-container {
                 margin-bottom: 64px;
             }
+            
+            /* 게시글 메타 정보 스타일 */
+            .post-meta {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 12px;
+                font-size: 0.85rem;
+                color: #666;
+            }
+            
+            .post-date {
+                font-weight: 500;
+            }
+            
+            .post-stats {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+            
+            .like-count,
+            .comment-count {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-weight: 500;
+                color: #666;
+            }
+            
+            .like-count {
+                color: #e53e3e;
+            }
+            
+            .comment-count {
+                color: #3182ce;
+            }
+            
+            /* 다크모드 */
+            body.dark-mode .post-meta {
+                color: #a0aec0;
+            }
+            
+            body.dark-mode .like-count,
+            body.dark-mode .comment-count {
+                color: #a0aec0;
+            }
+            
+            body.dark-mode .like-count {
+                color: #fc8181;
+            }
+            
+            body.dark-mode .comment-count {
+                color: #63b3ed;
+            }
         </style>
     </head>
 <body>
@@ -78,6 +133,10 @@
                                class="post-summary"></p>
                             <div class="post-meta">
                                 <span class="post-date" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}"></span>
+                                <div class="post-stats">
+                                    <span class="like-count" th:text="${post.likeCount != null ? post.likeCount : 0} + ' ♥'">0 ♥</span>
+                                    <span class="comment-count" th:text="${post.commentCount != null ? post.commentCount : 0} + ' 💬'">0 💬</span>
+                                </div>
                             </div>
                         </div>
                     </a>

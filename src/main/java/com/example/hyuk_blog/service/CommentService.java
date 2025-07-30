@@ -94,6 +94,10 @@ public class CommentService {
         return false;
     }
     
+    public Long getCommentCount(Long postId) {
+        return commentRepository.countByPostId(postId);
+    }
+    
     private CommentDto convertToDto(Comment comment) {
         CommentDto dto = new CommentDto();
         dto.setId(comment.getId());

@@ -25,6 +25,10 @@ public class PostService {
     private PostKrRepository postKrRepository;
     @Autowired
     private PostJpRepository postJpRepository;
+    @Autowired
+    private LikeService likeService;
+    @Autowired
+    private CommentService commentService;
 
     // 언어 감지 (ko/ja)
     private String detectLang() {
@@ -48,12 +52,22 @@ public class PostService {
         if ("ja".equals(lang)) {
             return postJpRepository.findByPublishedOrderByCreatedAtDesc(true)
                     .stream()
-                    .map(PostDto::fromJpEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromJpEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         } else {
             return postKrRepository.findByPublishedOrderByCreatedAtDesc(true)
                     .stream()
-                    .map(PostDto::fromKrEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromKrEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         }
     }
@@ -68,12 +82,22 @@ public class PostService {
         if ("ja".equals(lang)) {
             return postJpRepository.findAllOrderByCreatedAtDesc()
                     .stream()
-                    .map(PostDto::fromJpEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromJpEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         } else {
             return postKrRepository.findAllOrderByCreatedAtDesc()
                     .stream()
-                    .map(PostDto::fromKrEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromKrEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         }
     }
@@ -81,9 +105,19 @@ public class PostService {
     // ID로 게시글 조회
     public Optional<PostDto> getPostById(Long id, String lang) {
         if ("ja".equals(lang)) {
-            return postJpRepository.findById(id).map(PostDto::fromJpEntity);
+            return postJpRepository.findById(id).map(post -> {
+                PostDto dto = PostDto.fromJpEntity(post);
+                dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                return dto;
+            });
         } else {
-            return postKrRepository.findById(id).map(PostDto::fromKrEntity);
+            return postKrRepository.findById(id).map(post -> {
+                PostDto dto = PostDto.fromKrEntity(post);
+                dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                return dto;
+            });
         }
     }
 
@@ -150,12 +184,22 @@ public class PostService {
         if ("ja".equals(lang)) {
             return postJpRepository.findByTitleContainingAndPublishedOrderByCreatedAtDesc(query, true)
                     .stream()
-                    .map(PostDto::fromJpEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromJpEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         } else {
             return postKrRepository.findByTitleContainingAndPublishedOrderByCreatedAtDesc(query, true)
                     .stream()
-                    .map(PostDto::fromKrEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromKrEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         }
     }
@@ -165,12 +209,22 @@ public class PostService {
         if ("ja".equals(lang)) {
             return postJpRepository.findByCategoryAndPublishedOrderByCreatedAtDesc(category, true)
                     .stream()
-                    .map(PostDto::fromJpEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromJpEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         } else {
             return postKrRepository.findByCategoryAndPublishedOrderByCreatedAtDesc(category, true)
                     .stream()
-                    .map(PostDto::fromKrEntity)
+                    .map(post -> {
+                        PostDto dto = PostDto.fromKrEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        return dto;
+                    })
                     .collect(Collectors.toList());
         }
     }
