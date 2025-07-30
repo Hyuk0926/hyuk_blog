@@ -69,15 +69,14 @@
             color: #ffe082;
         }
         .post-detail-image {
-            max-width: 600px;
-            max-height: 350px;
+            max-width: 700px;
             width: 100%;
             height: auto;
             display: block;
             margin: 0 auto;
-            border-radius: 12px;
+            border-radius: 14px;
             object-fit: contain;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
         }
         body.dark-mode .post-header h1 {
             color: #f7fafc;
@@ -171,6 +170,71 @@
             letter-spacing: 0.01em;
             transition: background 0.3s, color 0.3s;
         }
+        
+        /* 제목과 본문 구분선 추가 */
+        .post-header {
+            border-bottom: 3px solid #e2e8f0;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            position: relative;
+        }
+        
+        .post-header::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+            border-radius: 2px;
+        }
+        
+        body.dark-mode .post-header {
+            border-bottom-color: #444;
+        }
+        
+        body.dark-mode .post-header::after {
+            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
+        }
+        
+        /* 메타 정보 스타일 개선 */
+        .post-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 16px;
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .post-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .post-meta span:first-child::before {
+            content: '📅';
+            font-size: 1rem;
+        }
+        
+        .post-meta span:last-child::before {
+            content: '✏️';
+            font-size: 1rem;
+        }
+        
+        body.dark-mode .post-meta {
+            color: #a0aec0;
+        }
+        
+        /* 이미지 컨테이너 스타일 */
+        .post-image-container {
+            margin: 32px auto;
+            max-width: 700px;
+            text-align: center;
+        }
         .post-summary::before {
             content: '';
             display: block;
@@ -216,6 +280,488 @@
         body.dark-mode .post-content pre[class*="language-"] {
             background: #1a202c;
         }
+        
+        /* 좋아요 버튼 스타일 */
+        .like-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .like-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #495057;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .like-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            border-color: #007bff;
+        }
+        
+        .like-button:active {
+            transform: translateY(0);
+        }
+        
+        .heart-icon {
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            color: #6c757d;
+        }
+        
+        .heart-icon.liked {
+            color: #dc3545;
+            animation: heartBeat 0.6s ease-in-out;
+        }
+        
+        @keyframes heartBeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.2); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .like-count {
+            font-weight: 700;
+            color: #495057;
+        }
+        
+        /* 다크모드 */
+        body.dark-mode .like-button {
+            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .like-button:hover {
+            border-color: #ffe082;
+        }
+        
+        body.dark-mode .heart-icon {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .heart-icon.liked {
+            color: #fc8181;
+        }
+        
+        body.dark-mode .like-count {
+            color: #e2e8f0;
+        }
+        
+        /* 댓글 시스템 스타일 */
+        .comment-section {
+            margin-top: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .comment-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 24px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .comment-form {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 32px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .comment-input-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .comment-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .comment-content-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        
+        .comment-textarea {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .comment-submit-btn {
+            padding: 12px 24px;
+            background: linear-gradient(145deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .comment-submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+        }
+        
+        .comment-submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .comment-item {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        
+        .comment-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .comment-nickname {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+        
+        .comment-date {
+            font-size: 0.85rem;
+            color: #718096;
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .comment-action-btn {
+            padding: 6px 12px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #4a5568;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .comment-action-btn:hover {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+        
+        .comment-action-btn.delete {
+            color: #e53e3e;
+            border-color: #fed7d7;
+        }
+        
+        .comment-action-btn.delete:hover {
+            background: #fed7d7;
+        }
+        
+        .comment-content {
+            color: #4a5568;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .comment-edit-form {
+            display: none;
+            margin-top: 12px;
+        }
+        
+        .comment-edit-form.active {
+            display: block;
+        }
+        
+        .comment-edit-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            min-height: 80px;
+            resize: vertical;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+        
+        .comment-edit-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+        
+        .comment-edit-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .comment-edit-btn.save {
+            background: #007bff;
+            color: white;
+        }
+        
+        .comment-edit-btn.cancel {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .comment-edit-btn:hover {
+            transform: translateY(-1px);
+        }
+        
+        .edited-badge {
+            font-size: 0.75rem;
+            color: #718096;
+            font-style: italic;
+        }
+        
+        /* 모달 스타일 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 80px;
+        }
+        
+        .modal-btn.confirm {
+            background: #007bff;
+            color: white;
+        }
+        
+        .modal-btn.confirm:hover {
+            background: #0056b3;
+        }
+        
+        .modal-btn.cancel {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .modal-btn.cancel:hover {
+            background: #cbd5e0;
+        }
+        
+        /* 다크모드 */
+        body.dark-mode .comment-title {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .comment-form,
+        body.dark-mode .comment-item {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        
+        body.dark-mode .comment-input,
+        body.dark-mode .comment-textarea,
+        body.dark-mode .comment-edit-textarea {
+            background: #1a202c;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .comment-input:focus,
+        body.dark-mode .comment-textarea:focus,
+        body.dark-mode .comment-edit-textarea:focus {
+            border-color: #ffe082;
+        }
+        
+        body.dark-mode .comment-nickname {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .comment-content {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .comment-action-btn {
+            background: #4a5568;
+            border-color: #718096;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .comment-action-btn:hover {
+            background: #718096;
+        }
+        
+        body.dark-mode .comment-action-btn.delete {
+            color: #fc8181;
+            border-color: #742a2a;
+        }
+        
+        body.dark-mode .comment-action-btn.delete:hover {
+            background: #742a2a;
+        }
+        
+        body.dark-mode .comment-edit-btn.cancel {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .modal {
+            background: #2d3748;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .modal-title {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .modal-input {
+            background: #1a202c;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .modal-input:focus {
+            border-color: #ffe082;
+        }
+        
+        body.dark-mode .modal-btn.cancel {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .modal-btn.cancel:hover {
+            background: #718096;
+        }
     </style>
 </head>
 <body>
@@ -223,9 +769,9 @@
     <div class="post-detail-container">
         <div class="post-header">
             <h1 th:text="${lang == 'ja' ? post.titleJa : post.titleKo}">게시글 제목</h1>
-            <div class="post-meta right-meta">
+            <div class="post-meta">
                 <span th:text="${#temporals.format(post.createdAt, 'yyyy년 MM월 dd일')}">작성일</span>
-                <span th:if="${post.updatedAt != post.createdAt}" th:text="'수정일: ' + ${#temporals.format(post.updatedAt, 'yyyy년 MM월 dd일')}">수정일</span>
+                <span th:if="${post.updatedAt != post.createdAt}" th:text="${#temporals.format(post.updatedAt, 'yyyy년 MM월 dd일')}">수정일</span>
             </div>
         </div>
         <div class="post-summary" th:if="${lang == 'ja' ? post.summaryJa != null and post.summaryJa != '' : post.summaryKo != null and post.summaryKo != ''}">
@@ -237,8 +783,50 @@
         <div class="post-content" id="post-content">
             <div th:utext="${lang == 'ja' ? post.contentJa : post.contentKo}"></div>
         </div>
+        
+        <!-- 좋아요 버튼 -->
+        <div class="like-section">
+            <button class="like-button" th:data-post-id="${post.id}" th:data-lang="${lang}">
+                <span class="heart-icon" th:class="${isLiked ? 'heart-icon liked' : 'heart-icon'}">♡</span>
+                <span class="like-count" th:text="${likeCount}">0</span>
+            </button>
+        </div>
         <div class="post-navigation">
             <a href="/index" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
+        </div>
+        
+        <!-- 댓글 시스템 -->
+        <div class="comment-section">
+            <h3 class="comment-title">댓글</h3>
+            
+            <!-- 댓글 목록 -->
+            <div id="comment-list" class="comment-list">
+                <!-- 댓글들이 여기에 동적으로 추가됩니다 -->
+            </div>
+            
+            <!-- 댓글 작성 폼 -->
+            <div class="comment-form">
+                <div class="comment-input-group">
+                    <input type="text" id="comment-nickname" placeholder="닉네임 (비워두면 IP 주소가 표시됩니다)" class="comment-input">
+                    <input type="password" id="comment-password" placeholder="비밀번호" class="comment-input">
+                </div>
+                <div class="comment-content-group">
+                    <textarea id="comment-content" placeholder="댓글을 입력하세요..." class="comment-textarea"></textarea>
+                    <button id="comment-submit" class="comment-submit-btn">댓글 작성</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 비밀번호 입력 모달 -->
+        <div id="password-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-title" id="modal-title">비밀번호 입력</div>
+                <input type="password" id="modal-password" class="modal-input" placeholder="비밀번호를 입력하세요">
+                <div class="modal-buttons">
+                    <button class="modal-btn confirm" id="modal-confirm">확인</button>
+                    <button class="modal-btn cancel" id="modal-cancel">취소</button>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -341,43 +929,8 @@
         }
     </style>
     
-    <script>
-        // 언어 변경 시 자연스러운 처리
-        document.addEventListener('DOMContentLoaded', function() {
-            const langLinks = document.querySelectorAll('a[href*="lang="]');
-            const currentPostId = window.location.pathname.split('/').pop().split('?')[0];
-            
-            langLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const url = new URL(this.href);
-                    const lang = url.searchParams.get('lang');
-                    
-                    // 현재 게시글의 해당 언어 버전이 있는지 확인
-                    fetch(`/api/post/${currentPostId}?lang=${lang}`)
-                        .then(response => {
-                            if (response.ok) {
-                                // 해당 언어 버전이 있으면 그곳으로 이동
-                                return response.json();
-                            } else {
-                                // 없으면 해당 언어의 메인 페이지로 이동
-                                throw new Error('Post not found in this language');
-                            }
-                        })
-                        .then(post => {
-                            // 해당 언어 버전으로 이동
-                            window.location.href = `/post/${currentPostId}?lang=${lang}`;
-                        })
-                        .catch(error => {
-                            // 해당 언어 버전이 없으면 메인 페이지로 이동
-                            window.location.href = `/index?lang=${lang}`;
-                        });
-                });
-            });
-        });
-    </script>
     <script src="/js/post-detail.js"></script>
-    <!-- Prism.js JavaScript -->
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <div th:replace="~{fragments/footer :: footer}"></div>

@@ -9,11 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.hyuk_blog.dto.ResumeDto;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 import java.util.Optional;
 import com.example.hyuk_blog.dto.InquiryDto;
 import com.example.hyuk_blog.service.InquiryService;
+import com.example.hyuk_blog.service.LikeService;
+import com.example.hyuk_blog.service.CommentService;
 
 @Controller
 public class PostController {
@@ -26,6 +29,12 @@ public class PostController {
 
     @Autowired
     private InquiryService inquiryService;
+
+    @Autowired
+    private LikeService likeService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/about")
     public String about(@RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
@@ -50,14 +59,35 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
+    public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request) {
         Optional<PostDto> post = postService.getPostById(id, lang);
         if (post.isPresent() && post.get().isPublished()) {
+            String userIp = getClientIpAddress(request);
+            long likeCount = likeService.getLikeCount(id, lang);
+            boolean isLiked = likeService.isLikedByUser(id, userIp, lang);
+            
             model.addAttribute("post", post.get());
             model.addAttribute("lang", lang);
+            model.addAttribute("likeCount", likeCount);
+            model.addAttribute("isLiked", isLiked);
+            model.addAttribute("postId", id);
             return "post-detail";
         }
         return "redirect:/";
+    }
+    
+    private String getClientIpAddress(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isEmpty() && !"unknown".equalsIgnoreCase(xForwardedFor)) {
+            return xForwardedFor.split(",")[0].trim();
+        }
+        
+        String xRealIp = request.getHeader("X-Real-IP");
+        if (xRealIp != null && !xRealIp.isEmpty() && !"unknown".equalsIgnoreCase(xRealIp)) {
+            return xRealIp;
+        }
+        
+        return request.getRemoteAddr();
     }
 
     @GetMapping("/projects")
