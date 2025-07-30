@@ -109,7 +109,32 @@ public class VisitorService {
             
             // IP 방문자 데이터 로드 (기존 데이터와의 호환성을 위해)
             if (map.containsKey("dailyVisitors")) {
-                dailyVisitors = (Map<String, Set<String>>) map.get("dailyVisitors");
+                Object dailyVisitorsObj = map.get("dailyVisitors");
+                if (dailyVisitorsObj instanceof Map) {
+                    Map<String, Object> visitorsMap = (Map<String, Object>) dailyVisitorsObj;
+                    dailyVisitors = new HashMap<>();
+                    
+                    // 각 날짜별 방문자 목록을 Set으로 변환
+                    for (Map.Entry<String, Object> entry : visitorsMap.entrySet()) {
+                        String date = entry.getKey();
+                        Object visitorsObj = entry.getValue();
+                        
+                        if (visitorsObj instanceof List) {
+                            // ArrayList를 HashSet으로 변환
+                            List<String> visitorsList = (List<String>) visitorsObj;
+                            Set<String> visitorsSet = new HashSet<>(visitorsList);
+                            dailyVisitors.put(date, visitorsSet);
+                        } else if (visitorsObj instanceof Set) {
+                            // 이미 Set인 경우 그대로 사용
+                            dailyVisitors.put(date, (Set<String>) visitorsObj);
+                        } else {
+                            // 예상치 못한 타입인 경우 빈 Set으로 초기화
+                            dailyVisitors.put(date, new HashSet<>());
+                        }
+                    }
+                } else {
+                    dailyVisitors = new HashMap<>();
+                }
             } else {
                 dailyVisitors = new HashMap<>();
             }
