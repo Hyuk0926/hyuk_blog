@@ -64,7 +64,7 @@ public class PostController {
         if (post.isPresent() && post.get().isPublished()) {
             String userIp = getClientIpAddress(request);
             long likeCount = likeService.getLikeCount(id, lang);
-            boolean isLiked = likeService.isLikedByUser(id, userIp, lang);
+            boolean isLiked = likeService.isLikedByUser(id, userIp, null, lang);
             
             model.addAttribute("post", post.get());
             model.addAttribute("lang", lang);

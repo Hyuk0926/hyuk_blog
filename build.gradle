@@ -43,4 +43,5 @@ flyway {
     user = 'admin'
     password = 'Shka991204!'
     locations = ['filesystem:src/main/resources/db/migration']
+    baselineVersion = '13'
 }

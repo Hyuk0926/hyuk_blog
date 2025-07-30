@@ -1,11 +1,13 @@
 package com.example.hyuk_blog.controller;
 
+import com.example.hyuk_blog.dto.UserDto;
 import com.example.hyuk_blog.service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,10 +22,19 @@ public class LikeController {
     public ResponseEntity<Map<String, Object>> toggleLike(
             @PathVariable Long postId,
             @RequestParam String lang,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            HttpSession session) {
+        
+        // 로그인 확인
+        UserDto user = (UserDto) session.getAttribute("user");
+        if (user == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("error", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(response);
+        }
         
         String userIp = getClientIpAddress(request);
-        boolean isLiked = likeService.toggleLike(postId, userIp, lang);
+        boolean isLiked = likeService.toggleLike(postId, userIp, user.getId(), lang);
         long likeCount = likeService.getLikeCount(postId, lang);
         
         Map<String, Object> response = new HashMap<>();
@@ -37,10 +48,12 @@ public class LikeController {
     public ResponseEntity<Map<String, Object>> getLikeStatus(
             @PathVariable Long postId,
             @RequestParam String lang,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            HttpSession session) {
         
         String userIp = getClientIpAddress(request);
-        boolean isLiked = likeService.isLikedByUser(postId, userIp, lang);
+        UserDto user = (UserDto) session.getAttribute("user");
+        boolean isLiked = likeService.isLikedByUser(postId, userIp, user != null ? user.getId() : null, lang);
         long likeCount = likeService.getLikeCount(postId, lang);
         
         Map<String, Object> response = new HashMap<>();

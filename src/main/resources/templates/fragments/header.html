@@ -27,6 +27,16 @@
                 </ul>
             </nav>
             <div class="header-controls">
+                <!-- 사용자 인증 상태에 따른 로그인/로그아웃 버튼 -->
+                <div class="auth-controls" th:if="${session.user != null}">
+                    <span class="user-info" th:text="${session.user.nickname}">사용자</span>
+                    <a href="/user/logout" class="auth-btn logout-btn">로그아웃</a>
+                </div>
+                <div class="auth-controls" th:if="${session.user == null}">
+                    <a href="/user/login" class="auth-btn login-btn">로그인</a>
+                    <a href="/user/register" class="auth-btn register-btn">회원가입</a>
+                </div>
+                
                 <button id="darkModeToggle" class="control-btn dark-mode-btn" title="다크모드 전환">
                     <span class="dark-icon">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path></svg>

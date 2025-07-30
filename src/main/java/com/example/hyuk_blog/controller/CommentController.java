@@ -1,12 +1,14 @@
 package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.CommentDto;
+import com.example.hyuk_blog.dto.UserDto;
 import com.example.hyuk_blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,30 +29,44 @@ public class CommentController {
     @PostMapping("/{postId}")
     public ResponseEntity<CommentDto> createComment(
             @PathVariable Long postId,
-            @RequestParam String nickname,
-            @RequestParam String password,
             @RequestParam String content,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            HttpSession session) {
+        
+        // 로그인 확인
+        UserDto user = (UserDto) session.getAttribute("user");
+        if (user == null) {
+            return ResponseEntity.status(401).body(null);
+        }
         
         String userIp = getClientIpAddress(request);
-        CommentDto comment = commentService.createComment(postId, nickname, password, content, userIp);
+        CommentDto comment = commentService.createComment(postId, content, userIp, user.getId(), user.getNickname());
         return ResponseEntity.ok(comment);
     }
     
     @PutMapping("/{commentId}")
     public ResponseEntity<Map<String, Object>> updateComment(
             @PathVariable Long commentId,
-            @RequestParam String password,
-            @RequestParam String content) {
+            @RequestParam String content,
+            HttpSession session) {
         
-        boolean success = commentService.updateComment(commentId, password, content);
+        // 로그인 확인
+        UserDto user = (UserDto) session.getAttribute("user");
+        if (user == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(response);
+        }
+        
+        boolean success = commentService.updateComment(commentId, user.getId(), content);
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         
         if (success) {
             response.put("message", "댓글이 수정되었습니다.");
         } else {
-            response.put("message", "비밀번호가 일치하지 않습니다.");
+            response.put("message", "댓글을 수정할 권한이 없습니다.");
         }
         
         return ResponseEntity.ok(response);
@@ -59,32 +75,31 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Map<String, Object>> deleteComment(
             @PathVariable Long commentId,
-            @RequestParam String password) {
+            HttpSession session) {
         
-        boolean success = commentService.deleteComment(commentId, password);
+        // 로그인 확인
+        UserDto user = (UserDto) session.getAttribute("user");
+        if (user == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(response);
+        }
+        
+        boolean success = commentService.deleteComment(commentId, user.getId());
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         
         if (success) {
             response.put("message", "댓글이 삭제되었습니다.");
         } else {
-            response.put("message", "비밀번호가 일치하지 않습니다.");
+            response.put("message", "댓글을 삭제할 권한이 없습니다.");
         }
         
         return ResponseEntity.ok(response);
     }
     
-    @PostMapping("/{commentId}/verify")
-    public ResponseEntity<Map<String, Object>> verifyPassword(
-            @PathVariable Long commentId,
-            @RequestParam String password) {
-        
-        boolean isValid = commentService.verifyPassword(commentId, password);
-        Map<String, Object> response = new HashMap<>();
-        response.put("valid", isValid);
-        
-        return ResponseEntity.ok(response);
-    }
+
     
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");

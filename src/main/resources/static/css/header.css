@@ -72,11 +72,62 @@
     border-bottom-color: #2c3e50;
 }
 
-/* Header Controls (Dark Mode, Lang) */
+/* Header Controls (Auth, Dark Mode, Lang) */
 .header-controls {
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+.auth-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-info {
+    font-size: 0.9rem;
+    color: #4a5568;
+    font-weight: 500;
+}
+
+.auth-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.login-btn {
+    color: #4a5568;
+    background: #f1f5f9;
+}
+
+.login-btn:hover {
+    background: #e2e8f0;
+    color: #1a202c;
+}
+
+.register-btn {
+    color: #ffffff;
+    background: #667eea;
+}
+
+.register-btn:hover {
+    background: #5a67d8;
+    transform: translateY(-1px);
+}
+
+.logout-btn {
+    color: #dc3545;
+    background: #fee;
+}
+
+.logout-btn:hover {
+    background: #fcc;
+    color: #c82333;
 }
 
 .control-btn {
@@ -181,6 +232,39 @@ body.dark-mode .lang-separator {
 
 body.dark-mode .light-icon svg {
     stroke: #e2e8f0;
+}
+
+body.dark-mode .user-info {
+    color: #a0aec0;
+}
+
+body.dark-mode .login-btn {
+    color: #a0aec0;
+    background: #2d3748;
+}
+
+body.dark-mode .login-btn:hover {
+    background: #4a5568;
+    color: #e2e8f0;
+}
+
+body.dark-mode .register-btn {
+    color: #ffffff;
+    background: #667eea;
+}
+
+body.dark-mode .register-btn:hover {
+    background: #5a67d8;
+}
+
+body.dark-mode .logout-btn {
+    color: #f56565;
+    background: #742a2a;
+}
+
+body.dark-mode .logout-btn:hover {
+    background: #9b2c2c;
+    color: #fed7d7;
 }
 
 /* Responsive */

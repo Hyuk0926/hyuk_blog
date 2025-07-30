@@ -15,14 +15,29 @@ public class Like {
     @Column(name = "post_id", nullable = false)
     private Long postId;
     
-    @Column(name = "user_ip", nullable = false, length = 45)
+    @Column(name = "user_ip", length = 45)
     private String userIp;
     
-    @Column(name = "created_at")
+    @Column(name = "user_id")
+    private Long userId;
+    
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
     
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+    
+    /**
+     * Detached Entity 문제 방지를 위한 안전한 복사 메서드
+     */
+    public Like copy() {
+        Like copy = new Like();
+        copy.setId(this.id);
+        copy.setPostId(this.postId);
+        copy.setUserIp(this.userIp);
+        copy.setCreatedAt(this.createdAt);
+        return copy;
     }
 } 

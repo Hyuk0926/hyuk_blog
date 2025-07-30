@@ -143,19 +143,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json',
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            // 좋아요 상태 업데이트
-            if (data.liked) {
-                heartIcon.classList.add('liked');
-                heartIcon.textContent = '♥';
-            } else {
-                heartIcon.classList.remove('liked');
-                heartIcon.textContent = '♡';
+        .then(response => {
+            if (response.status === 401) {
+                // 로그인이 필요한 경우
+                if (confirm('좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+                    window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+                }
+                return null;
             }
-            
-            // 좋아요 수 업데이트
-            likeCount.textContent = data.likeCount;
+            return response.json();
+        })
+        .then(data => {
+            if (data) {
+                // 좋아요 상태 업데이트
+                if (data.liked) {
+                    heartIcon.classList.add('liked');
+                    heartIcon.textContent = '♥';
+                } else {
+                    heartIcon.classList.remove('liked');
+                    heartIcon.textContent = '♡';
+                }
+                
+                // 좋아요 수 업데이트
+                likeCount.textContent = data.likeCount;
+            }
         })
         .catch(error => {
             console.error('좋아요 처리 중 오류 발생:', error);
@@ -172,68 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const postId = document.querySelector('.like-button').getAttribute('data-post-id');
     const commentList = document.getElementById('comment-list');
     const commentForm = document.querySelector('.comment-form');
-    const nicknameInput = document.getElementById('comment-nickname');
-    const passwordInput = document.getElementById('comment-password');
     const contentTextarea = document.getElementById('comment-content');
     const submitBtn = document.getElementById('comment-submit');
     
-    // 모달 관련 요소들
-    const modal = document.getElementById('password-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalPassword = document.getElementById('modal-password');
-    const modalConfirm = document.getElementById('modal-confirm');
-    const modalCancel = document.getElementById('modal-cancel');
-    
-    let currentAction = null;
-    let currentCommentId = null;
-    let currentEditTextarea = null;
-    
-    // 모달 표시 함수
-    function showModal(title, callback) {
-        modalTitle.textContent = title;
-        modalPassword.value = '';
-        currentAction = callback;
-        modal.classList.add('active');
-        modalPassword.focus();
-    }
-    
-    // 모달 숨기기 함수
-    function hideModal() {
-        modal.classList.remove('active');
-        currentAction = null;
-        currentCommentId = null;
-        currentEditTextarea = null;
-    }
-    
-    // 모달 이벤트 리스너
-    modalConfirm.addEventListener('click', function() {
-        const password = modalPassword.value.trim();
-        if (!password) {
-            alert('비밀번호를 입력해주세요.');
-            return;
-        }
-        
-        if (currentAction) {
-            currentAction(password);
-        }
-        hideModal();
-    });
-    
-    modalCancel.addEventListener('click', hideModal);
-    
-    // 모달 외부 클릭 시 닫기
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            hideModal();
-        }
-    });
-    
-    // 엔터키로 모달 확인
-    modalPassword.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            modalConfirm.click();
-        }
-    });
+
     
     // 댓글 목록 로드
     function loadComments() {
@@ -291,27 +244,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const cancelBtn = commentDiv.querySelector('.cancel');
         
                         editBtn.addEventListener('click', function() {
-                    showModal('댓글 수정을 위한 비밀번호를 입력하세요', function(password) {
-                        fetch(`/api/comments/${comment.id}/verify`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `password=${encodeURIComponent(password)}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.valid) {
-                                editForm.classList.add('active');
-                                editTextarea.focus();
-                                // 비밀번호를 저장하여 저장 시 재사용
-                                commentDiv.dataset.verifiedPassword = password;
-                            } else {
-                                alert('비밀번호가 일치하지 않습니다.');
-                            }
+                            editForm.classList.add('active');
+                            editTextarea.focus();
                         });
-                    });
-                });
                 
                 saveBtn.addEventListener('click', function() {
                     const newContent = editTextarea.value.trim();
@@ -320,27 +255,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     
-                    const password = commentDiv.dataset.verifiedPassword;
-                    if (!password) {
-                        alert('비밀번호 인증이 필요합니다.');
-                        return;
-                    }
-                    
                     fetch(`/api/comments/${comment.id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
-                        body: `password=${encodeURIComponent(password)}&content=${encodeURIComponent(newContent)}`
+                        body: `content=${encodeURIComponent(newContent)}`
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (response.status === 401) {
+                            alert('로그인이 필요합니다.');
+                            return null;
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        if (data.success) {
+                        if (data && data.success) {
                             editForm.classList.remove('active');
                             commentDiv.querySelector('.comment-content').textContent = newContent;
-                            delete commentDiv.dataset.verifiedPassword; // 저장된 비밀번호 삭제
                             loadComments(); // 댓글 목록 새로고침
-                        } else {
+                        } else if (data) {
                             alert(data.message);
                         }
                     });
@@ -355,22 +289,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const deleteBtn = commentDiv.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', function() {
             if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
-                showModal('댓글 삭제를 위한 비밀번호를 입력하세요', function(password) {
-                    fetch(`/api/comments/${comment.id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `password=${encodeURIComponent(password)}`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            commentDiv.remove();
-                        } else {
-                            alert(data.message);
-                        }
-                    });
+                fetch(`/api/comments/${comment.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    }
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        alert('로그인이 필요합니다.');
+                        return null;
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.success) {
+                        commentDiv.remove();
+                    } else if (data) {
+                        alert(data.message);
+                    }
                 });
             }
         });
@@ -380,14 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 댓글 작성
     submitBtn.addEventListener('click', function() {
-        const nickname = nicknameInput.value.trim();
-        const password = passwordInput.value.trim();
         const content = contentTextarea.value.trim();
-        
-        if (!password) {
-            alert('비밀번호를 입력해주세요.');
-            return;
-        }
         
         if (!content) {
             alert('댓글 내용을 입력해주세요.');
@@ -395,8 +325,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         const formData = new URLSearchParams();
-        formData.append('nickname', nickname);
-        formData.append('password', password);
         formData.append('content', content);
         
         fetch(`/api/comments/${postId}`, {
@@ -406,15 +334,24 @@ document.addEventListener('DOMContentLoaded', function() {
             },
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            if (response.status === 401) {
+                // 로그인이 필요한 경우
+                if (confirm('댓글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+                    window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+                }
+                return null;
+            }
+            return response.json();
+        })
         .then(comment => {
-            // 폼 초기화
-            nicknameInput.value = '';
-            passwordInput.value = '';
-            contentTextarea.value = '';
-            
-            // 댓글 목록 새로고침
-            loadComments();
+            if (comment) {
+                // 폼 초기화
+                contentTextarea.value = '';
+                
+                // 댓글 목록 새로고침
+                loadComments();
+            }
         })
         .catch(error => {
             console.error('댓글 작성 중 오류:', error);
