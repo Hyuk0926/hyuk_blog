@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 public class PostJp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "postjp_id")
     private Long id;
 
     @Column(length = 500)
