@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostKrRepository extends JpaRepository<PostKr, Long> {
@@ -16,4 +17,6 @@ public interface PostKrRepository extends JpaRepository<PostKr, Long> {
     @Query("SELECT p FROM PostKr p ORDER BY p.createdAt DESC")
     List<PostKr> findAllOrderByCreatedAtDesc();
     List<PostKr> findByCategoryAndPublishedOrderByCreatedAtDesc(Category category, boolean published);
+    
+    Optional<PostKr> findByEncryptedId(String encryptedId);
 } 

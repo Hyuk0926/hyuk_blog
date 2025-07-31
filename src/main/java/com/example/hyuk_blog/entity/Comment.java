@@ -3,6 +3,7 @@ package com.example.hyuk_blog.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "comments")
@@ -12,8 +13,8 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "post_id", nullable = false)
-    private Long postId;
+    @Column(name = "post_encrypted_id", nullable = true, length = 255)
+    private String postEncryptedId;
     
     @Column(name = "nickname", nullable = false, length = 100)
     private String nickname;
@@ -32,27 +33,22 @@ public class Comment {
     
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        try {
+            createdAt = LocalDateTime.now();
+            updatedAt = LocalDateTime.now();
+        } catch (Exception e) {
+            System.err.println("Error in onCreate: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
     
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-    
-    /**
-     * Detached Entity 문제 방지를 위한 안전한 복사 메서드
-     */
-    public Comment copy() {
-        Comment copy = new Comment();
-        copy.setId(this.id);
-        copy.setPostId(this.postId);
-        copy.setNickname(this.nickname);
-        copy.setContent(this.content);
-        copy.setUserId(this.userId);
-        copy.setCreatedAt(this.createdAt);
-        copy.setUpdatedAt(this.updatedAt);
-        return copy;
+        try {
+            updatedAt = LocalDateTime.now();
+        } catch (Exception e) {
+            System.err.println("Error in onUpdate: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 } 

@@ -2,7 +2,11 @@ package com.example.hyuk_blog.service;
 
 import com.example.hyuk_blog.dto.CommentDto;
 import com.example.hyuk_blog.entity.Comment;
+import com.example.hyuk_blog.entity.PostKr;
+import com.example.hyuk_blog.entity.PostJp;
 import com.example.hyuk_blog.repository.CommentRepository;
+import com.example.hyuk_blog.repository.PostKrRepository;
+import com.example.hyuk_blog.repository.PostJpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class CommentService {
     
@@ -22,25 +28,52 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
     
+    @Autowired
+    private PostKrRepository postKrRepository;
+    
+    @Autowired
+    private PostJpRepository postJpRepository;
+    
 
     
-    public List<CommentDto> getCommentsByPostId(Long postId) {
-        List<Comment> comments = commentRepository.findByPostIdOrderByCreatedAtAsc(postId);
+    public List<CommentDto> getCommentsByPostEncryptedId(String postEncryptedId) {
+        List<Comment> comments = commentRepository.findByPostEncryptedIdOrderByCreatedAtAsc(postEncryptedId);
         return comments.stream().map(this::convertToDto).collect(Collectors.toList());
     }
     
     @Transactional
-    public CommentDto createComment(Long postId, String content, Long userId, String nickname) {
-        // 새로운 Comment 엔티티 생성 (detached entity 문제 방지)
-        Comment comment = new Comment();
-        comment.setPostId(postId);
-        comment.setContent(content.trim());
-        comment.setUserId(userId);
-        comment.setNickname(nickname);
+    public void createComment(String postEncryptedId, String content, Long userId, String nickname) {
+        logger.info("Creating comment - postEncryptedId: {}, content: {}, userId: {}, nickname: {}", 
+                   postEncryptedId, content, userId, nickname);
         
-        // 저장 및 반환 (detached entity 문제 완전 방지)
-        Comment savedComment = safeSave(comment);
-        return convertToDto(savedComment);
+        try {
+            // 1. encrypted_id로 게시글 존재 여부 확인
+            boolean postExists = findPostByEncryptedId(postEncryptedId);
+            if (!postExists) {
+                throw new EntityNotFoundException("Post not found with encrypted_id: " + postEncryptedId);
+            }
+            
+            // 2. 새로운 Comment 엔티티를 생성합니다.
+            Comment comment = new Comment();
+            comment.setPostEncryptedId(postEncryptedId);
+            comment.setContent(content.trim());
+            comment.setUserId(userId);
+            comment.setNickname(nickname);
+            
+            logger.info("Comment entity created: {}", comment);
+
+            // 3. 댓글을 저장합니다.
+            Comment savedComment = commentRepository.save(comment);
+            logger.info("Comment saved successfully: {}", savedComment);
+            
+            //CommentDto dto = convertToDto(savedComment);
+            //logger.info("Comment DTO created: {}", dto);
+
+            // return dto;
+        } catch (Exception e) {
+            logger.error("Error creating comment: {}", e.getMessage());
+        }
+
     }
     
     @Transactional
@@ -51,9 +84,9 @@ public class CommentService {
             
             // 댓글 작성자이거나 admin 계정인 경우 수정 가능
             if (userId.equals(comment.getUserId()) || isAdminUser(userId)) {
-                // detached entity 문제 방지를 위해 내용만 업데이트
+                // 내용만 업데이트
                 comment.setContent(newContent.trim());
-                safeSave(comment);
+                commentRepository.save(comment);
                 return true;
             }
         }
@@ -84,44 +117,44 @@ public class CommentService {
     
 
     
-    public Long getCommentCount(Long postId) {
-        return commentRepository.countByPostId(postId);
+    public Long getCommentCount(String postEncryptedId) {
+        return commentRepository.countByPostEncryptedId(postEncryptedId);
     }
     
     /**
-     * Detached Entity 문제를 방지하기 위한 안전한 엔티티 처리 메서드
-     * 향후 다른 엔티티와의 관계가 추가될 때 사용
+     * encrypted_id로 게시글 존재 여부를 확인하는 메서드
      */
-    private Comment ensureManagedEntity(Comment comment) {
-        if (comment.getId() != null) {
-            // 이미 관리되는 엔티티인지 확인
-            return commentRepository.findById(comment.getId()).orElse(comment);
+    private boolean findPostByEncryptedId(String postEncryptedId) {
+        logger.info("Finding post by encrypted_id: {}", postEncryptedId);
+        
+        if (postEncryptedId == null || postEncryptedId.trim().isEmpty()) {
+            return false;
         }
-        return comment;
-    }
-    
-    /**
-     * Detached Entity 문제를 방지하기 위한 안전한 저장 메서드
-     */
-    private Comment safeSave(Comment comment) {
-        try {
-            return commentRepository.save(comment);
-        } catch (Exception e) {
-            logger.warn("Detached entity 오류 발생, 새로운 엔티티로 재생성: {}", e.getMessage());
-            // detached entity 오류 발생 시 새로운 엔티티로 재생성
-            Comment newComment = new Comment();
-            newComment.setPostId(comment.getPostId());
-            newComment.setNickname(comment.getNickname());
-            newComment.setContent(comment.getContent());
-            newComment.setUserId(comment.getUserId());
-            return commentRepository.save(newComment);
+        
+        // PostKr에서 검색
+        Optional<PostKr> postKr = postKrRepository.findByEncryptedId(postEncryptedId);
+        if (postKr.isPresent()) {
+            logger.info("Found PostKr: {}", postKr.get().getTitle());
+            return true;
         }
+        
+        // PostJp에서 검색
+        Optional<PostJp> postJp = postJpRepository.findByEncryptedId(postEncryptedId);
+        if (postJp.isPresent()) {
+            logger.info("Found PostJp: {}", postJp.get().getTitle());
+            return true;
+        }
+        
+        logger.warn("Post not found with encrypted_id: {}", postEncryptedId);
+        return false;
     }
-    
+
+
+
     private CommentDto convertToDto(Comment comment) {
         CommentDto dto = new CommentDto();
         dto.setId(comment.getId());
-        dto.setPostId(comment.getPostId());
+        dto.setPostEncryptedId(comment.getPostEncryptedId());
         dto.setNickname(comment.getNickname());
         dto.setContent(comment.getContent());
         dto.setUserId(comment.getUserId());
@@ -130,4 +163,6 @@ public class CommentService {
         dto.setEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt()));
         return dto;
     }
+    
+
 } 

@@ -61,11 +61,22 @@ public class PostController {
         return "index";
     }
 
+    @GetMapping("/jp")
+    public String jpIndex(Model model) {
+        List<PostDto> posts = postService.getAllPublishedPosts("ja");
+        model.addAttribute("posts", posts);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("lang", "ja");
+        return "index";
+    }
+
     @GetMapping("/post/{id}")
     public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, lang);
         if (post.isPresent() && post.get().isPublished()) {
-            long likeCount = likeService.getLikeCount(id, lang);
+            // encrypted_id를 사용하여 좋아요/댓글 관련 작업 수행
+            String encryptedId = post.get().getEncryptedId();
+            long likeCount = likeService.getLikeCount(encryptedId, lang);
             
             // user 또는 admin 세션 확인
             UserDto user = (UserDto) session.getAttribute("user");
@@ -74,19 +85,20 @@ public class PostController {
             
             // 좋아요 상태 확인 (user 또는 admin ID 사용)
             Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
-            boolean isLiked = likeService.isLikedByUser(id, userId, lang);
+            boolean isLiked = likeService.isLikedByUser(encryptedId, userId, lang);
             
             model.addAttribute("post", post.get());
             model.addAttribute("lang", lang);
             model.addAttribute("likeCount", likeCount);
             model.addAttribute("isLiked", isLiked);
             model.addAttribute("postId", id);
+            model.addAttribute("postEncryptedId", encryptedId);
             model.addAttribute("user", user);
             model.addAttribute("admin", admin);
             model.addAttribute("isLoggedIn", isLoggedIn);
             return "post-detail";
         }
-        return "redirect:/";
+        return "redirect:" + (lang.equals("ja") ? "/jp" : "/index");
     }
     
     private String getClientIpAddress(HttpServletRequest request) {

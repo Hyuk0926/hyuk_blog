@@ -17,29 +17,29 @@ public class LikeService {
     private LikeRepository likeRepository;
     
     @Transactional
-    public boolean toggleLike(Long postId, Long userId, String lang) {
-        boolean exists = likeRepository.existsByPostIdAndUserId(postId, userId);
+    public boolean toggleLike(String postEncryptedId, Long userId, String lang) {
+        boolean exists = likeRepository.existsByPostEncryptedIdAndUserId(postEncryptedId, userId);
         
         if (exists) {
             // 좋아요 취소
-            likeRepository.deleteByPostIdAndUserId(postId, userId);
+            likeRepository.deleteByPostEncryptedIdAndUserId(postEncryptedId, userId);
             return false;
         } else {
             // 좋아요 추가 (detached entity 문제 완전 방지)
             Like like = new Like();
-            like.setPostId(postId);
+            like.setPostEncryptedId(postEncryptedId);
             like.setUserId(userId);
             safeSave(like);
             return true;
         }
     }
     
-    public long getLikeCount(Long postId, String lang) {
-        return likeRepository.countByPostId(postId);
+    public long getLikeCount(String postEncryptedId, String lang) {
+        return likeRepository.countByPostEncryptedId(postEncryptedId);
     }
     
-    public boolean isLikedByUser(Long postId, Long userId, String lang) {
-        return likeRepository.existsByPostIdAndUserId(postId, userId);
+    public boolean isLikedByUser(String postEncryptedId, Long userId, String lang) {
+        return likeRepository.existsByPostEncryptedIdAndUserId(postEncryptedId, userId);
     }
     
     /**
@@ -64,7 +64,7 @@ public class LikeService {
             logger.warn("Detached entity 오류 발생, 새로운 엔티티로 재생성: {}", e.getMessage());
             // detached entity 오류 발생 시 새로운 엔티티로 재생성
             Like newLike = new Like();
-            newLike.setPostId(like.getPostId());
+            newLike.setPostEncryptedId(like.getPostEncryptedId());
             newLike.setUserId(like.getUserId());
             return likeRepository.save(newLike);
         }

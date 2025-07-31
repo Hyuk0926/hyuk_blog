@@ -868,7 +868,7 @@
             </button>
         </div>
         <div class="post-navigation">
-            <a href="/index" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
+            <a th:href="${lang == 'ja' ? '/jp' : '/index'}" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
         </div>
         
         <!-- 댓글 시스템 -->

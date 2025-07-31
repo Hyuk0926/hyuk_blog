@@ -11,14 +11,14 @@ import java.util.Optional;
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long> {
     
-    @Query("SELECT COUNT(l) FROM Like l WHERE l.postId = :postId")
-    long countByPostId(@Param("postId") Long postId);
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.postEncryptedId = :postEncryptedId")
+    long countByPostEncryptedId(@Param("postEncryptedId") String postEncryptedId);
     
 
     
-    Optional<Like> findByPostIdAndUserId(Long postId, Long userId);
+    Optional<Like> findByPostEncryptedIdAndUserId(String postEncryptedId, Long userId);
     
-    boolean existsByPostIdAndUserId(Long postId, Long userId);
+    boolean existsByPostEncryptedIdAndUserId(String postEncryptedId, Long userId);
     
-    void deleteByPostIdAndUserId(Long postId, Long userId);
+    void deleteByPostEncryptedIdAndUserId(String postEncryptedId, Long userId);
 } 

@@ -117,7 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .catch(error => {
                     // 해당 언어 버전이 없으면 메인 페이지로 이동
-                    window.location.href = `/index?lang=${lang}`;
+                    const mainPage = lang === 'ja' ? '/jp' : '/index';
+                    window.location.href = `${mainPage}?lang=${lang}`;
                 });
         });
     });
@@ -137,18 +138,32 @@ document.addEventListener('DOMContentLoaded', function() {
         // 버튼 비활성화 (중복 클릭 방지)
         this.disabled = true;
         
+        console.log('Sending like request:', {
+            postId: postId,
+            lang: lang,
+            url: `/api/like/${postId}?lang=${lang}`
+        });
+        
         fetch(`/api/like/${postId}?lang=${lang}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-            }
+                'X-Requested-With': 'XMLHttpRequest',
+                'Cache-Control': 'no-cache'
+            },
+            credentials: 'include'
         })
         .then(response => {
+            console.log('Like response status:', response.status);
             if (response.status === 401) {
                 // 로그인이 필요한 경우
                 if (confirm('좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
                 }
+                return null;
+            } else if (response.status === 500) {
+                console.error('Server error in like request');
+                alert('서버 오류가 발생했습니다.');
                 return null;
             }
             return response.json();
@@ -325,19 +340,33 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new URLSearchParams();
         formData.append('content', content);
         
+        console.log('Sending comment request:', {
+            postId: postId,
+            content: content,
+            formData: formData.toString()
+        });
+        
         fetch(`/api/comments/${postId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Cache-Control': 'no-cache'
             },
-            body: formData
+            body: formData,
+            credentials: 'include'
         })
         .then(response => {
+            console.log('Comment response status:', response.status);
             if (response.status === 401) {
                 // 로그인이 필요한 경우
                 if (confirm('댓글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
                 }
+                return null;
+            } else if (response.status === 500) {
+                console.error('Server error in comment request');
+                alert('서버 오류가 발생했습니다.');
                 return null;
             }
             return response.json();

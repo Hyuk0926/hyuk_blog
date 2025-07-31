@@ -51,24 +51,24 @@ public class PostService {
     public List<PostDto> getAllPublishedPosts(String lang) {
         if ("ja".equals(lang)) {
             return postJpRepository.findByPublishedOrderByCreatedAtDesc(true)
-                    .stream()
-                    .map(post -> {
-                        PostDto dto = PostDto.fromJpEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+                .stream()
+                .map(post -> {
+                    PostDto dto = PostDto.fromJpEntity(post);
+                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
         } else {
             return postKrRepository.findByPublishedOrderByCreatedAtDesc(true)
-                    .stream()
-                    .map(post -> {
-                        PostDto dto = PostDto.fromKrEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+                .stream()
+                .map(post -> {
+                    PostDto dto = PostDto.fromKrEntity(post);
+                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
         }
     }
 
@@ -81,24 +81,24 @@ public class PostService {
     public List<PostDto> getAllPosts(String lang) {
         if ("ja".equals(lang)) {
             return postJpRepository.findAllOrderByCreatedAtDesc()
-                    .stream()
-                    .map(post -> {
-                        PostDto dto = PostDto.fromJpEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+                .stream()
+                .map(post -> {
+                    PostDto dto = PostDto.fromJpEntity(post);
+                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
         } else {
             return postKrRepository.findAllOrderByCreatedAtDesc()
-                    .stream()
-                    .map(post -> {
-                        PostDto dto = PostDto.fromKrEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
-                        return dto;
-                    })
-                    .collect(Collectors.toList());
+                .stream()
+                .map(post -> {
+                    PostDto dto = PostDto.fromKrEntity(post);
+                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
         }
     }
 
@@ -107,15 +107,15 @@ public class PostService {
         if ("ja".equals(lang)) {
             return postJpRepository.findById(id).map(post -> {
                 PostDto dto = PostDto.fromJpEntity(post);
-                dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
                 return dto;
             });
         } else {
             return postKrRepository.findById(id).map(post -> {
                 PostDto dto = PostDto.fromKrEntity(post);
-                dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
                 return dto;
             });
         }
@@ -186,8 +186,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromJpEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -196,8 +196,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromKrEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -211,8 +211,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromJpEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -221,8 +221,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromKrEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
+                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
