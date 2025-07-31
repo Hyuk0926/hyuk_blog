@@ -19,130 +19,132 @@ import java.util.Optional;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/admin_jp")
+@RequestMapping("/admin/jp")
 public class AdminJpController {
+    
     @Autowired
     private PostService postService;
+    
     @Autowired
     private ResumeService resumeService;
+
     @Autowired
     private InquiryService inquiryService;
 
-    // 관리자 대시보드 (일본어)
+    // 일본어 관리자 대시보드
     @GetMapping("")
-    public String adminDashboard(Model model, HttpSession session) {
-        session.setAttribute("lang", "ja"); // 무조건 일본어
-        List<PostDto> posts = postService.getAllPosts("ja");
+    public String adminJpDashboard(Model model, HttpSession session) {
+        // 세션에 lang을 일본어로 설정
+        session.setAttribute("lang", "ja");
+        
+        String lang = "ja";
+        List<PostDto> posts = postService.getAllPosts(lang);
         model.addAttribute("posts", posts);
         model.addAttribute("inquiryCount", inquiryService.getUnreadCount());
         model.addAttribute("inquiries", inquiryService.getAllInquiries());
-        model.addAttribute("adminPrefix", "/admin_jp");
+        model.addAttribute("adminPrefix", "/admin/jp");
         model.addAttribute("lang", "ja");
         return "admin/dashboard";
     }
-
-    // 새 게시글 작성 폼 (일본어 전용)
+    
+    // 새 일본어 게시글 작성 폼
     @GetMapping("/post/new")
-    public String newPostForm(Model model, HttpSession session) {
-        session.setAttribute("lang", "ja");
+    public String newJpPostForm(Model model, HttpSession session) {
+        session.setAttribute("lang", "ja"); // 무조건 일본어
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         model.addAttribute("post", new PostDto());
         model.addAttribute("admin", admin);
         model.addAttribute("categories", Category.values());
-        model.addAttribute("formAction", "/admin_jp/post/new");
+        model.addAttribute("formAction", "/admin/jp/post/new");
         return "admin/post-form-jp";
     }
-
-    // 새 게시글 저장 (일본어)
+    
+    // 새 일본어 게시글 저장
     @PostMapping("/post/new")
-    public String createPost(@ModelAttribute PostDto postDto, HttpSession session) {
-        session.setAttribute("lang", "ja");
+    public String createJpPost(@ModelAttribute PostDto postDto) {
         postService.savePost(postDto, "ja");
-        return "redirect:/admin_jp";
+        return "redirect:/admin/jp";
     }
-
-    // 게시글 수정 폼 (일본어 전용)
+    
+    // 일본어 게시글 수정 폼
     @GetMapping("/post/edit/{id}")
-    public String editPostForm(@PathVariable Long id, Model model, HttpSession session) {
-        session.setAttribute("lang", "ja");
+    public String editJpPostForm(@PathVariable Long id, Model model, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, "ja");
         AdminDto admin = (AdminDto) session.getAttribute("admin");
+        
         if (post.isPresent()) {
             model.addAttribute("post", post.get());
             model.addAttribute("admin", admin);
             model.addAttribute("categories", Category.values());
-            model.addAttribute("formAction", "/admin_jp/post/edit/" + id);
+            model.addAttribute("formAction", "/admin/jp/post/edit/" + id);
             return "admin/post-form-jp";
         }
-        return "redirect:/admin_jp";
+        return "redirect:/admin/jp";
     }
-
-    // 게시글 수정 (일본어)
+    
+    // 일본어 게시글 수정
     @PostMapping("/post/edit/{id}")
-    public String updatePost(@PathVariable Long id, @ModelAttribute PostDto postDto, HttpSession session) {
-        session.setAttribute("lang", "ja");
+    public String updateJpPost(@PathVariable Long id, @ModelAttribute PostDto postDto) {
         postService.updatePost(id, postDto, "ja");
-        return "redirect:/admin_jp";
+        return "redirect:/admin/jp";
     }
-
-    // 게시글 삭제 (일본어)
+    
+    // 일본어 게시글 삭제
     @PostMapping("/post/delete/{id}")
-    public String deletePost(@PathVariable Long id, HttpSession session) {
-        session.setAttribute("lang", "ja");
+    public String deleteJpPost(@PathVariable Long id) {
         postService.deletePost(id, "ja");
-        return "redirect:/admin_jp";
+        return "redirect:/admin/jp";
     }
-
-    // 게시글 미리보기 (일본어)
+    
+    // 일본어 게시글 미리보기
     @GetMapping("/post/preview/{id}")
-    public String previewPost(@PathVariable Long id, Model model) {
+    public String previewJpPost(@PathVariable Long id, Model model) {
         Optional<PostDto> post = postService.getPostById(id, "ja");
         if (post.isPresent()) {
             model.addAttribute("post", post.get());
             return "post-detail";
         }
-        return "redirect:/admin_jp";
+        return "redirect:/admin/jp";
     }
 
-    // 이력서 관리 폼 (일본어)
+    // 일본어 이력서 관리 폼 (GET)
     @GetMapping("/resume")
-    public String resumeForm(Model model, HttpSession session) {
-        session.setAttribute("lang", "ja");
+    public String resumeJpForm(Model model, HttpSession session) {
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         model.addAttribute("admin", admin);
         model.addAttribute("resume", resumeService.loadResume());
-        return "admin/resume-form";
+        return "admin/resume-form-jp";
     }
 
-    // 이력서 저장 (일본어)
+    // 일본어 이력서 저장 (POST)
     @PostMapping("/resume")
-    public String saveResume(@ModelAttribute com.example.hyuk_blog.entity.Resume resume, RedirectAttributes redirectAttributes) {
+    public String saveJpResume(@ModelAttribute com.example.hyuk_blog.entity.Resume resume, RedirectAttributes redirectAttributes) {
         resumeService.saveResume(resume);
-        redirectAttributes.addFlashAttribute("message", "이력서가 저장되었습니다!");
-        return "redirect:/admin_jp";
+        redirectAttributes.addFlashAttribute("message", "履歴書が保存されました！");
+        return "redirect:/admin/jp";
     }
 
     @GetMapping("/inquiry")
-    public String inquiryManage(Model model) {
+    public String inquiryJpManage(Model model) {
         model.addAttribute("inquiries", inquiryService.getAllInquiries());
         return "admin/inquiry";
     }
 
-    @GetMapping("/admin_jp/inquiries")
+    @GetMapping("/admin/inquiries")
     @ResponseBody
-    public List<InquiryDto> getInquiries() {
+    public List<InquiryDto> getJpInquiries() {
         return inquiryService.getAllInquiries();
     }
 
-    @PostMapping("/admin_jp/inquiries/read")
+    @PostMapping("/admin/inquiries/read")
     @ResponseBody
-    public void markInquiriesRead() {
+    public void markJpInquiriesRead() {
         inquiryService.markAllRead();
     }
 
-    @GetMapping("/admin_jp/inquiries/recent")
+    @GetMapping("/admin/inquiries/recent")
     @ResponseBody
-    public List<InquiryDto> getRecentInquiries() {
+    public List<InquiryDto> getRecentJpInquiries() {
         return inquiryService.getRecentInquiries(5);
     }
 } 

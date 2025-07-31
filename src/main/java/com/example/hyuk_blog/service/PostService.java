@@ -54,8 +54,8 @@ public class PostService {
                 .stream()
                 .map(post -> {
                     PostDto dto = PostDto.fromJpEntity(post);
-                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                    dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.JP));
+                    dto.setCommentCount(commentService.getCommentCountByPostJpId(post.getId()));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -64,8 +64,8 @@ public class PostService {
                 .stream()
                 .map(post -> {
                     PostDto dto = PostDto.fromKrEntity(post);
-                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                    dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.KR));
+                    dto.setCommentCount(commentService.getCommentCountByPostKrId(post.getId()));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -81,24 +81,24 @@ public class PostService {
     public List<PostDto> getAllPosts(String lang) {
         if ("ja".equals(lang)) {
             return postJpRepository.findAllOrderByCreatedAtDesc()
-                .stream()
-                .map(post -> {
-                    PostDto dto = PostDto.fromJpEntity(post);
-                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
-                    return dto;
-                })
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(post -> {
+                        PostDto dto = PostDto.fromJpEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.JP));
+                        dto.setCommentCount(commentService.getCommentCountByPostJpId(post.getId()));
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
         } else {
             return postKrRepository.findAllOrderByCreatedAtDesc()
-                .stream()
-                .map(post -> {
-                    PostDto dto = PostDto.fromKrEntity(post);
-                    dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                    dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
-                    return dto;
-                })
-                .collect(Collectors.toList());
+                    .stream()
+                    .map(post -> {
+                        PostDto dto = PostDto.fromKrEntity(post);
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.KR));
+                        dto.setCommentCount(commentService.getCommentCountByPostKrId(post.getId()));
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
         }
     }
 
@@ -107,15 +107,15 @@ public class PostService {
         if ("ja".equals(lang)) {
             return postJpRepository.findById(id).map(post -> {
                 PostDto dto = PostDto.fromJpEntity(post);
-                dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.JP));
+                dto.setCommentCount(commentService.getCommentCountByPostJpId(post.getId()));
                 return dto;
             });
         } else {
             return postKrRepository.findById(id).map(post -> {
                 PostDto dto = PostDto.fromKrEntity(post);
-                dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.KR));
+                dto.setCommentCount(commentService.getCommentCountByPostKrId(post.getId()));
                 return dto;
             });
         }
@@ -186,8 +186,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromJpEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.JP));
+                        dto.setCommentCount(commentService.getCommentCountByPostJpId(post.getId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -196,8 +196,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromKrEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.KR));
+                        dto.setCommentCount(commentService.getCommentCountByPostKrId(post.getId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -211,8 +211,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromJpEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.JP));
+                        dto.setCommentCount(commentService.getCommentCountByPostJpId(post.getId()));
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -221,8 +221,8 @@ public class PostService {
                     .stream()
                     .map(post -> {
                         PostDto dto = PostDto.fromKrEntity(post);
-                        dto.setLikeCount(likeService.getLikeCount(post.getEncryptedId(), lang));
-                        dto.setCommentCount(commentService.getCommentCount(post.getEncryptedId()));
+                        dto.setLikeCount(likeService.getLikeCount(post.getId(), com.example.hyuk_blog.entity.PostType.KR));
+                        dto.setCommentCount(commentService.getCommentCountByPostKrId(post.getId()));
                         return dto;
                     })
                     .collect(Collectors.toList());

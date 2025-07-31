@@ -12,8 +12,12 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "post_encrypted_id", nullable = true, length = 255)
-    private String postEncryptedId;
+    @Column(name = "post_id")
+    private Long postId;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "post_type", length = 10)
+    private PostType postType;
     
     @Column(name = "user_id")
     private Long userId;
@@ -32,7 +36,8 @@ public class Like {
     public Like copy() {
         Like copy = new Like();
         copy.setId(this.id);
-        copy.setPostEncryptedId(this.postEncryptedId);
+        copy.setPostId(this.postId);
+        copy.setPostType(this.postType);
         copy.setUserId(this.userId);
         copy.setCreatedAt(this.createdAt);
         return copy;

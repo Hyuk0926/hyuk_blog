@@ -12,14 +12,16 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     
-    @Query("SELECT c FROM Comment c WHERE c.postEncryptedId = :postEncryptedId ORDER BY c.createdAt ASC")
-    List<Comment> findByPostEncryptedIdOrderByCreatedAtAsc(@Param("postEncryptedId") String postEncryptedId);
+    @Query("SELECT c FROM Comment c WHERE c.postKr.id = :postId AND c.postType = 'KR' ORDER BY c.createdAt ASC")
+    List<Comment> findByPostKrIdOrderByCreatedAtAsc(@Param("postId") Long postId);
     
-    @Query("SELECT COUNT(c) FROM Comment c WHERE c.postEncryptedId = :postEncryptedId")
-    Long countByPostEncryptedId(@Param("postEncryptedId") String postEncryptedId);
+    @Query("SELECT c FROM Comment c WHERE c.postJp.id = :postId AND c.postType = 'JP' ORDER BY c.createdAt ASC")
+    List<Comment> findByPostJpIdOrderByCreatedAtAsc(@Param("postId") Long postId);
     
-    @Query("SELECT c FROM Comment c WHERE c.postEncryptedId = :postEncryptedId ORDER BY c.createdAt ASC")
-    List<Comment> findByPostEncryptedId(@Param("postEncryptedId") String postEncryptedId);
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.postKr.id = :postId AND c.postType = 'KR'")
+    Long countByPostKrId(@Param("postId") Long postId);
     
-
+    @Query("SELECT COUNT(c) FROM Comment c WHERE c.postJp.id = :postId AND c.postType = 'JP'")
+    Long countByPostJpId(@Param("postId") Long postId);
+    
 } 

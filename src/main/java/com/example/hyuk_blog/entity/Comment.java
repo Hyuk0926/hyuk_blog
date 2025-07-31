@@ -13,8 +13,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "post_encrypted_id", nullable = true, length = 255)
-    private String postEncryptedId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "post_type", length = 10)
+    private PostType postType;
     
     @Column(name = "nickname", nullable = false, length = 100)
     private String nickname;

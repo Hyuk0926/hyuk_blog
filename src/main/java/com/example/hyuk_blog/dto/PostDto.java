@@ -17,7 +17,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 @AllArgsConstructor
 public class PostDto {
     private Long id;
-    private String encryptedId;
     private String titleKo; // 한국어 제목 추가
     private String titleJa; // 일본어 제목 추가
     private String summaryKo; // 한국어 요약 추가
@@ -36,7 +35,6 @@ public class PostDto {
     public static PostDto fromKrEntity(PostKr post) {
         PostDto dto = new PostDto();
         dto.setId(post.getId());
-        dto.setEncryptedId(post.getEncryptedId());
         dto.setTitleKo(post.getTitle());
         dto.setImageUrl(post.getImageUrl());
         dto.setPublished(post.isPublished());
@@ -51,7 +49,6 @@ public class PostDto {
     public static PostDto fromJpEntity(PostJp post) {
         PostDto dto = new PostDto();
         dto.setId(post.getId());
-        dto.setEncryptedId(post.getEncryptedId());
         dto.setTitleJa(post.getTitle());
         dto.setImageUrl(post.getImageUrl());
         dto.setPublished(post.isPublished());

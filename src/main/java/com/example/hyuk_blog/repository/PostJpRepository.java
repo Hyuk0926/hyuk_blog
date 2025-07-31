@@ -18,5 +18,5 @@ public interface PostJpRepository extends JpaRepository<PostJp, Long> {
     List<PostJp> findAllOrderByCreatedAtDesc();
     List<PostJp> findByCategoryAndPublishedOrderByCreatedAtDesc(Category category, boolean published);
     
-    Optional<PostJp> findByEncryptedId(String encryptedId);
+
 } 

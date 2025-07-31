@@ -1,6 +1,7 @@
 package com.example.hyuk_blog.service;
 
 import com.example.hyuk_blog.entity.Like;
+import com.example.hyuk_blog.entity.PostType;
 import com.example.hyuk_blog.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,41 +18,30 @@ public class LikeService {
     private LikeRepository likeRepository;
     
     @Transactional
-    public boolean toggleLike(String postEncryptedId, Long userId, String lang) {
-        boolean exists = likeRepository.existsByPostEncryptedIdAndUserId(postEncryptedId, userId);
+    public boolean toggleLike(Long postId, PostType postType, Long userId) {
+        boolean exists = likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType.name(), userId);
         
         if (exists) {
             // 좋아요 취소
-            likeRepository.deleteByPostEncryptedIdAndUserId(postEncryptedId, userId);
+            likeRepository.deleteByPostIdAndPostTypeAndUserId(postId, postType.name(), userId);
             return false;
         } else {
-            // 좋아요 추가 (detached entity 문제 완전 방지)
+            // 좋아요 추가
             Like like = new Like();
-            like.setPostEncryptedId(postEncryptedId);
+            like.setPostId(postId);
+            like.setPostType(postType);
             like.setUserId(userId);
             safeSave(like);
             return true;
         }
     }
     
-    public long getLikeCount(String postEncryptedId, String lang) {
-        return likeRepository.countByPostEncryptedId(postEncryptedId);
+    public long getLikeCount(Long postId, PostType postType) {
+        return likeRepository.countByPostIdAndPostType(postId, postType.name());
     }
     
-    public boolean isLikedByUser(String postEncryptedId, Long userId, String lang) {
-        return likeRepository.existsByPostEncryptedIdAndUserId(postEncryptedId, userId);
-    }
-    
-    /**
-     * Detached Entity 문제를 방지하기 위한 안전한 엔티티 처리 메서드
-     * 향후 다른 엔티티와의 관계가 추가될 때 사용
-     */
-    private Like ensureManagedEntity(Like like) {
-        if (like.getId() != null) {
-            // 이미 관리되는 엔티티인지 확인
-            return likeRepository.findById(like.getId()).orElse(like);
-        }
-        return like;
+    public boolean isLikedByUser(Long postId, PostType postType, Long userId) {
+        return likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType.name(), userId);
     }
     
     /**
@@ -64,7 +54,8 @@ public class LikeService {
             logger.warn("Detached entity 오류 발생, 새로운 엔티티로 재생성: {}", e.getMessage());
             // detached entity 오류 발생 시 새로운 엔티티로 재생성
             Like newLike = new Like();
-            newLike.setPostEncryptedId(like.getPostEncryptedId());
+            newLike.setPostId(like.getPostId());
+            newLike.setPostType(like.getPostType());
             newLike.setUserId(like.getUserId());
             return likeRepository.save(newLike);
         }

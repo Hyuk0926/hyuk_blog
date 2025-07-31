@@ -3,7 +3,7 @@ package com.example.hyuk_blog.controller;
 import com.example.hyuk_blog.dto.CommentDto;
 import com.example.hyuk_blog.dto.UserDto;
 import com.example.hyuk_blog.dto.AdminDto;
-import com.example.hyuk_blog.entity.Comment;
+import com.example.hyuk_blog.entity.PostType;
 import com.example.hyuk_blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +22,12 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
     
-    @GetMapping("/{postEncryptedId}")
-    public ResponseEntity<List<CommentDto>> getComments(@PathVariable String postEncryptedId) {
+    // 한국어 게시글 댓글 조회
+    @GetMapping("/kr/{postId}")
+    public ResponseEntity<List<CommentDto>> getCommentsKr(@PathVariable Long postId) {
         try {
-            System.out.println("Getting comments for postEncryptedId: " + postEncryptedId);
-            List<CommentDto> comments = commentService.getCommentsByPostEncryptedId(postEncryptedId);
+            System.out.println("Getting comments for KR postId: " + postId);
+            List<CommentDto> comments = commentService.getCommentsByPostKrId(postId);
             System.out.println("Found " + comments.size() + " comments");
             return ResponseEntity.ok(comments);
         } catch (Exception e) {
@@ -36,95 +37,100 @@ public class CommentController {
         }
     }
     
-//    @GetMapping("/test")
-//    public ResponseEntity<String> test() {
-//        try {
-//            System.out.println("Testing comment service...");
-//            return ResponseEntity.ok("Comment controller is working!");
-//        } catch (Exception e) {
-//            System.err.println("Test failed: " + e.getMessage());
-//            e.printStackTrace();
-//            return ResponseEntity.status(500).body("Test failed: " + e.getMessage());
-//        }
-//    }
-//
-//    @GetMapping("/test-db")
-//    public ResponseEntity<String> testDb() {
-//        try {
-//            System.out.println("Testing database connection...");
-//            // 간단한 테스트 - 댓글 개수 조회 (임시로 테스트용 encrypted_id 사용)
-//            Long count = commentService.getCommentCount("test_encrypted_id");
-//            System.out.println("Comment count for test post: " + count);
-//            return ResponseEntity.ok("Database is working. Count: " + count);
-//        } catch (Exception e) {
-//            System.err.println("Database test failed: " + e.getMessage());
-//            e.printStackTrace();
-//            return ResponseEntity.status(500).body("Database test failed: " + e.getMessage());
-//        }
-//    }
-    
-    @GetMapping("/check-posts")
-    public ResponseEntity<String> checkPosts() {
+    // 일본어 게시글 댓글 조회
+    @GetMapping("/jp/{postId}")
+    public ResponseEntity<List<CommentDto>> getCommentsJp(@PathVariable Long postId) {
         try {
-            System.out.println("Checking available posts...");
-            // 실제 존재하는 게시글 ID들을 확인하는 로직을 추가할 수 있습니다
-            return ResponseEntity.ok("Check server logs for available post IDs");
+            System.out.println("Getting comments for JP postId: " + postId);
+            List<CommentDto> comments = commentService.getCommentsByPostJpId(postId);
+            System.out.println("Found " + comments.size() + " comments");
+            return ResponseEntity.ok(comments);
         } catch (Exception e) {
-            System.err.println("Check posts failed: " + e.getMessage());
+            System.err.println("Error getting comments: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body("Check posts failed: " + e.getMessage());
+            return ResponseEntity.status(500).body(null);
         }
     }
     
-    @PostMapping("/{postEncryptedId}")
-    public String createComment(@RequestParam String content, HttpServletRequest request, HttpSession session, CommentDto commentDto) {
+    // 한국어 게시글 댓글 작성
+    @PostMapping("/kr/{postId}")
+    public ResponseEntity<Map<String, Object>> createCommentKr(
+            @PathVariable Long postId,
+            @RequestParam String content,
+            HttpSession session) {
         
-        System.out.println("=== Comment Request Debug ===");
+        System.out.println("=== Comment KR Request Debug ===");
+        System.out.println("PostId: " + postId);
         System.out.println("Content: " + content);
-        System.out.println("Session ID: " + (session != null ? session.getId() : "null"));
         
         // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         
-        System.out.println("User: " + (user != null ? user.getUsername() : "null"));
-        System.out.println("Admin: " + (admin != null ? admin.getUsername() : "null"));
-        
-        // 임시로 세션 체크 우회 (테스트용)
-        Long userId = null;
-        String nickname = "테스트사용자";
-        
-        if (user != null) {
-            userId = user.getId();
-            nickname = user.getNickname();
-        } else if (admin != null) {
-            userId = admin.getId();
-            nickname = admin.getUsername();
-        } else {
-            System.out.println("No user or admin found in session");
-            System.out.println("Session attributes: " + (session != null ? session.getAttributeNames() : "null"));
+        if (user == null && admin == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(response);
         }
         
-        System.out.println("UserId: " + userId);
-        System.out.println("Nickname: " + nickname);
+        Long userId = user != null ? user.getId() : admin.getId();
+        String nickname = user != null ? user.getNickname() : admin.getUsername();
         
         try {
-            System.out.println("Calling commentService.createComment with:");
-//            System.out.println("  postEncryptedId: " + postEncryptedId);
-            System.out.println("  content: " + content);
-            System.out.println("  userId: " + userId);
-            System.out.println("  nickname: " + nickname);
-            
-            // 실제 저장 코드로 복원
-            commentService.createComment(commentDto, content, userId, nickname);
-
-            return "redirect:/index";
+            CommentDto commentDto = commentService.createComment(postId, PostType.KR, content, userId, nickname);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "댓글이 작성되었습니다.");
+            response.put("comment", commentDto);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error in createComment: " + e.getMessage());
-            System.err.println("Exception type: " + e.getClass().getName());
-            System.err.println("Stack trace:");
-            e.printStackTrace();
-            return null;
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "댓글 작성에 실패했습니다: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
+    }
+    
+    // 일본어 게시글 댓글 작성
+    @PostMapping("/jp/{postId}")
+    public ResponseEntity<Map<String, Object>> createCommentJp(
+            @PathVariable Long postId,
+            @RequestParam String content,
+            HttpSession session) {
+        
+        System.out.println("=== Comment JP Request Debug ===");
+        System.out.println("PostId: " + postId);
+        System.out.println("Content: " + content);
+        
+        // 로그인 확인 (user 또는 admin)
+        UserDto user = (UserDto) session.getAttribute("user");
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        
+        if (user == null && admin == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다.");
+            return ResponseEntity.status(401).body(response);
+        }
+        
+        Long userId = user != null ? user.getId() : admin.getId();
+        String nickname = user != null ? user.getNickname() : admin.getUsername();
+        
+        try {
+            CommentDto commentDto = commentService.createComment(postId, PostType.JP, content, userId, nickname);
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "댓글이 작성되었습니다.");
+            response.put("comment", commentDto);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            System.err.println("Error in createComment: " + e.getMessage());
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "댓글 작성에 실패했습니다: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
     }
     
@@ -191,21 +197,5 @@ public class CommentController {
         }
         
         return ResponseEntity.ok(response);
-    }
-    
-
-    
-    private String getClientIpAddress(HttpServletRequest request) {
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isEmpty() && !"unknown".equalsIgnoreCase(xForwardedFor)) {
-            return xForwardedFor.split(",")[0].trim();
-        }
-        
-        String xRealIp = request.getHeader("X-Real-IP");
-        if (xRealIp != null && !xRealIp.isEmpty() && !"unknown".equalsIgnoreCase(xRealIp)) {
-            return xRealIp;
-        }
-        
-        return request.getRemoteAddr();
     }
 } 

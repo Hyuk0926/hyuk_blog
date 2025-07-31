@@ -18,5 +18,5 @@ public interface PostKrRepository extends JpaRepository<PostKr, Long> {
     List<PostKr> findAllOrderByCreatedAtDesc();
     List<PostKr> findByCategoryAndPublishedOrderByCreatedAtDesc(Category category, boolean published);
     
-    Optional<PostKr> findByEncryptedId(String encryptedId);
+
 } 
