@@ -36,10 +36,10 @@ public class CommentService {
     
 
     
-    public List<CommentDto> getCommentsByPostEncryptedId(String postEncryptedId) {
-        List<Comment> comments = commentRepository.findByPostEncryptedIdOrderByCreatedAtAsc(postEncryptedId);
-        return comments.stream().map(this::convertToDto).collect(Collectors.toList());
-    }
+//    public List<CommentDto> getCommentsByPostEncryptedId(String postEncryptedId) {
+//        List<Comment> comments = commentRepository.findByPostEncryptedIdOrderByCreatedAtAsc(postEncryptedId);
+//        return comments.stream().map(this::convertToDto).collect(Collectors.toList());
+//    }
     
     @Transactional
     public void createComment(CommentDto commentDto, String content, Long userId, String nickname) {
