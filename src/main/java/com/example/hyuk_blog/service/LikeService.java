@@ -19,11 +19,11 @@ public class LikeService {
     
     @Transactional
     public boolean toggleLike(Long postId, PostType postType, Long userId) {
-        boolean exists = likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType.name(), userId);
+        boolean exists = likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType, userId);
         
         if (exists) {
             // 좋아요 취소
-            likeRepository.deleteByPostIdAndPostTypeAndUserId(postId, postType.name(), userId);
+            likeRepository.deleteByPostIdAndPostTypeAndUserId(postId, postType, userId);
             return false;
         } else {
             // 좋아요 추가
@@ -37,11 +37,11 @@ public class LikeService {
     }
     
     public long getLikeCount(Long postId, PostType postType) {
-        return likeRepository.countByPostIdAndPostType(postId, postType.name());
+        return likeRepository.countByPostIdAndPostType(postId, postType);
     }
     
     public boolean isLikedByUser(Long postId, PostType postType, Long userId) {
-        return likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType.name(), userId);
+        return likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType, userId);
     }
     
     /**
