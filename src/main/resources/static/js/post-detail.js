@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const lang = document.querySelector('.like-button').getAttribute('data-lang');
         const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
         
-        fetch(apiEndpoint)
+        fetch(apiEndpoint + '?v=' + Date.now())
             .then(response => response.json())
             .then(comments => {
                 commentList.innerHTML = '';
@@ -275,6 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         return;
                     }
                     
+                    // 댓글 수정은 기존 엔드포인트 사용 (comment.id로 특정 댓글 수정)
                     fetch(`/api/comments/${comment.id}`, {
                         method: 'PUT',
                         headers: {
@@ -309,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const deleteBtn = commentDiv.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', function() {
             if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+                // 댓글 삭제는 기존 엔드포인트 사용 (comment.id로 특정 댓글 삭제)
                 fetch(`/api/comments/${comment.id}`, {
                     method: 'DELETE',
                     headers: {
