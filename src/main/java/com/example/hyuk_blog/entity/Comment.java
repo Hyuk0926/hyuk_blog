@@ -23,7 +23,7 @@ public class Comment {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
     
-    @Column(name = "user_id")
+    @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
     
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6)")

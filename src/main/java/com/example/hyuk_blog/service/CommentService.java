@@ -5,9 +5,11 @@ import com.example.hyuk_blog.entity.Comment;
 import com.example.hyuk_blog.entity.PostKr;
 import com.example.hyuk_blog.entity.PostJp;
 import com.example.hyuk_blog.entity.PostType;
+import com.example.hyuk_blog.entity.User;
 import com.example.hyuk_blog.repository.CommentRepository;
 import com.example.hyuk_blog.repository.PostKrRepository;
 import com.example.hyuk_blog.repository.PostJpRepository;
+import com.example.hyuk_blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,9 @@ public class CommentService {
     @Autowired
     private PostJpRepository postJpRepository;
     
+    @Autowired
+    private UserRepository userRepository;
+    
     // 한국어 게시글 댓글 조회
     public List<CommentDto> getCommentsByPostKrId(Long postId) {
         List<Comment> comments = commentRepository.findByPostKrIdOrderByCreatedAtAsc(postId);
@@ -54,9 +59,13 @@ public class CommentService {
         try {
             Comment comment = new Comment();
             comment.setContent(content.trim());
-            comment.setUserId(userId);
             comment.setNickname(nickname);
             comment.setPostType(postType);
+            
+            // User 엔티티를 찾아서 설정
+            User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+            comment.setUser(user);
             
             // 게시글 타입에 따라 연결
             if (postType == PostType.KR) {
@@ -86,7 +95,7 @@ public class CommentService {
             Comment comment = commentOpt.get();
             
             // 댓글 작성자이거나 admin 계정인 경우 수정 가능
-            if (userId.equals(comment.getUserId()) || isAdminUser(userId)) {
+            if (userId.equals(comment.getUser() != null ? comment.getUser().getId() : null) || isAdminUser(userId)) {
                 comment.setContent(newContent.trim());
                 commentRepository.save(comment);
                 return true;
@@ -102,7 +111,7 @@ public class CommentService {
             Comment comment = commentOpt.get();
             
             // 댓글 작성자이거나 admin 계정인 경우 삭제 가능
-            if (userId.equals(comment.getUserId()) || isAdminUser(userId)) {
+            if (userId.equals(comment.getUser() != null ? comment.getUser().getId() : null) || isAdminUser(userId)) {
                 commentRepository.delete(comment);
                 return true;
             }
@@ -130,7 +139,7 @@ public class CommentService {
         dto.setId(comment.getId());
         dto.setNickname(comment.getNickname());
         dto.setContent(comment.getContent());
-        dto.setUserId(comment.getUserId());
+        dto.setUserId(comment.getUser() != null ? comment.getUser().getId() : null);
         dto.setCreatedAt(comment.getCreatedAt());
         dto.setUpdatedAt(comment.getUpdatedAt());
         dto.setEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt()));
