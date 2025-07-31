@@ -174,18 +174,18 @@ public class CommentService {
 
 
 
-    private CommentDto convertToDto(Comment comment) {
-        CommentDto dto = new CommentDto();
-        dto.setId(comment.getId());
-        dto.setPostEncryptedId(comment.getPostEncryptedId());
-        dto.setNickname(comment.getNickname());
-        dto.setContent(comment.getContent());
-        dto.setUserId(comment.getUserId());
-        dto.setCreatedAt(comment.getCreatedAt());
-        dto.setUpdatedAt(comment.getUpdatedAt());
-        dto.setEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt()));
-        return dto;
-    }
+//    private CommentDto convertToDto(Comment comment) {
+//        CommentDto dto = new CommentDto();
+//        dto.setId(comment.getId());
+//        dto.setPostEncryptedId(comment.getPostEncryptedId());
+//        dto.setNickname(comment.getNickname());
+//        dto.setContent(comment.getContent());
+//        dto.setUserId(comment.getUserId());
+//        dto.setCreatedAt(comment.getCreatedAt());
+//        dto.setUpdatedAt(comment.getUpdatedAt());
+//        dto.setEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt()));
+//        return dto;
+//    }
     
 
 } 
