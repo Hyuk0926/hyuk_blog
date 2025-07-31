@@ -351,6 +351,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         console.log('Sending comment request:', {
             postId: postId,
+            lang: lang,
+            apiEndpoint: apiEndpoint,
             content: content,
             formData: formData.toString()
         });
@@ -359,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const lang = document.querySelector('.like-button').getAttribute('data-lang');
         const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
         
-        fetch(apiEndpoint, {
+        fetch(apiEndpoint + '?v=' + Date.now(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
