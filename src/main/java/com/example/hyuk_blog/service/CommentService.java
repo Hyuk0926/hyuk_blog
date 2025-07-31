@@ -42,23 +42,46 @@ public class CommentService {
     }
     
     @Transactional
-    public void createComment(String postEncryptedId, String content, Long userId, String nickname) {
+    public void createComment(CommentDto commentDto, String content, Long userId, String nickname) {
         logger.info("Creating comment - postEncryptedId: {}, content: {}, userId: {}, nickname: {}", 
-                   postEncryptedId, content, userId, nickname);
+                   content, userId, nickname);
         
         try {
             // 1. encrypted_id로 게시글 존재 여부 확인
-            boolean postExists = findPostByEncryptedId(postEncryptedId);
-            if (!postExists) {
-                throw new EntityNotFoundException("Post not found with encrypted_id: " + postEncryptedId);
-            }
-            
+//            boolean postExists = findPostByEncryptedId(postEncryptedId);
+//            if (!postExists) {
+//                throw new EntityNotFoundException("Post not found with encrypted_id: " + postEncryptedId);
+//            }
+
+            PostJp postJp = postJpRepository.findById(commentDto.getPostjpId()).orElseThrow(EntityNotFoundException::new);
+            PostKr postKr = postKrRepository.findById(commentDto.getPostkrId()).orElseThrow(EntityNotFoundException::new);
+
             // 2. 새로운 Comment 엔티티를 생성합니다.
             Comment comment = new Comment();
-            comment.setPostEncryptedId(postEncryptedId);
-            comment.setContent(content.trim());
-            comment.setUserId(userId);
-            comment.setNickname(nickname);
+
+            if(postJp.equals(userId)) {
+
+                System.out.println("일본");
+
+//                comment.setContent(content);
+//                comment.setUserId(userId);
+//                comment.setPostJp(postJp);
+//                comment.setNickname(nickname);
+
+            } else if(postKr.equals(userId)) {
+
+                System.out.println("한국");
+
+//                comment.setContent(content);
+//                comment.setUserId(userId);
+//                comment.setPostKr(postKr);
+//                comment.setNickname(nickname);
+
+            }
+
+
+//            comment.setContent(content.trim());
+//            comment.setPostEncryptedId(postEncryptedId);
             
             logger.info("Comment entity created: {}", comment);
 

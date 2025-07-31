@@ -51,4 +51,17 @@ public class Comment {
             e.printStackTrace();
         }
     }
-} 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postjp_id")
+    private PostJp postJp;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "postkr_id")
+    private PostKr postKr;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+}

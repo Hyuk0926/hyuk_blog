@@ -77,14 +77,9 @@ public class CommentController {
     }
     
     @PostMapping("/{postEncryptedId}")
-    public String createComment(
-            @PathVariable String postEncryptedId,
-            @RequestParam String content,
-            HttpServletRequest request,
-            HttpSession session) {
+    public String createComment(@RequestParam String content, HttpServletRequest request, HttpSession session, CommentDto commentDto) {
         
         System.out.println("=== Comment Request Debug ===");
-        System.out.println("PostEncryptedId: " + postEncryptedId);
         System.out.println("Content: " + content);
         System.out.println("Session ID: " + (session != null ? session.getId() : "null"));
         
@@ -115,13 +110,13 @@ public class CommentController {
         
         try {
             System.out.println("Calling commentService.createComment with:");
-            System.out.println("  postEncryptedId: " + postEncryptedId);
+//            System.out.println("  postEncryptedId: " + postEncryptedId);
             System.out.println("  content: " + content);
             System.out.println("  userId: " + userId);
             System.out.println("  nickname: " + nickname);
             
             // 실제 저장 코드로 복원
-            commentService.createComment(postEncryptedId, content, userId, nickname);
+            commentService.createComment(commentDto, content, userId, nickname);
 
             return "redirect:/index";
         } catch (Exception e) {
