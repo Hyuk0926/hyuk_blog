@@ -15,9 +15,6 @@ public class Like {
     @Column(name = "post_id", nullable = false)
     private Long postId;
     
-    @Column(name = "user_ip", length = 45)
-    private String userIp;
-    
     @Column(name = "user_id")
     private Long userId;
     
@@ -36,7 +33,7 @@ public class Like {
         Like copy = new Like();
         copy.setId(this.id);
         copy.setPostId(this.postId);
-        copy.setUserIp(this.userIp);
+        copy.setUserId(this.userId);
         copy.setCreatedAt(this.createdAt);
         return copy;
     }

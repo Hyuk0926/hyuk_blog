@@ -62,9 +62,8 @@ public class PostController {
     public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request) {
         Optional<PostDto> post = postService.getPostById(id, lang);
         if (post.isPresent() && post.get().isPublished()) {
-            String userIp = getClientIpAddress(request);
             long likeCount = likeService.getLikeCount(id, lang);
-            boolean isLiked = likeService.isLikedByUser(id, userIp, null, lang);
+            boolean isLiked = likeService.isLikedByUser(id, null, lang);
             
             model.addAttribute("post", post.get());
             model.addAttribute("lang", lang);

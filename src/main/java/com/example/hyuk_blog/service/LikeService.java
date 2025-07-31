@@ -17,7 +17,7 @@ public class LikeService {
     private LikeRepository likeRepository;
     
     @Transactional
-    public boolean toggleLike(Long postId, String userIp, Long userId, String lang) {
+    public boolean toggleLike(Long postId, Long userId, String lang) {
         boolean exists = likeRepository.existsByPostIdAndUserId(postId, userId);
         
         if (exists) {
@@ -28,7 +28,6 @@ public class LikeService {
             // 좋아요 추가 (detached entity 문제 완전 방지)
             Like like = new Like();
             like.setPostId(postId);
-            like.setUserIp(userIp);
             like.setUserId(userId);
             safeSave(like);
             return true;
@@ -39,12 +38,8 @@ public class LikeService {
         return likeRepository.countByPostId(postId);
     }
     
-    public boolean isLikedByUser(Long postId, String userIp, Long userId, String lang) {
-        if (userId != null) {
-            return likeRepository.existsByPostIdAndUserId(postId, userId);
-        } else {
-            return likeRepository.existsByPostIdAndUserIp(postId, userIp);
-        }
+    public boolean isLikedByUser(Long postId, Long userId, String lang) {
+        return likeRepository.existsByPostIdAndUserId(postId, userId);
     }
     
     /**
@@ -70,7 +65,7 @@ public class LikeService {
             // detached entity 오류 발생 시 새로운 엔티티로 재생성
             Like newLike = new Like();
             newLike.setPostId(like.getPostId());
-            newLike.setUserIp(like.getUserIp());
+            newLike.setUserId(like.getUserId());
             return likeRepository.save(newLike);
         }
     }

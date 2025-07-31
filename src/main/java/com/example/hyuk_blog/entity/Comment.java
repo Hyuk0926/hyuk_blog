@@ -18,14 +18,8 @@ public class Comment {
     @Column(name = "nickname", nullable = false, length = 100)
     private String nickname;
     
-    @Column(name = "password", nullable = false, length = 255)
-    private String password;
-    
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
-    
-    @Column(name = "user_ip", length = 45)
-    private String userIp;
     
     @Column(name = "user_id")
     private Long userId;
@@ -55,9 +49,8 @@ public class Comment {
         copy.setId(this.id);
         copy.setPostId(this.postId);
         copy.setNickname(this.nickname);
-        copy.setPassword(this.password);
         copy.setContent(this.content);
-        copy.setUserIp(this.userIp);
+        copy.setUserId(this.userId);
         copy.setCreatedAt(this.createdAt);
         copy.setUpdatedAt(this.updatedAt);
         return copy;

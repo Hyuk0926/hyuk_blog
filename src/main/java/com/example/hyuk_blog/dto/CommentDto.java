@@ -9,7 +9,7 @@ public class CommentDto {
     private Long postId;
     private String nickname;
     private String content;
-    private String userIp;
+    private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean isEdited;

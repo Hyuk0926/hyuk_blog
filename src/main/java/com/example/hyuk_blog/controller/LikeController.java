@@ -33,8 +33,7 @@ public class LikeController {
             return ResponseEntity.status(401).body(response);
         }
         
-        String userIp = getClientIpAddress(request);
-        boolean isLiked = likeService.toggleLike(postId, userIp, user.getId(), lang);
+        boolean isLiked = likeService.toggleLike(postId, user.getId(), lang);
         long likeCount = likeService.getLikeCount(postId, lang);
         
         Map<String, Object> response = new HashMap<>();
@@ -51,9 +50,8 @@ public class LikeController {
             HttpServletRequest request,
             HttpSession session) {
         
-        String userIp = getClientIpAddress(request);
         UserDto user = (UserDto) session.getAttribute("user");
-        boolean isLiked = likeService.isLikedByUser(postId, userIp, user != null ? user.getId() : null, lang);
+        boolean isLiked = likeService.isLikedByUser(postId, user != null ? user.getId() : null, lang);
         long likeCount = likeService.getLikeCount(postId, lang);
         
         Map<String, Object> response = new HashMap<>();

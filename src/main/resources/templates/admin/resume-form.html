@@ -139,30 +139,7 @@
             </table>
             <button type="button" class="add-btn" onclick="addEducationRow()"><span aria-hidden="true">➕</span> 학력 추가</button>
         </div>
-        <div class="form-group">
-            <label class="form-label">경력</label>
-            <table id="experience-table" style="width:100%; margin-bottom:8px; border-collapse:collapse;">
-                <thead style="position:sticky; top:0; background:#f8f8f8;">
-                    <tr>
-                        <th style="padding:8px; border:1px solid #eee;">회사명</th>
-                        <th style="padding:8px; border:1px solid #eee;">직무</th>
-                        <th style="padding:8px; border:1px solid #eee;">기간</th>
-                        <th style="padding:8px; border:1px solid #eee;">설명</th>
-                        <th style="padding:8px; border:1px solid #eee;">삭제</th>
-                    </tr>
-                </thead>
-                <tbody id="experience-tbody">
-                    <tr th:each="exp,stat : *{experiences}" th:classappend="${stat.index % 2 == 0} ? 'even-row' : 'odd-row'">
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].company}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].position}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].period}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee;"><input type="text" th:field="*{experiences[__${stat.index}__].description}" class="form-input compact-input"></td>
-                        <td style="padding:6px; border:1px solid #eee; text-align:center;"><button type="button" class="remove-btn" onclick="removeRow(this)" title="삭제"><span aria-hidden="true">🗑️</span></button></td>
-                    </tr>
-                </tbody>
-            </table>
-            <button type="button" class="add-btn" onclick="addExperienceRow()"><span aria-hidden="true">➕</span> 경력 추가</button>
-        </div>
+
         <div class="form-group">
             <label class="form-label">기술스택</label>
             <input type="text" th:field="*{skills}" class="form-input" placeholder="Java, Spring, React, ...">
@@ -218,19 +195,7 @@ function addEducationRow() {
     `;
     tbody.appendChild(tr);
 }
-function addExperienceRow() {
-    const tbody = document.getElementById('experience-tbody');
-    const idx = tbody.children.length;
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-        <td><input type="text" name="experiences[${idx}].company" class="form-input"></td>
-        <td><input type="text" name="experiences[${idx}].position" class="form-input"></td>
-        <td><input type="text" name="experiences[${idx}].period" class="form-input"></td>
-        <td><input type="text" name="experiences[${idx}].description" class="form-input"></td>
-        <td><button type="button" onclick="removeRow(this)">삭제</button></td>
-    `;
-    tbody.appendChild(tr);
-}
+
 function removeRow(btn) {
     btn.closest('tr').remove();
 }

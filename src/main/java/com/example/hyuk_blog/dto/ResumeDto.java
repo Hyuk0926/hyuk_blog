@@ -22,7 +22,6 @@ public class ResumeDto {
     private String birth;
     private String address;
     private List<Education> educations;
-    private List<Experience> experiences;
     private String skills;
 
     private String studentLifeKo; // 한국어 학생생활(성장과정)
@@ -48,16 +47,5 @@ public class ResumeDto {
         private String school;
         private String degree;
         private String period;
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Experience {
-        private String company;
-        private String position;
-        private String period;
-        private String description;
     }
 }

@@ -14,11 +14,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("SELECT COUNT(l) FROM Like l WHERE l.postId = :postId")
     long countByPostId(@Param("postId") Long postId);
     
-    Optional<Like> findByPostIdAndUserIp(Long postId, String userIp);
-    
-    boolean existsByPostIdAndUserIp(Long postId, String userIp);
-    
-    void deleteByPostIdAndUserIp(Long postId, String userIp);
+
     
     Optional<Like> findByPostIdAndUserId(Long postId, Long userId);
     

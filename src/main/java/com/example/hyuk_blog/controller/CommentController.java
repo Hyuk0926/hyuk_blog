@@ -39,8 +39,7 @@ public class CommentController {
             return ResponseEntity.status(401).body(null);
         }
         
-        String userIp = getClientIpAddress(request);
-        CommentDto comment = commentService.createComment(postId, content, userIp, user.getId(), user.getNickname());
+        CommentDto comment = commentService.createComment(postId, content, user.getId(), user.getNickname());
         return ResponseEntity.ok(comment);
     }
     

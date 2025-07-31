@@ -4,8 +4,7 @@ import com.example.hyuk_blog.dto.CommentDto;
 import com.example.hyuk_blog.entity.Comment;
 import com.example.hyuk_blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -23,21 +22,7 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
     
-    private String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(password.getBytes());
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 algorithm not available", e);
-        }
-    }
+
     
     public List<CommentDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostIdOrderByCreatedAtAsc(postId);
@@ -45,12 +30,11 @@ public class CommentService {
     }
     
     @Transactional
-    public CommentDto createComment(Long postId, String content, String userIp, Long userId, String nickname) {
+    public CommentDto createComment(Long postId, String content, Long userId, String nickname) {
         // 새로운 Comment 엔티티 생성 (detached entity 문제 방지)
         Comment comment = new Comment();
         comment.setPostId(postId);
         comment.setContent(content.trim());
-        comment.setUserIp(userIp);
         comment.setUserId(userId);
         comment.setNickname(nickname);
         
@@ -128,9 +112,8 @@ public class CommentService {
             Comment newComment = new Comment();
             newComment.setPostId(comment.getPostId());
             newComment.setNickname(comment.getNickname());
-            newComment.setPassword(comment.getPassword());
             newComment.setContent(comment.getContent());
-            newComment.setUserIp(comment.getUserIp());
+            newComment.setUserId(comment.getUserId());
             return commentRepository.save(newComment);
         }
     }
@@ -141,7 +124,7 @@ public class CommentService {
         dto.setPostId(comment.getPostId());
         dto.setNickname(comment.getNickname());
         dto.setContent(comment.getContent());
-        dto.setUserIp(comment.getUserIp());
+        dto.setUserId(comment.getUserId());
         dto.setCreatedAt(comment.getCreatedAt());
         dto.setUpdatedAt(comment.getUpdatedAt());
         dto.setEdited(!comment.getCreatedAt().equals(comment.getUpdatedAt()));

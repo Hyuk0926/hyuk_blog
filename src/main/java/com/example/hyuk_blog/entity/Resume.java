@@ -32,9 +32,6 @@ public class Resume {
     @ElementCollection
     @CollectionTable(name = "resume_education", joinColumns = @JoinColumn(name = "resume_id"))
     private List<Education> educations;
-
-    @ElementCollection
-    private List<Experience> experiences;
     
     @Column(columnDefinition = "TEXT")
     private String studentLifeKo; // studentLife -> studentLifeKo 로 변경

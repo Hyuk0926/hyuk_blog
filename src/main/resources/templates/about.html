@@ -59,27 +59,7 @@
         </table>
       </section>
 
-      <section th:if="${resume.experiences != null and !#lists.isEmpty(resume.experiences)}">
-        <h2 th:text="#{resume.experience}">경력</h2>
-        <table class="custom-table">
-          <thead>
-            <tr>
-              <th th:text="#{resume.table.company}">회사명</th>
-              <th th:text="#{resume.table.position}">직무</th>
-              <th th:text="#{resume.table.period}">기간</th>
-              <th th:text="#{resume.table.description}">설명</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="exp : ${resume.experiences}">
-              <td th:text="${exp.company}"></td>
-              <td th:text="${exp.position}"></td>
-              <td th:text="${exp.period}"></td>
-              <td th:text="${exp.description}"></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+
 
       <section th:if="${resume.skills != null and !#lists.isEmpty(resume.skills)}">
         <h2 th:text="#{resume.skills}">기술스택</h2>
