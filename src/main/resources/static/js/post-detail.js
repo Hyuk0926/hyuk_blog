@@ -350,6 +350,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new URLSearchParams();
         formData.append('content', content);
         
+        const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
+        
         console.log('Sending comment request:', {
             postId: postId,
             lang: lang,
@@ -357,8 +359,6 @@ document.addEventListener('DOMContentLoaded', function() {
             content: content,
             formData: formData.toString()
         });
-        
-        const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
         
         fetch(apiEndpoint + '?v=' + Date.now(), {
             method: 'POST',
