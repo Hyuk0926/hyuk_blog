@@ -30,6 +30,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // 비밀번호 확인 이벤트 설정
     UserEvents.setupPasswordConfirm(password, confirmPassword);
     
+    // 이메일 필드 초기 상태 설정
+    if (!email.value.trim()) {
+        emailCheckBtn.disabled = true;
+        emailCheckBtn.textContent = '이메일 입력 필요';
+        emailCheckBtn.style.background = 'linear-gradient(145deg, #555555 0%, #333333 100%)';
+    }
+    
     // 폼 제출 전 최종 검증
     registerForm.addEventListener('submit', function(e) {
         const hasErrors = document.querySelectorAll('.form-input.error').length > 0;
@@ -47,12 +54,25 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 중복확인 완료 여부 검증
         const uncheckedFields = [];
-        if (!usernameCheckBtn.disabled) uncheckedFields.push('아이디');
-        if (!nicknameCheckBtn.disabled) uncheckedFields.push('닉네임');
+        
+        // 아이디와 닉네임은 필수 중복확인
+        if (usernameCheckBtn.dataset.checked !== 'true') uncheckedFields.push('아이디');
+        if (nicknameCheckBtn.dataset.checked !== 'true') uncheckedFields.push('닉네임');
+        
+        // 이메일은 입력된 경우에만 중복확인 필수
+        if (email.value.trim() && emailCheckBtn.dataset.checked !== 'true') {
+            uncheckedFields.push('이메일');
+        }
         
         if (uncheckedFields.length > 0) {
             e.preventDefault();
             UserUI.showMessage(`${uncheckedFields.join(', ')} 중복확인을 완료해주세요.`, 'error');
+            console.log('중복확인 상태:', {
+                username: usernameCheckBtn.dataset.checked,
+                nickname: nicknameCheckBtn.dataset.checked,
+                email: emailCheckBtn.dataset.checked,
+                emailValue: email.value.trim()
+            });
             return;
         }
         
@@ -95,6 +115,26 @@ document.addEventListener('DOMContentLoaded', function() {
             UserUI.updateFieldStatus(this, false, '비밀번호는 6자 이상이어야 합니다.');
         } else if (value.length >= 6) {
             UserUI.updateFieldStatus(this, true, '');
+        }
+    });
+    
+    // 이메일 필드 변경 시 중복확인 버튼 상태 관리
+    email.addEventListener('input', function() {
+        const value = this.value.trim();
+        if (!value) {
+            // 이메일이 비어있으면 중복확인 버튼 비활성화
+            emailCheckBtn.disabled = true;
+            emailCheckBtn.textContent = '이메일 입력 필요';
+            emailCheckBtn.style.background = 'linear-gradient(145deg, #555555 0%, #333333 100%)';
+            // 체크 상태 초기화
+            delete emailCheckBtn.dataset.checked;
+        } else {
+            // 이메일이 입력되면 중복확인 버튼 활성화
+            emailCheckBtn.disabled = false;
+            emailCheckBtn.textContent = '중복확인';
+            emailCheckBtn.style.background = 'linear-gradient(145deg, #666666 0%, #444444 100%)';
+            // 체크 상태 초기화
+            delete emailCheckBtn.dataset.checked;
         }
     });
 }); 

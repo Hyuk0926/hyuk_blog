@@ -119,6 +119,12 @@ const UserEvents = {
             const value = field.value.trim();
             const minLength = fieldName === 'username' ? 4 : 2;
             
+            // 이메일은 비어있으면 중복확인 불필요
+            if (fieldName === 'email' && !value) {
+                UserUI.showMessage('이메일을 입력해주세요.', 'error');
+                return;
+            }
+            
             if (value.length < minLength) {
                 UserUI.showMessage(`${fieldName === 'username' ? '아이디' : fieldName === 'nickname' ? '닉네임' : '이메일'}를 ${minLength}자 이상 입력해주세요.`, 'error');
                 return;
@@ -140,6 +146,8 @@ const UserEvents = {
                     this.disabled = true;
                     this.textContent = '확인완료';
                     this.style.background = 'linear-gradient(145deg, #68d391 0%, #47a87a 100%)';
+                    // 성공 상태를 데이터 속성으로 저장
+                    this.dataset.checked = 'true';
                 }
             } catch (error) {
                 UserUI.updateFieldStatus(field, false, '확인 중 오류가 발생했습니다.');
@@ -153,6 +161,8 @@ const UserEvents = {
             button.disabled = false;
             button.textContent = fieldName === 'username' ? '중복확인' : fieldName === 'nickname' ? '중복확인' : '중복확인';
             button.style.background = 'linear-gradient(145deg, #666666 0%, #444444 100%)';
+            // 체크 상태 초기화
+            delete button.dataset.checked;
         });
     },
     
