@@ -204,10 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentTextarea = document.getElementById('comment-content');
     const submitBtn = document.getElementById('comment-submit');
     
+    // 현재 페이지의 언어를 확인하여 적절한 API 엔드포인트 사용
+    const lang = document.querySelector('.like-button').getAttribute('data-lang');
+    
     // 댓글 목록 로드
     function loadComments() {
-        // 현재 페이지의 언어를 확인하여 적절한 API 엔드포인트 사용
-        const lang = document.querySelector('.like-button').getAttribute('data-lang');
         const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
         
         fetch(apiEndpoint + '?v=' + Date.now())
@@ -357,8 +358,6 @@ document.addEventListener('DOMContentLoaded', function() {
             formData: formData.toString()
         });
         
-        // 현재 페이지의 언어를 확인하여 적절한 API 엔드포인트 사용
-        const lang = document.querySelector('.like-button').getAttribute('data-lang');
         const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
         
         fetch(apiEndpoint + '?v=' + Date.now(), {
