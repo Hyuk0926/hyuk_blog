@@ -36,32 +36,32 @@ public class CommentController {
         }
     }
     
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        try {
-            System.out.println("Testing comment service...");
-            return ResponseEntity.ok("Comment controller is working!");
-        } catch (Exception e) {
-            System.err.println("Test failed: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Test failed: " + e.getMessage());
-        }
-    }
-    
-    @GetMapping("/test-db")
-    public ResponseEntity<String> testDb() {
-        try {
-            System.out.println("Testing database connection...");
-            // 간단한 테스트 - 댓글 개수 조회 (임시로 테스트용 encrypted_id 사용)
-            Long count = commentService.getCommentCount("test_encrypted_id");
-            System.out.println("Comment count for test post: " + count);
-            return ResponseEntity.ok("Database is working. Count: " + count);
-        } catch (Exception e) {
-            System.err.println("Database test failed: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Database test failed: " + e.getMessage());
-        }
-    }
+//    @GetMapping("/test")
+//    public ResponseEntity<String> test() {
+//        try {
+//            System.out.println("Testing comment service...");
+//            return ResponseEntity.ok("Comment controller is working!");
+//        } catch (Exception e) {
+//            System.err.println("Test failed: " + e.getMessage());
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body("Test failed: " + e.getMessage());
+//        }
+//    }
+//
+//    @GetMapping("/test-db")
+//    public ResponseEntity<String> testDb() {
+//        try {
+//            System.out.println("Testing database connection...");
+//            // 간단한 테스트 - 댓글 개수 조회 (임시로 테스트용 encrypted_id 사용)
+//            Long count = commentService.getCommentCount("test_encrypted_id");
+//            System.out.println("Comment count for test post: " + count);
+//            return ResponseEntity.ok("Database is working. Count: " + count);
+//        } catch (Exception e) {
+//            System.err.println("Database test failed: " + e.getMessage());
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body("Database test failed: " + e.getMessage());
+//        }
+//    }
     
     @GetMapping("/check-posts")
     public ResponseEntity<String> checkPosts() {
