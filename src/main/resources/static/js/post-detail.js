@@ -138,13 +138,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // 버튼 비활성화 (중복 클릭 방지)
         this.disabled = true;
         
+        // 언어에 따라 적절한 API 엔드포인트 사용
+        const apiEndpoint = lang === 'ja' ? `/api/like/jp/${postId}` : `/api/like/kr/${postId}`;
+        
         console.log('Sending like request:', {
             postId: postId,
             lang: lang,
-            url: `/api/like/${postId}?lang=${lang}`
+            url: apiEndpoint
         });
         
-        fetch(`/api/like/${postId}?lang=${lang}`, {
+        fetch(apiEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -203,7 +206,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 댓글 목록 로드
     function loadComments() {
-        fetch(`/api/comments/${postId}`)
+        // 현재 페이지의 언어를 확인하여 적절한 API 엔드포인트 사용
+        const lang = document.querySelector('.like-button').getAttribute('data-lang');
+        const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
+        
+        fetch(apiEndpoint)
             .then(response => response.json())
             .then(comments => {
                 commentList.innerHTML = '';
@@ -346,7 +353,11 @@ document.addEventListener('DOMContentLoaded', function() {
             formData: formData.toString()
         });
         
-        fetch(`/api/comments/${postId}`, {
+        // 현재 페이지의 언어를 확인하여 적절한 API 엔드포인트 사용
+        const lang = document.querySelector('.like-button').getAttribute('data-lang');
+        const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
+        
+        fetch(apiEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
