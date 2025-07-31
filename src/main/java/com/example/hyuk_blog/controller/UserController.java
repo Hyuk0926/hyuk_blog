@@ -34,7 +34,8 @@ public class UserController {
         Optional<UserDto> user = userService.authenticate(username, password);
         
         if (user.isPresent()) {
-            // 로그인 성공
+            // 로그인 성공 - 기존 admin 세션 제거
+            session.removeAttribute("admin");
             session.setAttribute("user", user.get());
             
             // 리다이렉트 URL이 있으면 해당 페이지로, 없으면 메인 페이지로

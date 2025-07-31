@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입 - 백엔드 기초부터</title>
+    <title>회원가입</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #404040 50%, #2d2d2d 75%, #1a1a1a 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
             padding: 20px;
+            font-family: 'Noto Sans KR', sans-serif;
         }
         .register-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: rgba(45, 45, 45, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             padding: 40px;
             width: 100%;
             max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .register-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
         .register-title {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
         }
         .register-subtitle {
-            color: #666;
-            font-size: 1rem;
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
         .form-group {
             margin-bottom: 20px;
@@ -43,91 +49,276 @@
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: #e0e0e0;
+            font-size: 0.9rem;
         }
         .form-input {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 14px 16px;
+            border: 2px solid #555555;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
             box-sizing: border-box;
+            background: rgba(60, 60, 60, 0.8);
+            font-family: inherit;
+            color: #ffffff;
+        }
+        
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-group .form-input {
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        
+        .check-button {
+            padding: 14px 16px;
+            background: linear-gradient(145deg, #666666 0%, #444444 100%);
+            color: white;
+            border: 2px solid #555555;
+            border-left: none;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: 80px;
+        }
+        
+        .check-button:hover {
+            background: linear-gradient(145deg, #777777 0%, #555555 100%);
+            transform: translateY(-1px);
+        }
+        
+        .check-button:disabled {
+            background: linear-gradient(145deg, #555555 0%, #333333 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .capslock-warning {
+            position: absolute;
+            top: -25px;
+            right: 0;
+            background: rgba(255, 193, 7, 0.9);
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: none;
+            z-index: 10;
+        }
+        
+        .capslock-warning.show {
+            display: block;
         }
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #888888;
+            box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.2);
+            transform: translateY(-1px);
+            background: rgba(70, 70, 70, 0.9);
         }
         .form-input.error {
-            border-color: #dc3545;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
         }
         .form-input.success {
-            border-color: #28a745;
+            border-color: #68d391;
+            box-shadow: 0 0 0 3px rgba(104, 211, 145, 0.2);
         }
         .validation-message {
             font-size: 0.875rem;
-            margin-top: 5px;
+            margin-top: 8px;
+            font-weight: 500;
         }
         .validation-message.error {
-            color: #dc3545;
+            color: #ff6b6b;
         }
         .validation-message.success {
-            color: #28a745;
+            color: #68d391;
         }
         .register-button {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 14px;
+            background: linear-gradient(145deg, #666666 0%, #444444 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         .register-button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(145deg, #777777 0%, #555555 100%);
+        }
+        .register-button:active {
+            transform: translateY(0);
         }
         .register-button:disabled {
-            background: #ccc;
+            background: linear-gradient(145deg, #555555 0%, #333333 100%);
             cursor: not-allowed;
             transform: none;
+            opacity: 0.6;
         }
         .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 8px;
+            background: rgba(197, 48, 48, 0.2);
+            color: #ff6b6b;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: 500;
+            border: 1px solid rgba(197, 48, 48, 0.3);
         }
         .login-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         .login-link a {
-            color: #667eea;
+            color: #cccccc;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            transition: color 0.3s ease;
         }
         .login-link a:hover {
+            color: #ffffff;
             text-decoration: underline;
         }
         .back-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 16px;
         }
         .back-link a {
-            color: #666;
+            color: #aaaaaa;
             text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
         }
         .back-link a:hover {
+            color: #cccccc;
             text-decoration: underline;
         }
         .required {
-            color: #dc3545;
+            color: #ff6b6b;
+        }
+        
+        /* 다크모드 지원 */
+        body.dark-mode {
+            background: #1a202c;
+        }
+        
+        body.dark-mode .register-container {
+            background: #2d3748;
+            border-color: #4a5568;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        body.dark-mode .register-title {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .register-subtitle {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .form-label {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .form-input {
+            background: #1a202c;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .form-input:focus {
+            border-color: #ffe082;
+            box-shadow: 0 0 0 3px rgba(255, 224, 130, 0.1);
+        }
+        
+        body.dark-mode .login-link {
+            border-top-color: #4a5568;
+        }
+        
+        body.dark-mode .login-link a {
+            color: #90cdf4;
+        }
+        
+        body.dark-mode .login-link a:hover {
+            color: #63b3ed;
+        }
+        
+        body.dark-mode .back-link a {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .back-link a:hover {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .check-button {
+            background: linear-gradient(145deg, #4a5568 0%, #2d3748 100%);
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .check-button:hover {
+            background: linear-gradient(145deg, #5a6a7a 0%, #3d4a5a 100%);
+        }
+        
+        body.dark-mode .check-button:disabled {
+            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            opacity: 0.6;
+        }
+        
+        body.dark-mode .capslock-warning {
+            background: rgba(255, 193, 7, 0.8);
+            color: #744210;
+        }
+        
+        /* 메시지 스타일 */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .message.error {
+            background: rgba(197, 48, 48, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(197, 48, 48, 0.3);
+        }
+        
+        .message.success {
+            background: rgba(47, 133, 90, 0.2);
+            color: #68d391;
+            border: 1px solid rgba(47, 133, 90, 0.3);
+        }
+        
+        .message.info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
         }
     </style>
 </head>
@@ -145,38 +336,58 @@
         <form action="/user/register" method="post" id="registerForm">
             <div class="form-group">
                 <label for="username" class="form-label">아이디 <span class="required">*</span></label>
-                <input type="text" id="username" name="username" class="form-input" required 
-                       pattern="[a-zA-Z0-9_]{4,20}" 
-                       title="4-20자의 영문, 숫자, 언더스코어만 사용 가능합니다">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" class="form-input" required 
+                           pattern="[a-zA-Z0-9_]{4,20}" 
+                           title="4-20자의 영문, 숫자, 언더스코어만 사용 가능합니다"
+                           placeholder="4-20자의 영문, 숫자, 언더스코어">
+                    <button type="button" class="check-button" id="username-check-btn">중복확인</button>
+                </div>
                 <div id="username-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
                 <label for="password" class="form-label">비밀번호 <span class="required">*</span></label>
-                <input type="password" id="password" name="password" class="form-input" required 
-                       minlength="6" 
-                       title="최소 6자 이상 입력해주세요">
+                <div class="input-group" style="position: relative;">
+                    <input type="password" id="password" name="password" class="form-input" required 
+                           minlength="6" 
+                           title="최소 6자 이상 입력해주세요"
+                           placeholder="최소 6자 이상">
+                    <div class="capslock-warning" id="password-capslock">Caps Lock이 켜져 있습니다</div>
+                </div>
                 <div id="password-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
                 <label for="confirmPassword" class="form-label">비밀번호 확인 <span class="required">*</span></label>
-                <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required>
+                <div class="input-group" style="position: relative;">
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required
+                           placeholder="비밀번호를 다시 입력하세요">
+                    <div class="capslock-warning" id="confirmPassword-capslock">Caps Lock이 켜져 있습니다</div>
+                </div>
                 <div id="confirmPassword-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
                 <label for="nickname" class="form-label">닉네임 <span class="required">*</span></label>
-                <input type="text" id="nickname" name="nickname" class="form-input" required 
-                       minlength="2" maxlength="20" 
-                       title="2-20자의 닉네임을 입력해주세요">
+                <div class="input-group">
+                    <input type="text" id="nickname" name="nickname" class="form-input" required 
+                           minlength="2" maxlength="20" 
+                           title="2-20자의 닉네임을 입력해주세요"
+                           placeholder="2-20자의 닉네임">
+                    <button type="button" class="check-button" id="nickname-check-btn">중복확인</button>
+                </div>
                 <div id="nickname-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
                 <label for="email" class="form-label">이메일</label>
-                <input type="email" id="email" name="email" class="form-input" 
-                       title="올바른 이메일 형식을 입력해주세요">
+                <div class="input-group">
+                    <input type="email" id="email" name="email" class="form-input" 
+                           title="올바른 이메일 형식을 입력해주세요"
+                           placeholder="example@email.com">
+                    <button type="button" class="check-button" id="email-check-btn">중복확인</button>
+                </div>
                 <div id="email-validation" class="validation-message"></div>
             </div>
             
@@ -192,117 +403,7 @@
         </div>
     </div>
     
-    <script>
-        // 실시간 유효성 검사
-        const username = document.getElementById('username');
-        const password = document.getElementById('password');
-        const confirmPassword = document.getElementById('confirmPassword');
-        const nickname = document.getElementById('nickname');
-        const email = document.getElementById('email');
-        const submitBtn = document.getElementById('submitBtn');
-        
-        // 아이디 중복 확인
-        username.addEventListener('blur', function() {
-            const value = this.value.trim();
-            if (value.length >= 4) {
-                fetch('/user/check-username', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `username=${encodeURIComponent(value)}`
-                })
-                .then(response => response.json())
-                .then(available => {
-                    const validation = document.getElementById('username-validation');
-                    if (available) {
-                        this.classList.remove('error');
-                        this.classList.add('success');
-                        validation.textContent = '사용 가능한 아이디입니다.';
-                        validation.className = 'validation-message success';
-                    } else {
-                        this.classList.remove('success');
-                        this.classList.add('error');
-                        validation.textContent = '이미 사용 중인 아이디입니다.';
-                        validation.className = 'validation-message error';
-                    }
-                });
-            }
-        });
-        
-        // 닉네임 중복 확인
-        nickname.addEventListener('blur', function() {
-            const value = this.value.trim();
-            if (value.length >= 2) {
-                fetch('/user/check-nickname', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `nickname=${encodeURIComponent(value)}`
-                })
-                .then(response => response.json())
-                .then(available => {
-                    const validation = document.getElementById('nickname-validation');
-                    if (available) {
-                        this.classList.remove('error');
-                        this.classList.add('success');
-                        validation.textContent = '사용 가능한 닉네임입니다.';
-                        validation.className = 'validation-message success';
-                    } else {
-                        this.classList.remove('success');
-                        this.classList.add('error');
-                        validation.textContent = '이미 사용 중인 닉네임입니다.';
-                        validation.className = 'validation-message error';
-                    }
-                });
-            }
-        });
-        
-        // 이메일 중복 확인
-        email.addEventListener('blur', function() {
-            const value = this.value.trim();
-            if (value && value.includes('@')) {
-                fetch('/user/check-email', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `email=${encodeURIComponent(value)}`
-                })
-                .then(response => response.json())
-                .then(available => {
-                    const validation = document.getElementById('email-validation');
-                    if (available) {
-                        this.classList.remove('error');
-                        this.classList.add('success');
-                        validation.textContent = '사용 가능한 이메일입니다.';
-                        validation.className = 'validation-message success';
-                    } else {
-                        this.classList.remove('success');
-                        this.classList.add('error');
-                        validation.textContent = '이미 사용 중인 이메일입니다.';
-                        validation.className = 'validation-message error';
-                    }
-                });
-            }
-        });
-        
-        // 비밀번호 확인
-        confirmPassword.addEventListener('input', function() {
-            const validation = document.getElementById('confirmPassword-validation');
-            if (this.value === password.value) {
-                this.classList.remove('error');
-                this.classList.add('success');
-                validation.textContent = '비밀번호가 일치합니다.';
-                validation.className = 'validation-message success';
-            } else {
-                this.classList.remove('success');
-                this.classList.add('error');
-                validation.textContent = '비밀번호가 일치하지 않습니다.';
-                validation.className = 'validation-message error';
-            }
-        });
-    </script>
+    <script src="/js/user-utils.js"></script>
+    <script src="/js/user-register.js"></script>
 </body>
 </html> 

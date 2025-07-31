@@ -186,8 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const contentTextarea = document.getElementById('comment-content');
     const submitBtn = document.getElementById('comment-submit');
     
-
-    
     // 댓글 목록 로드
     function loadComments() {
         fetch(`/api/comments/${postId}`)

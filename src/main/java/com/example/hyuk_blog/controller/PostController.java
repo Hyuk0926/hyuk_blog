@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.hyuk_blog.dto.ResumeDto;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import com.example.hyuk_blog.dto.UserDto;
+import com.example.hyuk_blog.dto.AdminDto;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,17 +62,28 @@ public class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request) {
+    public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, lang);
         if (post.isPresent() && post.get().isPublished()) {
             long likeCount = likeService.getLikeCount(id, lang);
-            boolean isLiked = likeService.isLikedByUser(id, null, lang);
+            
+            // user 또는 admin 세션 확인
+            UserDto user = (UserDto) session.getAttribute("user");
+            AdminDto admin = (AdminDto) session.getAttribute("admin");
+            boolean isLoggedIn = (user != null || admin != null);
+            
+            // 좋아요 상태 확인 (user 또는 admin ID 사용)
+            Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
+            boolean isLiked = likeService.isLikedByUser(id, userId, lang);
             
             model.addAttribute("post", post.get());
             model.addAttribute("lang", lang);
             model.addAttribute("likeCount", likeCount);
             model.addAttribute("isLiked", isLiked);
             model.addAttribute("postId", id);
+            model.addAttribute("user", user);
+            model.addAttribute("admin", admin);
+            model.addAttribute("isLoggedIn", isLoggedIn);
             return "post-detail";
         }
         return "redirect:/";

@@ -2,6 +2,7 @@ package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.CommentDto;
 import com.example.hyuk_blog.dto.UserDto;
+import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,13 +34,19 @@ public class CommentController {
             HttpServletRequest request,
             HttpSession session) {
         
-        // 로그인 확인
+        // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
-        if (user == null) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        
+        if (user == null && admin == null) {
             return ResponseEntity.status(401).body(null);
         }
         
-        CommentDto comment = commentService.createComment(postId, content, user.getId(), user.getNickname());
+        // user가 있으면 user 정보 사용, 없으면 admin 정보 사용
+        Long userId = user != null ? user.getId() : admin.getId();
+        String nickname = user != null ? user.getNickname() : admin.getUsername();
+        
+        CommentDto comment = commentService.createComment(postId, content, userId, nickname);
         return ResponseEntity.ok(comment);
     }
     
@@ -49,16 +56,21 @@ public class CommentController {
             @RequestParam String content,
             HttpSession session) {
         
-        // 로그인 확인
+        // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
-        if (user == null) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        
+        if (user == null && admin == null) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("message", "로그인이 필요합니다.");
             return ResponseEntity.status(401).body(response);
         }
         
-        boolean success = commentService.updateComment(commentId, user.getId(), content);
+        // user가 있으면 user ID 사용, 없으면 admin ID 사용
+        Long userId = user != null ? user.getId() : admin.getId();
+        
+        boolean success = commentService.updateComment(commentId, userId, content);
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         
@@ -76,16 +88,21 @@ public class CommentController {
             @PathVariable Long commentId,
             HttpSession session) {
         
-        // 로그인 확인
+        // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
-        if (user == null) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        
+        if (user == null && admin == null) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
             response.put("message", "로그인이 필요합니다.");
             return ResponseEntity.status(401).body(response);
         }
         
-        boolean success = commentService.deleteComment(commentId, user.getId());
+        // user가 있으면 user ID 사용, 없으면 admin ID 사용
+        Long userId = user != null ? user.getId() : admin.getId();
+        
+        boolean success = commentService.deleteComment(commentId, userId);
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         

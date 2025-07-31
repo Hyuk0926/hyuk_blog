@@ -1,6 +1,7 @@
 package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.UserDto;
+import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.service.LikeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,15 +26,20 @@ public class LikeController {
             HttpServletRequest request,
             HttpSession session) {
         
-        // 로그인 확인
+        // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
-        if (user == null) {
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        
+        if (user == null && admin == null) {
             Map<String, Object> response = new HashMap<>();
             response.put("error", "로그인이 필요합니다.");
             return ResponseEntity.status(401).body(response);
         }
         
-        boolean isLiked = likeService.toggleLike(postId, user.getId(), lang);
+        // user가 있으면 user ID 사용, 없으면 admin ID 사용
+        Long userId = user != null ? user.getId() : admin.getId();
+        
+        boolean isLiked = likeService.toggleLike(postId, userId, lang);
         long likeCount = likeService.getLikeCount(postId, lang);
         
         Map<String, Object> response = new HashMap<>();
@@ -51,7 +57,10 @@ public class LikeController {
             HttpSession session) {
         
         UserDto user = (UserDto) session.getAttribute("user");
-        boolean isLiked = likeService.isLikedByUser(postId, user != null ? user.getId() : null, lang);
+        AdminDto admin = (AdminDto) session.getAttribute("admin");
+        Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
+        
+        boolean isLiked = likeService.isLikedByUser(postId, userId, lang);
         long likeCount = likeService.getLikeCount(postId, lang);
         
         Map<String, Object> response = new HashMap<>();

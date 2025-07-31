@@ -881,7 +881,7 @@
             </div>
             
             <!-- 댓글 작성 폼 -->
-            <div class="comment-form" th:if="${session.user != null}">
+            <div class="comment-form" th:if="${isLoggedIn}">
                 <div class="comment-content-group">
                     <textarea id="comment-content" placeholder="댓글을 입력하세요..." class="comment-textarea"></textarea>
                     <button id="comment-submit" class="comment-submit-btn">댓글 작성</button>
@@ -889,8 +889,8 @@
             </div>
             
             <!-- 로그인 필요 메시지 -->
-            <div class="comment-login-message" th:if="${session.user == null}">
-                <p>댓글을 작성하려면 <a href="/user/login?redirectUrl=${#request.requestURI}?${#request.queryString}" class="login-link">로그인</a>이 필요합니다.</p>
+            <div class="comment-login-message" th:if="${!isLoggedIn}">
+                <p>댓글을 작성하려면 <a href="/user/login" class="login-link" id="comment-login-link">로그인</a>이 필요합니다.</p>
             </div>
         </div>
         

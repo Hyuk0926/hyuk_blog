@@ -1,6 +1,7 @@
 package com.example.hyuk_blog.service;
 
 import com.example.hyuk_blog.dto.UserDto;
+import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.entity.User;
 import com.example.hyuk_blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class UserService {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private AdminService adminService;
     
     // 비밀번호 해싱
     private String hashPassword(String password) {
@@ -35,7 +39,7 @@ public class UserService {
     
     // 사용자 로그인 인증 (admin 계정도 포함)
     public Optional<UserDto> authenticate(String username, String password) {
-        // User 테이블에서 사용자 찾기 (마이그레이션으로 admin 계정도 포함됨)
+        // 1. User 테이블에서 사용자 찾기
         Optional<UserDto> user = userRepository.findByUsernameAndActiveTrue(username)
                 .filter(u -> {
                     // admin 계정은 해시되지 않은 비밀번호, 일반 사용자는 해시된 비밀번호
@@ -43,7 +47,27 @@ public class UserService {
                 })
                 .map(UserDto::fromEntity);
         
-        return user;
+        if (user.isPresent()) {
+            return user;
+        }
+        
+        // 2. User 테이블에 없으면 Admin 테이블에서 확인
+        Optional<AdminDto> admin = adminService.authenticate(username, password);
+        if (admin.isPresent()) {
+            // Admin을 UserDto로 변환하여 반환
+            UserDto adminAsUser = new UserDto();
+            adminAsUser.setId(admin.get().getId());
+            adminAsUser.setUsername(admin.get().getUsername());
+            adminAsUser.setPassword(admin.get().getPassword());
+            adminAsUser.setNickname(admin.get().getUsername()); // admin username을 nickname으로 사용
+            adminAsUser.setEmail(admin.get().getEmail());
+            adminAsUser.setActive(admin.get().isActive());
+            adminAsUser.setCreatedAt(admin.get().getCreatedAt());
+            adminAsUser.setUpdatedAt(admin.get().getUpdatedAt());
+            return Optional.of(adminAsUser);
+        }
+        
+        return Optional.empty();
     }
     
     // 사용자명으로 사용자 조회

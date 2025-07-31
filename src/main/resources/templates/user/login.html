@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인 - 백엔드 기초부터</title>
+    <title>로그인</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #404040 50%, #2d2d2d 75%, #1a1a1a 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
             padding: 20px;
+            font-family: 'Noto Sans KR', sans-serif;
         }
         .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            background: rgba(45, 45, 45, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             padding: 40px;
             width: 100%;
             max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .login-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
         .login-title {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 1.75rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
         }
         .login-subtitle {
-            color: #666;
-            font-size: 1rem;
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
         .form-group {
             margin-bottom: 20px;
@@ -43,75 +49,197 @@
         .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: #e0e0e0;
+            font-size: 0.9rem;
         }
         .form-input {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            padding: 14px 16px;
+            border: 2px solid #555555;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
             box-sizing: border-box;
+            background: rgba(60, 60, 60, 0.8);
+            font-family: inherit;
+            color: #ffffff;
         }
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #888888;
+            box-shadow: 0 0 0 3px rgba(136, 136, 136, 0.2);
+            transform: translateY(-1px);
+            background: rgba(70, 70, 70, 0.9);
         }
         .login-button {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 14px;
+            background: linear-gradient(145deg, #666666 0%, #444444 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Montserrat', sans-serif;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
         .login-button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(145deg, #777777 0%, #555555 100%);
+        }
+        .login-button:active {
+            transform: translateY(0);
         }
         .error-message {
-            background: #fee;
-            color: #c33;
-            padding: 12px;
-            border-radius: 8px;
+            background: rgba(197, 48, 48, 0.2);
+            color: #ff6b6b;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: 500;
+            border: 1px solid rgba(197, 48, 48, 0.3);
         }
         .success-message {
-            background: #efe;
-            color: #3c3;
-            padding: 12px;
-            border-radius: 8px;
+            background: rgba(47, 133, 90, 0.2);
+            color: #68d391;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 20px;
             text-align: center;
+            font-weight: 500;
+            border: 1px solid rgba(47, 133, 90, 0.3);
         }
         .register-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         .register-link a {
-            color: #667eea;
+            color: #cccccc;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 600;
+            transition: color 0.3s ease;
         }
         .register-link a:hover {
+            color: #ffffff;
             text-decoration: underline;
         }
         .back-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 16px;
         }
         .back-link a {
-            color: #666;
+            color: #aaaaaa;
             text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
         }
         .back-link a:hover {
+            color: #cccccc;
             text-decoration: underline;
+        }
+        
+        /* 다크모드 지원 */
+        body.dark-mode {
+            background: #1a202c;
+        }
+        
+        body.dark-mode .login-container {
+            background: #2d3748;
+            border-color: #4a5568;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        body.dark-mode .login-title {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .login-subtitle {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .form-label {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .form-input {
+            background: #1a202c;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .form-input:focus {
+            border-color: #ffe082;
+            box-shadow: 0 0 0 3px rgba(255, 224, 130, 0.1);
+        }
+        
+        body.dark-mode .register-link {
+            border-top-color: #4a5568;
+        }
+        
+        body.dark-mode .register-link a {
+            color: #90cdf4;
+        }
+        
+        body.dark-mode .register-link a:hover {
+            color: #63b3ed;
+        }
+        
+        body.dark-mode .back-link a {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .back-link a:hover {
+            color: #e2e8f0;
+        }
+        
+        /* 비밀번호 토글 아이콘 다크모드 */
+        body.dark-mode #togglePassword {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode #togglePassword:hover {
+            color: #e2e8f0;
+        }
+        
+        /* 메시지 스타일 */
+        .message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .message.error {
+            background: rgba(197, 48, 48, 0.2);
+            color: #ff6b6b;
+            border: 1px solid rgba(197, 48, 48, 0.3);
+        }
+        
+        .message.success {
+            background: rgba(47, 133, 90, 0.2);
+            color: #68d391;
+            border: 1px solid rgba(47, 133, 90, 0.3);
+        }
+        
+        .message.info {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* 비밀번호 토글 아이콘 호버 효과 */
+        #togglePassword:hover {
+            color: #ffffff !important;
+            transform: scale(1.1);
+            transition: all 0.2s ease;
         }
     </style>
 </head>
@@ -140,7 +268,11 @@
             
             <div class="form-group">
                 <label for="password" class="form-label">비밀번호</label>
-                <input type="password" id="password" name="password" class="form-input" required>
+                <div style="position:relative;">
+                    <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password" style="padding-right:40px; ime-mode:disabled;">
+                    <span id="togglePassword" title="비밀번호 보기" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.3rem; color:#888;">𝄐</span>
+                </div>
+                <div id="capsLockMsg" style="color:#dc3545; font-size:0.95rem; margin-top:6px; display:none;">CapsLock이 켜져 있습니다!</div>
             </div>
             
             <button type="submit" class="login-button">로그인</button>
@@ -154,5 +286,8 @@
             <a href="/">← 메인 페이지로 돌아가기</a>
         </div>
     </div>
+    
+    <script src="/js/user-utils.js"></script>
+    <script src="/js/user-login.js"></script>
 </body>
 </html> 

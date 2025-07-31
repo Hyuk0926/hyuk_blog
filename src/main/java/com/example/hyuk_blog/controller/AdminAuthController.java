@@ -37,8 +37,10 @@ public class AdminAuthController {
         Optional<AdminDto> admin = adminService.authenticate(username, password);
         
         if (admin.isPresent()) {
-            // 로그인 성공
+            // 로그인 성공 - 기존 user 세션 제거
+            session.removeAttribute("user");
             session.setAttribute("admin", admin.get());
+            
             // 계정에 따라 언어 세션 저장 및 리다이렉트 경로 분기
             if ("admin_jp".equals(username)) {
                 session.setAttribute("lang", "ja");
@@ -57,7 +59,7 @@ public class AdminAuthController {
     // 로그아웃
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
+        session.removeAttribute("admin");
         return "redirect:/admin/login";
     }
 } 
