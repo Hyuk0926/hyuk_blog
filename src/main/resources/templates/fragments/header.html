@@ -16,7 +16,7 @@
         </style>
     </head>
     <div class="container header-flex">
-        <a class="navbar-brand" th:href="@{${(lang != null ? lang : #locale.language) == 'ja' ? '/jp' : '/'}}" th:text="#{header.title}">Takahara's Blog</a>
+        <a class="navbar-brand" th:href="@{${(lang != null ? lang : #locale.language) == 'ja' ? '/?lang=ja' : '/?lang=ko'}}" th:text="#{header.title}">Takahara's Blog</a>
         <div class="header-right">
             <nav>
                 <ul class="navbar-nav">
