@@ -14,7 +14,7 @@
     <div style="color:#aaa; font-size:0.95rem;">
       &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> <span th:text="#{footer.copyrights}">Takahara Yuuki. All rights reserved.</span>
     </div>
-    <div class="admin-link" style="margin-top: 16px;" th:if="${session.user != null}">
+    <div class="admin-link" style="margin-top: 16px;" th:if="${session.user != null and (session.user.username == 'admin' or session.user.username == 'admin_jp')}">
       <a th:href="@{/admin/login}" class="admin-button" th:text="#{footer.adminLogin}">관리자 로그인</a>
     </div>
   </div>
