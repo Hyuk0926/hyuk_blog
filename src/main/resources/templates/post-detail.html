@@ -12,62 +12,92 @@
     <!-- Prism.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
-        /* 코드 복사 버튼 스타일 */
+        /* 코드 복사 버튼 스타일 - 심플한 투명/반투명 디자인 */
         .code-block-wrapper {
             position: relative;
         }
         .copy-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ffffff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 12px;
-            font-size: 0.9rem;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            color: #a0aec0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
             cursor: pointer;
-            opacity: 0.85;
+            opacity: 0.3;
             z-index: 2;
-            transition: background 0.2s, opacity 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-weight: 500;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .code-block-wrapper:hover .copy-btn {
+            opacity: 1;
+            transform: translateY(0);
         }
         .copy-btn:hover {
-            background: #0056b3;
-            opacity: 1;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .copy-btn:active {
+            transform: translateY(0);
+            transition: all 0.1s ease;
+        }
+        .copy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         body.dark-mode .copy-btn {
-            background: #23272a;
-            color: #ffe082;
-            border: 1px solid #444;
+            background: rgba(0, 0, 0, 0.25);
+            color: #718096;
+            border-color: rgba(255, 255, 255, 0.08);
         }
         body.dark-mode .copy-btn:hover {
-            background: #444;
+            background: rgba(0, 0, 0, 0.4);
+            color: #e2e8f0;
+            border-color: rgba(255, 255, 255, 0.15);
         }
-        /* Toast 알림 스타일 */
+        /* Toast 알림 스타일 - 심플하고 부드러운 디자인 */
         .copy-toast {
             position: fixed;
-            right: 32px;
-            bottom: 32px;
-            background: #222;
-            color: #fff;
-            padding: 12px 24px;
+            right: 24px;
+            bottom: 24px;
+            background: rgba(34, 34, 34, 0.9);
+            backdrop-filter: blur(12px);
+            color: #ffffff;
+            padding: 12px 20px;
             border-radius: 8px;
-            font-size: 1rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-            opacity: 0.95;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            opacity: 0;
             z-index: 9999;
             pointer-events: none;
-            animation: fadeInOut 1.5s;
+            animation: copyToastFade 2s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(20px); }
-            10% { opacity: 0.95; transform: translateY(0); }
-            90% { opacity: 0.95; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(20px); }
+        @keyframes copyToastFade {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            15% { opacity: 1; transform: translateY(0) scale(1); }
+            85% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-10px) scale(0.95); }
         }
         body.dark-mode .copy-toast {
-            background: #333;
-            color: #ffe082;
+            background: rgba(0, 0, 0, 0.8);
+            color: #e2e8f0;
+            border-color: rgba(255, 255, 255, 0.1);
         }
         .post-detail-image {
             max-width: 700px;
@@ -115,7 +145,7 @@
             color: #ffe082 !important;
             background: #23272a !important;
         }
-        /* 코드 블록(박스) */
+        /* 코드 블록(박스) - 개선된 스타일 */
         .post-content pre {
             background: #23272a;
             color: #ffe082;
@@ -127,6 +157,12 @@
             margin: 16px 0;
             box-shadow: 0 2px 12px rgba(0,0,0,0.10);
             border: 1px solid #444;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .post-content pre:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
         }
         /* 코드 블록 내부 <code>는 배경/패딩/테두리 없음 */
         .post-content pre code {

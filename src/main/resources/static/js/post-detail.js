@@ -1,19 +1,31 @@
-// Toast 알림 함수
+// Toast 알림 함수 - 개선된 버전
 function showCopyToast(msg) {
     // 이미 떠있는 토스트가 있으면 제거
     const old = document.getElementById('copy-toast');
     if (old) old.remove();
+    
     const toast = document.createElement('div');
     toast.className = 'copy-toast';
     toast.id = 'copy-toast';
-    toast.innerText = msg;
+    toast.innerHTML = `
+        <span style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+                <polyline points="20,6 9,17 4,12"></polyline>
+            </svg>
+            <span>${msg}</span>
+        </span>
+    `;
     document.body.appendChild(toast);
+    
+    // 애니메이션 완료 후 요소 제거
     setTimeout(() => {
-        toast.remove();
-    }, 1500);
+        if (toast.parentNode) {
+            toast.remove();
+        }
+    }, 2000);
 }
 
-// 코드 복사 버튼 동적 추가 및 복사 기능
+// 코드 복사 버튼 동적 추가 및 복사 기능 - 개선된 버전
 document.addEventListener('DOMContentLoaded', function() {
     const content = document.getElementById('post-content');
     if (!content) return;
@@ -37,14 +49,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const btn = document.createElement('button');
         btn.className = 'copy-btn';
         btn.type = 'button';
-        btn.innerText = '📋';
-        btn.onclick = function() {
-            // 코드 텍스트 복사
-            const code = codeElem.innerText;
-            navigator.clipboard.writeText(code).then(function() {
-                showCopyToast('복사 완료');
-            });
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+        btn.title = '코드 복사';
+        
+        // 복사 기능 개선
+        btn.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // 버튼 비활성화 (중복 클릭 방지)
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            
+            // 코드 텍스트 추출 (Prism.js 하이라이팅 제거)
+            let codeText = '';
+            if (codeElem.textContent) {
+                codeText = codeElem.textContent;
+            } else {
+                // fallback: innerText 사용
+                codeText = codeElem.innerText;
+            }
+            
+            // 클립보드에 복사
+            if (navigator.clipboard && window.isSecureContext) {
+                // 모던 브라우저에서 안전한 컨텍스트
+                navigator.clipboard.writeText(codeText).then(function() {
+                    showCopyToast('코드가 복사되었습니다');
+                    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"></polyline></svg>';
+                    setTimeout(() => {
+                        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                        btn.disabled = false;
+                        btn.style.opacity = '';
+                    }, 1000);
+                }).catch(function(err) {
+                    console.error('클립보드 복사 실패:', err);
+                    fallbackCopyTextToClipboard(codeText, btn);
+                });
+            } else {
+                // fallback: 구형 브라우저 지원
+                fallbackCopyTextToClipboard(codeText, btn);
+            }
         };
+        
         wrapper.appendChild(btn);
     });
     
@@ -53,6 +99,42 @@ document.addEventListener('DOMContentLoaded', function() {
         Prism.highlightAll();
     }
 });
+
+// 구형 브라우저를 위한 fallback 복사 함수
+function fallbackCopyTextToClipboard(text, btn) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showCopyToast('코드가 복사되었습니다');
+            btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"></polyline></svg>';
+            setTimeout(() => {
+                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+                btn.disabled = false;
+                btn.style.opacity = '';
+            }, 1000);
+        } else {
+            showCopyToast('복사에 실패했습니다');
+            btn.disabled = false;
+            btn.style.opacity = '';
+        }
+    } catch (err) {
+        console.error('Fallback 복사 실패:', err);
+        showCopyToast('복사에 실패했습니다');
+        btn.disabled = false;
+        btn.style.opacity = '';
+    }
+    
+    document.body.removeChild(textArea);
+}
 
 // 언어 감지 및 클래스 추가 함수
 function detectAndAddLanguageClass(codeElement) {
