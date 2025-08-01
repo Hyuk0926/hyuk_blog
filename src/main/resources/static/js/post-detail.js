@@ -160,13 +160,19 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Like response status:', response.status);
             if (response.status === 401) {
                 // 로그인이 필요한 경우
-                if (confirm('좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+                const lang = document.querySelector('.like-button').getAttribute('data-lang');
+                const loginRequiredMessage = lang === 'ja' ? 
+                    'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : 
+                    '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
+                if (confirm(loginRequiredMessage)) {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
                 }
                 return null;
             } else if (response.status === 500) {
                 console.error('Server error in like request');
-                alert('서버 오류가 발생했습니다.');
+                const lang = document.querySelector('.like-button').getAttribute('data-lang');
+                const serverErrorMessage = lang === 'ja' ? 'サーバーエラーが発生しました。' : '서버 오류가 발생했습니다.';
+                alert(serverErrorMessage);
                 return null;
             }
             return response.json();
@@ -187,7 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            console.error('좋아요 처리 중 오류 발생:', error);
+            const lang = document.querySelector('.like-button').getAttribute('data-lang');
+            const errorMessage = lang === 'ja' ? 'いいね処理中にエラーが発生しました' : '좋아요 처리 중 오류 발생';
+            console.error(errorMessage + ':', error);
         })
         .finally(() => {
             // 버튼 다시 활성화

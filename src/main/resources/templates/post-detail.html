@@ -996,6 +996,15 @@
         }
     </style>
     
+    <script th:inline="javascript">
+        // 국제화 메시지를 JavaScript에서 사용할 수 있도록 전역 변수로 설정
+        window.i18nMessages = {
+            likeLoginRequired: /*[[${lang == 'ja' ? 'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?'}]]*/ '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?',
+            likeServerError: /*[[${lang == 'ja' ? 'サーバーエラーが発生しました。' : '서버 오류가 발생했습니다.'}]]*/ '서버 오류가 발생했습니다.',
+            likeError: /*[[${lang == 'ja' ? 'いいね処理中にエラーが発生しました' : '좋아요 처리 중 오류 발생'}]]*/ '좋아요 처리 중 오류 발생'
+        };
+    </script>
+    
     <script src="/js/post-detail.js"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>

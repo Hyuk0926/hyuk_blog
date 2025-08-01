@@ -26,21 +26,15 @@ public class LikeController {
             @PathVariable Long postId,
             HttpSession session) {
         
-        System.out.println("=== Like KR Request Debug ===");
-        System.out.println("PostId: " + postId);
-        
         // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         
         if (user == null && admin == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "로그인이 필요합니다.");
-            return ResponseEntity.status(401).body(response);
+            return ResponseEntity.status(401).build();
         }
         
         Long userId = user != null ? user.getId() : admin.getId();
-        System.out.println("UserId: " + userId);
         
         try {
             boolean isLiked = likeService.toggleLike(postId, PostType.KR, userId);
@@ -50,7 +44,6 @@ public class LikeController {
             response.put("liked", isLiked);
             response.put("likeCount", likeCount);
             
-            System.out.println("Response: " + response);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error in toggleLike: " + e.getMessage());
@@ -67,21 +60,15 @@ public class LikeController {
             @PathVariable Long postId,
             HttpSession session) {
         
-        System.out.println("=== Like JP Request Debug ===");
-        System.out.println("PostId: " + postId);
-        
         // 로그인 확인 (user 또는 admin)
         UserDto user = (UserDto) session.getAttribute("user");
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         
         if (user == null && admin == null) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("error", "로그인이 필요합니다.");
-            return ResponseEntity.status(401).body(response);
+            return ResponseEntity.status(401).build();
         }
         
         Long userId = user != null ? user.getId() : admin.getId();
-        System.out.println("UserId: " + userId);
         
         try {
             boolean isLiked = likeService.toggleLike(postId, PostType.JP, userId);
@@ -91,7 +78,6 @@ public class LikeController {
             response.put("liked", isLiked);
             response.put("likeCount", likeCount);
             
-            System.out.println("Response: " + response);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error in toggleLike: " + e.getMessage());
