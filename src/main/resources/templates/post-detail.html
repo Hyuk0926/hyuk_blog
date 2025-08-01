@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -752,9 +752,246 @@
         body.dark-mode .modal-btn.cancel:hover {
             background: #718096;
         }
+        
+        /* 알림 메시지 스타일 */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        .notification-message {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: #2d3748;
+            backdrop-filter: blur(12px);
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: #718096;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-close:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        body.dark-mode .notification-message {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .notification-close {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .notification-close:hover {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        /* 로그인 확인 모달 스타일 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            animation: modalSlideIn 0.3s ease-out;
+            border: 1px solid #e2e8f0;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header {
+            padding: 20px 24px 0 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            font-family: inherit;
+        }
+        
+        .modal-body {
+            padding: 20px 24px;
+        }
+        
+        .modal-body p {
+            margin: 0;
+            font-size: 1rem;
+            color: #4a5568;
+            line-height: 1.6;
+            font-family: inherit;
+        }
+        
+        .modal-footer {
+            padding: 0 24px 20px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            border: 1px solid transparent;
+        }
+        
+        .modal-btn.cancel {
+            background: #f7fafc;
+            color: #4a5568;
+            border-color: #e2e8f0;
+        }
+        
+        .modal-btn.cancel:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+        
+        .modal-btn.confirm {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .modal-btn.confirm:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+        
+        /* 다크모드 */
+        body.dark-mode .modal-content {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        
+        body.dark-mode .modal-header {
+            border-bottom-color: #4a5568;
+        }
+        
+        body.dark-mode .modal-title {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .modal-body p {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .modal-btn.cancel {
+            background: #4a5568;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        
+        body.dark-mode .modal-btn.cancel:hover {
+            background: #718096;
+            border-color: #718096;
+        }
     </style>
 </head>
 <body>
+    <!-- 알림 메시지 컨테이너 -->
+    <div id="notification-container" class="notification-container" style="display: none;">
+        <div class="notification-message">
+            <span id="notification-text"></span>
+            <button class="notification-close" onclick="closeNotification()">×</button>
+        </div>
+    </div>
+    
+    <!-- 로그인 확인 모달 -->
+    <div id="login-confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">로그인 필요</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeLoginModal()">취소</button>
+                <button class="modal-btn confirm" onclick="confirmLogin()">확인</button>
+            </div>
+        </div>
+    </div>
+    
     <div th:replace="~{fragments/header :: header}"></div>
     <div class="post-detail-container">
         <div class="post-header">

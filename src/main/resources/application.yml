@@ -36,7 +36,15 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   thymeleaf:
-    cache: true
+    cache: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: true
+      static-locations: classpath:/static/
+      cache:
+        period: 0
 
 # 개인정보 표시 설정 (운영 환경에서는 주소와 전화번호 숨김)
 app:

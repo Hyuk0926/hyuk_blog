@@ -33,6 +33,10 @@
 #      max-request-size: 10MB
 #  thymeleaf:
 #    cache: true
+#  web:
+#    resources:
+#      cache:
+#        period: 31536000
 
 ## 개인정보 표시 설정 (운영 환경에서는 주소와 전화번호 숨김)
 #app:

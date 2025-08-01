@@ -25,6 +25,63 @@ function showCopyToast(msg) {
     }, 2000);
 }
 
+// 알림 메시지 함수들
+function showNotification(message, duration = 5000) {
+    const container = document.getElementById('notification-container');
+    const text = document.getElementById('notification-text');
+    
+    if (container && text) {
+        text.textContent = message;
+        container.style.display = 'block';
+        
+        // 자동으로 사라지게 설정
+        if (duration > 0) {
+            setTimeout(() => {
+                closeNotification();
+            }, duration);
+        }
+    }
+}
+
+function closeNotification() {
+    const container = document.getElementById('notification-container');
+    if (container) {
+        container.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => {
+            container.style.display = 'none';
+            container.style.animation = '';
+        }, 300);
+    }
+}
+
+// 다국어 메시지 가져오기 함수
+function getMessage(key) {
+    // 현재 언어 감지
+    const currentLang = document.documentElement.lang || 'ko';
+    
+    // 메시지 매핑
+    const messages = {
+        ko: {
+            'comment.empty': '아직 댓글이 없습니다.',
+            'comment.load.error': '댓글을 불러오는 중 오류가 발생했습니다.',
+            'comment.content.required': '댓글 내용을 입력해주세요.',
+            'comment.session.expired': '세션이 만료되었습니다. 다시 로그인해주세요.',
+            'comment.server.error': '서버 오류가 발생했습니다.',
+            'comment.write.error': '댓글 작성 중 오류가 발생했습니다.'
+        },
+        ja: {
+            'comment.empty': 'まだコメントがありません。',
+            'comment.load.error': 'コメントの読み込み中にエラーが発生しました。',
+            'comment.content.required': 'コメント内容を入力してください。',
+            'comment.session.expired': 'セッションが期限切れです。再度ログインしてください。',
+            'comment.server.error': 'サーバーエラーが発生しました。',
+            'comment.write.error': 'コメント投稿中にエラーが発生しました。'
+        }
+    };
+    
+    return messages[currentLang]?.[key] || messages.ko[key] || key;
+}
+
 // 코드 복사 버튼 동적 추가 및 복사 기능 - 개선된 버전
 document.addEventListener('DOMContentLoaded', function() {
     const content = document.getElementById('post-content');
@@ -206,6 +263,60 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// 모달 관련 전역 변수
+let loginModalCallback = null;
+
+// 모달 표시 함수
+function showLoginModal(title, message, callback) {
+    const modal = document.getElementById('login-confirm-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    
+    if (modal && modalTitle && modalMessage) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        loginModalCallback = callback;
+        modal.style.display = 'flex';
+        
+        // 모달 외부 클릭 시 닫기 (이벤트 리스너 중복 방지)
+        const handleModalClick = function(e) {
+            if (e.target === modal) {
+                closeLoginModal();
+            }
+        };
+        
+        const handleEscKey = function(e) {
+            if (e.key === 'Escape') {
+                closeLoginModal();
+            }
+        };
+        
+        // 기존 이벤트 리스너 제거 후 새로 추가
+        modal.removeEventListener('click', handleModalClick);
+        document.removeEventListener('keydown', handleEscKey);
+        
+        modal.addEventListener('click', handleModalClick);
+        document.addEventListener('keydown', handleEscKey);
+    }
+}
+
+// 모달 닫기 함수
+function closeLoginModal() {
+    const modal = document.getElementById('login-confirm-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        loginModalCallback = null;
+    }
+}
+
+// 로그인 확인 함수
+function confirmLogin() {
+    if (loginModalCallback) {
+        loginModalCallback();
+    }
+    closeLoginModal();
+}
+
 // 좋아요 기능 JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     const likeButton = document.querySelector('.like-button');
@@ -224,9 +335,15 @@ document.addEventListener('DOMContentLoaded', function() {
     likeButton.addEventListener('click', function() {
         // 로그인하지 않은 경우 클릭 무시
         if (!isLoggedIn) {
-            if (confirm('좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+            const lang = this.getAttribute('data-lang') || 'ko';
+            const title = lang === 'ja' ? 'ログインが必要' : '로그인 필요';
+            const message = lang === 'ja' ? 
+                'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : 
+                '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
+            
+            showLoginModal(title, message, function() {
                 window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-            }
+            });
             return;
         }
         const postId = this.getAttribute('data-post-id');
@@ -260,29 +377,31 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.status === 401) {
                 // 로그인이 필요한 경우
                 const lang = likeButton.getAttribute('data-lang') || 'ko';
-                const loginRequiredMessage = lang === 'ja' ? 
+                const title = lang === 'ja' ? 'ログインが必要' : '로그인 필요';
+                const message = lang === 'ja' ? 
                     'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : 
                     '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
-                if (confirm(loginRequiredMessage)) {
+                showLoginModal(title, message, function() {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-                }
+                });
                 return null;
             } else if (response.status === 403) {
                 // 권한이 없는 경우 (세션 만료 등)
                 console.error('Forbidden error in like request');
                 const lang = likeButton.getAttribute('data-lang') || 'ko';
-                const forbiddenMessage = lang === 'ja' ? 
+                const title = lang === 'ja' ? 'セッション期限切れ' : '세션 만료';
+                const message = lang === 'ja' ? 
                     'セッションが期限切れです。再度ログインしてください。' : 
                     '세션이 만료되었습니다. 다시 로그인해주세요.';
-                if (confirm(forbiddenMessage)) {
+                showLoginModal(title, message, function() {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-                }
+                });
                 return null;
             } else if (response.status === 500) {
                 console.error('Server error in like request');
                 const lang = likeButton.getAttribute('data-lang') || 'ko';
                 const serverErrorMessage = lang === 'ja' ? 'サーバーエラーが発生しました。' : '서버 오류가 발생했습니다.';
-                alert(serverErrorMessage);
+                showNotification(serverErrorMessage);
                 return null;
             }
             return response.json();
@@ -395,13 +514,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         commentList.appendChild(createCommentElement(comment, currentUserId));
                     });
                 } else {
-                    commentList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">아직 댓글이 없습니다.</div>';
+                    commentList.innerHTML = `<div style="text-align: center; color: #666; padding: 20px;">${getMessage('comment.empty')}</div>`;
                 }
             })
             .catch(error => {
                 console.error('댓글 로드 중 오류:', error);
                 if (commentList) {
-                    commentList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">댓글을 불러오는 중 오류가 발생했습니다.</div>';
+                    commentList.innerHTML = `<div style="text-align: center; color: #666; padding: 20px;">${getMessage('comment.load.error')}</div>`;
                 }
             });
     }
@@ -472,7 +591,7 @@ document.addEventListener('DOMContentLoaded', function() {
             saveBtn.addEventListener('click', function() {
                 const newContent = editTextarea.value.trim();
                 if (!newContent) {
-                    alert('댓글 내용을 입력해주세요.');
+                    showNotification(getMessage('comment.content.required'));
                     return;
                 }
                 
@@ -487,10 +606,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(response => {
                     if (response.status === 401) {
-                        alert('로그인이 필요합니다.');
+                        showNotification(getMessage('comment.login.required'));
                         return null;
                     } else if (response.status === 403) {
-                        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                        showNotification(getMessage('comment.session.expired'));
                         return null;
                     }
                     return response.json();
@@ -503,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function() {
                              loadComments(); // 댓글 목록 새로고침
                          }, 100);
                      } else if (data) {
-                        alert(data.message);
+                        showNotification(data.message);
                     }
                 });
             });
@@ -520,7 +639,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const deleteBtn = commentDiv.querySelector('.delete-btn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', function() {
-                if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+                const lang = likeButton ? likeButton.getAttribute('data-lang') : 'ko';
+                const title = lang === 'ja' ? 'コメント削除' : '댓글 삭제';
+                const message = lang === 'ja' ? '本当にこのコメントを削除しますか？' : '정말로 이 댓글을 삭제하시겠습니까?';
+                
+                showLoginModal(title, message, function() {
                     // 댓글 삭제는 기존 엔드포인트 사용 (comment.id로 특정 댓글 삭제)
                     fetch(`/api/comments/${comment.id}`, {
                         method: 'DELETE',
@@ -531,10 +654,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(response => {
                         if (response.status === 401) {
-                            alert('로그인이 필요합니다.');
+                            showNotification(getMessage('comment.login.required'));
                             return null;
                         } else if (response.status === 403) {
-                            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                            showNotification(getMessage('comment.session.expired'));
                             return null;
                         }
                         return response.json();
@@ -543,10 +666,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (data && data.success) {
                             commentDiv.remove();
                         } else if (data) {
-                            alert(data.message);
+                            showNotification(data.message);
                         }
                     });
-                }
+                });
             });
         }
         
@@ -559,7 +682,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const content = contentTextarea.value.trim();
         
         if (!content) {
-            alert('댓글 내용을 입력해주세요.');
+            showNotification(getMessage('comment.content.required'));
             return;
         }
         
@@ -591,27 +714,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (response.status === 401) {
                 // 로그인이 필요한 경우
                 const lang = likeButton ? likeButton.getAttribute('data-lang') : 'ko';
-                const loginMessage = lang === 'ja' ? 
+                const title = lang === 'ja' ? 'ログインが必要' : '로그인 필요';
+                const message = lang === 'ja' ? 
                     'コメントを投稿するにはログインが必要です。ログインページに移動しますか？' : 
                     '댓글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
-                if (confirm(loginMessage)) {
+                showLoginModal(title, message, function() {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-                }
+                });
                 return null;
             } else if (response.status === 403) {
                 // 권한이 없는 경우 (세션 만료 등)
                 console.error('Forbidden error in comment request');
                 const lang = likeButton ? likeButton.getAttribute('data-lang') : 'ko';
-                const forbiddenMessage = lang === 'ja' ? 
+                const title = lang === 'ja' ? 'セッション期限切れ' : '세션 만료';
+                const message = lang === 'ja' ? 
                     'セッションが期限切れです。再度ログインしてください。' : 
                     '세션이 만료되었습니다. 다시 로그인해주세요.';
-                if (confirm(forbiddenMessage)) {
+                showLoginModal(title, message, function() {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
-                }
+                });
                 return null;
             } else if (response.status === 500) {
                 console.error('Server error in comment request');
-                alert('서버 오류가 발생했습니다.');
+                showNotification(getMessage('comment.server.error'));
                 return null;
             }
             return response.json();
@@ -629,7 +754,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('댓글 작성 중 오류:', error);
-            alert('댓글 작성 중 오류가 발생했습니다.');
+            showNotification(getMessage('comment.write.error'));
         });
         });
     }
