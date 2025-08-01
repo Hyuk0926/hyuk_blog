@@ -41,6 +41,10 @@ public class LikeService {
     }
     
     public boolean isLikedByUser(Long postId, PostType postType, Long userId) {
+        // userId가 null이면 좋아요하지 않은 것으로 처리
+        if (userId == null) {
+            return false;
+        }
         return likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType, userId);
     }
     

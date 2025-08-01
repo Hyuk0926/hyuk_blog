@@ -24,12 +24,22 @@ public class CommentController {
     
     // 한국어 게시글 댓글 조회
     @GetMapping("/kr/{postId}")
-    public ResponseEntity<List<CommentDto>> getCommentsKr(@PathVariable Long postId) {
+    public ResponseEntity<Map<String, Object>> getCommentsKr(@PathVariable Long postId, HttpSession session) {
         try {
             System.out.println("Getting comments for KR postId: " + postId);
             List<CommentDto> comments = commentService.getCommentsByPostKrId(postId);
             System.out.println("Found " + comments.size() + " comments");
-            return ResponseEntity.ok(comments);
+            
+            // 현재 로그인한 사용자 정보 가져오기
+            UserDto user = (UserDto) session.getAttribute("user");
+            AdminDto admin = (AdminDto) session.getAttribute("admin");
+            Long currentUserId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("comments", comments);
+            response.put("currentUserId", currentUserId);
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error getting comments: " + e.getMessage());
             e.printStackTrace();
@@ -39,12 +49,22 @@ public class CommentController {
     
     // 일본어 게시글 댓글 조회
     @GetMapping("/jp/{postId}")
-    public ResponseEntity<List<CommentDto>> getCommentsJp(@PathVariable Long postId) {
+    public ResponseEntity<Map<String, Object>> getCommentsJp(@PathVariable Long postId, HttpSession session) {
         try {
             System.out.println("Getting comments for JP postId: " + postId);
             List<CommentDto> comments = commentService.getCommentsByPostJpId(postId);
             System.out.println("Found " + comments.size() + " comments");
-            return ResponseEntity.ok(comments);
+            
+            // 현재 로그인한 사용자 정보 가져오기
+            UserDto user = (UserDto) session.getAttribute("user");
+            AdminDto admin = (AdminDto) session.getAttribute("admin");
+            Long currentUserId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("comments", comments);
+            response.put("currentUserId", currentUserId);
+            
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             System.err.println("Error getting comments: " + e.getMessage());
             e.printStackTrace();

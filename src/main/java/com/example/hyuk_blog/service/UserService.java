@@ -5,10 +5,9 @@ import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.entity.User;
 import com.example.hyuk_blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
@@ -20,30 +19,22 @@ public class UserService {
     @Autowired
     private AdminService adminService;
     
-    // 비밀번호 해싱
-    private String hashPassword(String password) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(password.getBytes());
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("SHA-256 algorithm not available", e);
-        }
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     // 사용자 로그인 인증 (admin 계정도 포함)
     public Optional<UserDto> authenticate(String username, String password) {
         // 1. User 테이블에서 사용자 찾기
         Optional<UserDto> user = userRepository.findByUsernameAndActiveTrue(username)
                 .filter(u -> {
-                    // admin 계정은 해시되지 않은 비밀번호, 일반 사용자는 해시된 비밀번호
-                    return u.getPassword().equals(hashPassword(password)) || u.getPassword().equals(password);
+                    // BCrypt로 비밀번호 검증 시도
+                    if (passwordEncoder.matches(password, u.getPassword())) {
+                        return true;
+                    }
+                    
+                    // BCrypt 실패 시 SHA-256으로 검증 시도 (기존 사용자 호환성)
+                    String sha256Hash = hashPassword(password);
+                    return u.getPassword().equals(sha256Hash);
                 })
                 .map(UserDto::fromEntity);
         
@@ -70,6 +61,23 @@ public class UserService {
         return Optional.empty();
     }
     
+    // SHA-256 해싱 (기존 사용자 호환성을 위해 유지)
+    private String hashPassword(String password) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+            byte[] hash = md.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA-256 algorithm not available", e);
+        }
+    }
+    
     // 사용자명으로 사용자 조회
     public Optional<UserDto> findByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -92,7 +100,7 @@ public class UserService {
         
         User user = new User();
         user.setUsername(username);
-        user.setPassword(hashPassword(password));
+        user.setPassword(passwordEncoder.encode(password)); // BCrypt로 비밀번호 인코딩
         user.setNickname(nickname);
         user.setEmail(email);
         user.setActive(true);

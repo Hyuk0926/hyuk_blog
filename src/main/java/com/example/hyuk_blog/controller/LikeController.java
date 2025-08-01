@@ -98,12 +98,18 @@ public class LikeController {
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
         
-        boolean isLiked = likeService.isLikedByUser(postId, PostType.KR, userId);
         long likeCount = likeService.getLikeCount(postId, PostType.KR);
         
         Map<String, Object> response = new HashMap<>();
-        response.put("liked", isLiked);
         response.put("likeCount", likeCount);
+        
+        // 로그인한 사용자만 좋아요 상태 반환
+        if (userId != null) {
+            boolean isLiked = likeService.isLikedByUser(postId, PostType.KR, userId);
+            response.put("liked", isLiked);
+        } else {
+            response.put("liked", false);
+        }
         
         return ResponseEntity.ok(response);
     }
@@ -118,12 +124,18 @@ public class LikeController {
         AdminDto admin = (AdminDto) session.getAttribute("admin");
         Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
         
-        boolean isLiked = likeService.isLikedByUser(postId, PostType.JP, userId);
         long likeCount = likeService.getLikeCount(postId, PostType.JP);
         
         Map<String, Object> response = new HashMap<>();
-        response.put("liked", isLiked);
         response.put("likeCount", likeCount);
+        
+        // 로그인한 사용자만 좋아요 상태 반환
+        if (userId != null) {
+            boolean isLiked = likeService.isLikedByUser(postId, PostType.JP, userId);
+            response.put("liked", isLiked);
+        } else {
+            response.put("liked", false);
+        }
         
         return ResponseEntity.ok(response);
     }

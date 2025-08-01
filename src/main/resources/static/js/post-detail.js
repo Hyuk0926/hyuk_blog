@@ -129,7 +129,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const likeButton = document.querySelector('.like-button');
     if (!likeButton) return;
     
+    // 로그인 상태 확인
+    const isLoggedIn = document.querySelector('.comment-form') !== null; // 댓글 폼이 있으면 로그인된 상태
+    
+    // 로그인하지 않은 경우 좋아요 버튼 비활성화
+    if (!isLoggedIn) {
+        likeButton.style.opacity = '0.6';
+        likeButton.style.cursor = 'not-allowed';
+        likeButton.title = '좋아요 기능을 사용하려면 로그인이 필요합니다.';
+    }
+    
     likeButton.addEventListener('click', function() {
+        // 로그인하지 않은 경우 클릭 무시
+        if (!isLoggedIn) {
+            if (confirm('좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+                window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+            }
+            return;
+        }
         const postId = this.getAttribute('data-post-id');
         const lang = this.getAttribute('data-lang');
         const heartIcon = this.querySelector('.heart-icon');
@@ -160,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Like response status:', response.status);
             if (response.status === 401) {
                 // 로그인이 필요한 경우
-                const lang = document.querySelector('.like-button').getAttribute('data-lang');
+                const lang = likeButton.getAttribute('data-lang') || 'ko';
                 const loginRequiredMessage = lang === 'ja' ? 
                     'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : 
                     '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
@@ -170,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return null;
             } else if (response.status === 500) {
                 console.error('Server error in like request');
-                const lang = document.querySelector('.like-button').getAttribute('data-lang');
+                const lang = likeButton.getAttribute('data-lang') || 'ko';
                 const serverErrorMessage = lang === 'ja' ? 'サーバーエラーが発生しました。' : '서버 오류가 발생했습니다.';
                 alert(serverErrorMessage);
                 return null;
@@ -193,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => {
-            const lang = document.querySelector('.like-button').getAttribute('data-lang');
+            const lang = likeButton.getAttribute('data-lang') || 'ko';
             const errorMessage = lang === 'ja' ? 'いいね処理中にエラーが発生しました' : '좋아요 처리 중 오류 발생';
             console.error(errorMessage + ':', error);
         })
@@ -206,34 +223,98 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // 댓글 기능 JavaScript
 document.addEventListener('DOMContentLoaded', function() {
-    const postId = document.querySelector('.like-button').getAttribute('data-post-id');
+    console.log('댓글 기능 초기화 시작');
+    
+    // postId와 lang을 더 안전하게 가져오기
+    const likeButton = document.querySelector('.like-button');
+    let postId = likeButton ? likeButton.getAttribute('data-post-id') : null;
+    const lang = likeButton ? likeButton.getAttribute('data-lang') : 'ko'; // 기본값 설정
+    
+    console.log('초기 postId:', postId, 'lang:', lang);
+    
+    // postId가 없으면 URL에서 추출
+    if (!postId) {
+        const pathParts = window.location.pathname.split('/');
+        const urlPostId = pathParts[pathParts.length - 1];
+        console.log('URL에서 추출한 postId:', urlPostId);
+        if (urlPostId && !isNaN(urlPostId)) {
+            postId = urlPostId;
+        }
+    }
+    
+    console.log('최종 postId:', postId);
+    
+    // postId가 여전히 없으면 댓글 기능 비활성화
+    if (!postId) {
+        console.error('게시글 ID를 찾을 수 없습니다.');
+        return;
+    }
+    
     const commentList = document.getElementById('comment-list');
     const commentForm = document.querySelector('.comment-form');
     const contentTextarea = document.getElementById('comment-content');
     const submitBtn = document.getElementById('comment-submit');
     
-    // 현재 페이지의 언어를 확인하여 적절한 API 엔드포인트 사용
-    const lang = document.querySelector('.like-button').getAttribute('data-lang');
+    console.log('댓글 관련 요소들:', {
+        commentList: commentList,
+        commentForm: commentForm,
+        contentTextarea: contentTextarea,
+        submitBtn: submitBtn
+    });
     
     // 댓글 목록 로드
     function loadComments() {
+        if (!commentList) {
+            console.error('댓글 목록 요소를 찾을 수 없습니다.');
+            return;
+        }
+        
         const apiEndpoint = lang === 'ja' ? `/api/comments/jp/${postId}` : `/api/comments/kr/${postId}`;
         
-        fetch(apiEndpoint + '?v=' + Date.now())
-            .then(response => response.json())
-            .then(comments => {
+        console.log('댓글 로드 시작:', apiEndpoint);
+        console.log('현재 lang:', lang, 'postId:', postId);
+        console.log('commentList 요소:', commentList);
+        
+        // 로그인하지 않은 사용자도 댓글을 볼 수 있도록 credentials 옵션 제거
+        fetch(apiEndpoint + '?v=' + Date.now(), {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Cache-Control': 'no-cache'
+            }
+        })
+            .then(response => {
+                console.log('댓글 API 응답 상태:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('댓글 로드 완료:', data);
                 commentList.innerHTML = '';
-                comments.forEach(comment => {
-                    commentList.appendChild(createCommentElement(comment));
-                });
+                
+                const comments = data.comments || [];
+                const currentUserId = data.currentUserId;
+                
+                if (comments && comments.length > 0) {
+                    comments.forEach(comment => {
+                        commentList.appendChild(createCommentElement(comment, currentUserId));
+                    });
+                } else {
+                    commentList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">아직 댓글이 없습니다.</div>';
+                }
             })
             .catch(error => {
                 console.error('댓글 로드 중 오류:', error);
+                if (commentList) {
+                    commentList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">댓글을 불러오는 중 오류가 발생했습니다.</div>';
+                }
             });
     }
     
     // 댓글 요소 생성
-    function createCommentElement(comment) {
+    function createCommentElement(comment, currentUserId) {
         const commentDiv = document.createElement('div');
         commentDiv.className = 'comment-item';
         commentDiv.dataset.commentId = comment.id;
@@ -241,21 +322,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const date = new Date(comment.createdAt);
         const formattedDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
         
+        // 로그인 상태 확인 (댓글 폼이 있으면 로그인된 상태)
+        const isLoggedIn = document.querySelector('.comment-form') !== null;
+        // 현재 사용자가 댓글 작성자인지 확인
+        const isCommentAuthor = currentUserId && comment.userId && currentUserId === comment.userId;
+        console.log('댓글 생성 시 로그인 상태:', isLoggedIn, '댓글 작성자 여부:', isCommentAuthor, 'currentUserId:', currentUserId, 'comment.userId:', comment.userId);
+        
         commentDiv.innerHTML = `
             <div class="comment-header">
                 <div class="comment-info">
                     <div class="comment-nickname">${comment.nickname}</div>
                     <div class="comment-date">
                         ${formattedDate}
-                        ${comment.isEdited ? '<span class="edited-badge"> (수정됨)</span>' : ''}
+                        ${(comment.isEdited || comment.edited) ? '<span class="edited-badge"> (수정됨)</span>' : ''}
                     </div>
                 </div>
+                ${isLoggedIn && isCommentAuthor ? `
                 <div class="comment-actions">
                     <button class="comment-action-btn edit-btn">수정</button>
                     <button class="comment-action-btn delete delete-btn">삭제</button>
                 </div>
+                ` : ''}
             </div>
             <div class="comment-content">${comment.content}</div>
+            ${isLoggedIn && isCommentAuthor ? `
             <div class="comment-edit-form">
                 <textarea class="comment-edit-textarea">${comment.content}</textarea>
                 <div class="comment-edit-buttons">
@@ -263,34 +353,78 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="comment-edit-btn cancel">취소</button>
                 </div>
             </div>
+            ` : ''}
         `;
         
-        // 수정 버튼 이벤트
+        // 수정 버튼 이벤트 (로그인한 사용자만)
         const editBtn = commentDiv.querySelector('.edit-btn');
         const editForm = commentDiv.querySelector('.comment-edit-form');
         const editTextarea = commentDiv.querySelector('.comment-edit-textarea');
         const saveBtn = commentDiv.querySelector('.save');
         const cancelBtn = commentDiv.querySelector('.cancel');
         
-                        editBtn.addEventListener('click', function() {
-                            editForm.classList.add('active');
-                            editTextarea.focus();
-                        });
+        if (editBtn) {
+            editBtn.addEventListener('click', function() {
+                editForm.classList.add('active');
+                editTextarea.focus();
+            });
+        }
                 
-                saveBtn.addEventListener('click', function() {
-                    const newContent = editTextarea.value.trim();
-                    if (!newContent) {
-                        alert('댓글 내용을 입력해주세요.');
-                        return;
+        if (saveBtn) {
+            saveBtn.addEventListener('click', function() {
+                const newContent = editTextarea.value.trim();
+                if (!newContent) {
+                    alert('댓글 내용을 입력해주세요.');
+                    return;
+                }
+                
+                // 댓글 수정은 기존 엔드포인트 사용 (comment.id로 특정 댓글 수정)
+                fetch(`/api/comments/${comment.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `content=${encodeURIComponent(newContent)}`
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        alert('로그인이 필요합니다.');
+                        return null;
                     }
-                    
-                    // 댓글 수정은 기존 엔드포인트 사용 (comment.id로 특정 댓글 수정)
+                    return response.json();
+                })
+                .then(data => {
+                                         if (data && data.success) {
+                         editForm.classList.remove('active');
+                         commentDiv.querySelector('.comment-content').textContent = newContent;
+                         setTimeout(() => {
+                             loadComments(); // 댓글 목록 새로고침
+                         }, 100);
+                     } else if (data) {
+                        alert(data.message);
+                    }
+                });
+            });
+        }
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function() {
+                editForm.classList.remove('active');
+                editTextarea.value = comment.content;
+            });
+        }
+        
+        // 삭제 버튼 이벤트 (로그인한 사용자만)
+        const deleteBtn = commentDiv.querySelector('.delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function() {
+                if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
+                    // 댓글 삭제는 기존 엔드포인트 사용 (comment.id로 특정 댓글 삭제)
                     fetch(`/api/comments/${comment.id}`, {
-                        method: 'PUT',
+                        method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `content=${encodeURIComponent(newContent)}`
+                        }
                     })
                     .then(response => {
                         if (response.status === 401) {
@@ -301,53 +435,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(data => {
                         if (data && data.success) {
-                            editForm.classList.remove('active');
-                            commentDiv.querySelector('.comment-content').textContent = newContent;
-                            loadComments(); // 댓글 목록 새로고침
+                            commentDiv.remove();
                         } else if (data) {
                             alert(data.message);
                         }
                     });
-                });
-        
-        cancelBtn.addEventListener('click', function() {
-            editForm.classList.remove('active');
-            editTextarea.value = comment.content;
-        });
-        
-        // 삭제 버튼 이벤트
-        const deleteBtn = commentDiv.querySelector('.delete-btn');
-        deleteBtn.addEventListener('click', function() {
-            if (confirm('정말로 이 댓글을 삭제하시겠습니까?')) {
-                // 댓글 삭제는 기존 엔드포인트 사용 (comment.id로 특정 댓글 삭제)
-                fetch(`/api/comments/${comment.id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    }
-                })
-                .then(response => {
-                    if (response.status === 401) {
-                        alert('로그인이 필요합니다.');
-                        return null;
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.success) {
-                        commentDiv.remove();
-                    } else if (data) {
-                        alert(data.message);
-                    }
-                });
-            }
-        });
+                }
+            });
+        }
         
         return commentDiv;
     }
     
-    // 댓글 작성
-    submitBtn.addEventListener('click', function() {
+    // 댓글 작성 (로그인한 사용자만)
+    if (submitBtn && contentTextarea) {
+        submitBtn.addEventListener('click', function() {
         const content = contentTextarea.value.trim();
         
         if (!content) {
@@ -382,7 +484,11 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Comment response status:', response.status);
             if (response.status === 401) {
                 // 로그인이 필요한 경우
-                if (confirm('댓글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?')) {
+                const lang = likeButton ? likeButton.getAttribute('data-lang') : 'ko';
+                const loginMessage = lang === 'ja' ? 
+                    'コメントを投稿するにはログインが必要です。ログインページに移動しますか？' : 
+                    '댓글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
+                if (confirm(loginMessage)) {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
                 }
                 return null;
@@ -398,24 +504,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 폼 초기화
                 contentTextarea.value = '';
                 
-                // 댓글 목록 새로고침
-                loadComments();
+                                 // 댓글 목록 새로고침
+                 setTimeout(() => {
+                     loadComments();
+                 }, 100);
             }
         })
         .catch(error => {
             console.error('댓글 작성 중 오류:', error);
             alert('댓글 작성 중 오류가 발생했습니다.');
         });
-    });
+        });
+    }
     
-    // 엔터키로 댓글 작성
-    contentTextarea.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            submitBtn.click();
-        }
-    });
+    // 엔터키로 댓글 작성 (로그인한 사용자만)
+    if (contentTextarea && submitBtn) {
+        contentTextarea.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                submitBtn.click();
+            }
+        });
+    }
     
-    // 초기 댓글 로드
-    loadComments();
+    // 초기 댓글 로드 (로그인 여부와 관계없이 항상 실행)
+    console.log('초기 댓글 로드 시작');
+    console.log('로그인 상태:', commentForm ? '로그인됨' : '로그인 안됨');
+    
+    if (commentList) {
+        // 약간의 지연을 두어 DOM이 완전히 로드된 후 댓글 로드
+        setTimeout(() => {
+            loadComments();
+        }, 100);
+    } else {
+        console.error('댓글 목록 요소가 없어서 댓글을 로드할 수 없습니다.');
+    }
 });
