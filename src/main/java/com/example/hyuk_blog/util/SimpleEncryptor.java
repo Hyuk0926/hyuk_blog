@@ -52,14 +52,24 @@ public class SimpleEncryptor {
     }
     
     public static void main(String[] args) {
-        // 비밀번호 암호화 예제
+        // 로컬 MySQL 비밀번호 암호화 예제
         String originalPassword = "Shka991204!";
         String encryptedPassword = encrypt(originalPassword);
+        System.out.println("=== 로컬 MySQL 비밀번호 ===");
         System.out.println("Original Password: " + originalPassword);
         System.out.println("Encrypted Password: " + encryptedPassword);
         
+        // AWS RDS 비밀번호 암호화 예제 (실제 비밀번호로 변경 필요)
+        String awsPassword = "Shka991204!"; // 실제 AWS RDS 비밀번호로 변경
+        String encryptedAwsPassword = encrypt(awsPassword);
+        System.out.println("\n=== AWS RDS 비밀번호 ===");
+        System.out.println("Original Password: " + awsPassword);
+        System.out.println("Encrypted Password: " + encryptedAwsPassword);
+        System.out.println("application-prod.yml에서 사용할 값: ENC(" + encryptedAwsPassword + ")");
+        
         // 복호화 테스트
         String decryptedPassword = decrypt(encryptedPassword);
+        System.out.println("\n=== 복호화 테스트 ===");
         System.out.println("Decrypted Password: " + decryptedPassword);
     }
 } 
