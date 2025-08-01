@@ -1025,19 +1025,25 @@
             <div th:utext="${lang == 'ja' ? post.contentJa : post.contentKo}"></div>
         </div>
         
-        <!-- 좋아요 버튼 -->
-        <div class="like-section">
+        <!-- 미리보기 모드 표시 -->
+        <div class="preview-notice" th:if="${isPreview}" style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 16px; border-radius: 8px; margin: 20px auto; max-width: 700px; text-align: center; font-weight: 500;">
+            <span th:text="${lang == 'ja' ? 'プレビューモード' : '미리보기 모드'}">미리보기 모드</span>
+        </div>
+        
+        <!-- 좋아요 버튼 (미리보기 모드에서는 비활성화) -->
+        <div class="like-section" th:unless="${isPreview}">
             <button class="like-button" th:data-post-id="${post.id}" th:data-lang="${lang}">
                 <span class="heart-icon" th:class="${isLiked ? 'heart-icon liked' : 'heart-icon'}" th:text="${isLiked ? '♥' : '♡'}">♡</span>
                 <span class="like-count" th:text="${likeCount}">0</span>
             </button>
         </div>
         <div class="post-navigation">
-            <a th:href="${lang == 'ja' ? '/jp' : '/index?lang=' + lang}" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
+            <a th:if="${isPreview}" th:href="${lang == 'ja' ? '/admin_jp' : '/admin'}" class="back-button" th:text="${lang == 'ja' ? '관리자 페이지로 돌아가기' : '관리자 페이지로 돌아가기'}">관리자 페이지로 돌아가기</a>
+            <a th:unless="${isPreview}" th:href="${lang == 'ja' ? '/jp' : '/index?lang=' + lang}" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
         </div>
         
-        <!-- 댓글 시스템 -->
-        <div class="comment-section">
+        <!-- 댓글 시스템 (미리보기 모드에서는 비활성화) -->
+        <div class="comment-section" th:unless="${isPreview}">
                             <h3 class="comment-title" th:text="#{comment.title}">댓글</h3>
             
             <!-- 댓글 목록 -->
@@ -1110,6 +1116,13 @@
         .post-navigation {
             margin-top: 40px;
             margin-bottom: 20px;
+        }
+        
+        /* 미리보기 알림 다크모드 스타일 */
+        body.dark-mode .preview-notice {
+            background: #742a2a;
+            border: 1px solid #f56565;
+            color: #fed7d7;
         }
     </style>
     

@@ -4,6 +4,7 @@ import com.example.hyuk_blog.dto.AdminDto;
 import com.example.hyuk_blog.entity.Admin;
 import com.example.hyuk_blog.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,10 +15,21 @@ public class AdminService {
     @Autowired
     private AdminRepository adminRepository;
     
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
     // 관리자 로그인 인증
     public Optional<AdminDto> authenticate(String username, String password) {
         return adminRepository.findByUsernameAndActiveTrue(username)
-                .filter(admin -> admin.getPassword().equals(password))
+                .filter(admin -> {
+                    // BCrypt로 비밀번호 검증 시도
+                    if (passwordEncoder.matches(password, admin.getPassword())) {
+                        return true;
+                    }
+                    
+                    // BCrypt 실패 시 평문 비교 시도 (기존 admin 계정 호환성)
+                    return admin.getPassword().equals(password);
+                })
                 .map(AdminDto::fromEntity);
     }
     

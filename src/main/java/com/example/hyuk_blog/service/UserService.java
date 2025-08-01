@@ -2,6 +2,7 @@ package com.example.hyuk_blog.service;
 
 import com.example.hyuk_blog.dto.UserDto;
 import com.example.hyuk_blog.dto.AdminDto;
+import com.example.hyuk_blog.dto.UserRegistrationDto;
 import com.example.hyuk_blog.entity.User;
 import com.example.hyuk_blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,29 +85,41 @@ public class UserService {
                 .map(UserDto::fromEntity);
     }
     
-    // 회원가입
+    // 회원가입 (DTO 사용)
     @Transactional
-    public UserDto register(String username, String password, String nickname, String email) {
+    public UserDto register(com.example.hyuk_blog.dto.UserRegistrationDto registrationDto) {
         // 중복 검사
-        if (userRepository.existsByUsername(username)) {
+        if (userRepository.existsByUsername(registrationDto.getUsername())) {
             throw new RuntimeException("이미 존재하는 사용자명입니다.");
         }
-        if (userRepository.existsByNickname(nickname)) {
+        if (userRepository.existsByNickname(registrationDto.getNickname())) {
             throw new RuntimeException("이미 존재하는 닉네임입니다.");
         }
-        if (email != null && !email.isEmpty() && userRepository.existsByEmail(email)) {
+        if (registrationDto.getEmail() != null && !registrationDto.getEmail().isEmpty() 
+            && userRepository.existsByEmail(registrationDto.getEmail())) {
             throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
         
         User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password)); // BCrypt로 비밀번호 인코딩
-        user.setNickname(nickname);
-        user.setEmail(email);
+        user.setUsername(registrationDto.getUsername());
+        user.setPassword(passwordEncoder.encode(registrationDto.getPassword())); // BCrypt로 비밀번호 인코딩
+        user.setNickname(registrationDto.getNickname());
+        user.setEmail(registrationDto.getEmail());
         user.setActive(true);
         
         User savedUser = userRepository.save(user);
         return UserDto.fromEntity(savedUser);
+    }
+    
+    // 회원가입 (기존 방식 - 호환성 유지)
+    @Transactional
+    public UserDto register(String username, String password, String nickname, String email) {
+        UserRegistrationDto dto = new UserRegistrationDto();
+        dto.setUsername(username);
+        dto.setPassword(password);
+        dto.setNickname(nickname);
+        dto.setEmail(email);
+        return register(dto);
     }
     
     // 사용자명 존재 여부 확인

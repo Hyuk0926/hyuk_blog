@@ -79,11 +79,16 @@ public class PostController {
     @GetMapping("/post/{id}")
     public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, lang);
-        if (post.isPresent() && post.get().isPublished()) {
+        if (post.isPresent()) {
             // user 또는 admin 세션 확인
             UserDto user = (UserDto) session.getAttribute("user");
             AdminDto admin = (AdminDto) session.getAttribute("admin");
             boolean isLoggedIn = (user != null || admin != null);
+            
+            // 관리자가 아니고 게시글이 공개되지 않은 경우 리다이렉트
+            if (!post.get().isPublished() && admin == null) {
+                return "redirect:" + (lang.equals("ja") ? "/jp" : "/index?lang=" + lang);
+            }
             
             // 게시글 타입에 따라 좋아요/댓글 수 조회
             Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
@@ -114,7 +119,7 @@ public class PostController {
             model.addAttribute("isLoggedIn", isLoggedIn);
             return "post-detail";
         }
-        return "redirect:" + (lang.equals("ja") ? "/jp" : "/index(lang=" + lang + ")");
+        return "redirect:" + (lang.equals("ja") ? "/jp" : "/index?lang=" + lang);
     }
     
     private String getClientIpAddress(HttpServletRequest request) {

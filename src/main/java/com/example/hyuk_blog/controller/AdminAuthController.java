@@ -60,6 +60,7 @@ public class AdminAuthController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("admin");
+        session.removeAttribute("jwtToken"); // JWT 토큰도 제거
         return "redirect:/admin/login";
     }
 } 

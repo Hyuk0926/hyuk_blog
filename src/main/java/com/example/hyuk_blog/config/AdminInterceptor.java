@@ -14,16 +14,19 @@ public class AdminInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
         String uri = request.getRequestURI();
         
-        // 세션이 없거나 관리자 로그인 정보가 없으면 로그인 페이지로 리다이렉트
-        if (session == null || session.getAttribute("admin") == null) {
-            if (uri.startsWith("/admin_jp")) {
-                response.sendRedirect("/admin/login"); // admin_jp도 동일 로그인 사용
-            } else {
-                response.sendRedirect("/admin/login");
-            }
+        // 세션이 없으면 로그인 페이지로 리다이렉트
+        if (session == null) {
+            response.sendRedirect("/admin/login");
             return false;
         }
         
-        return true;
+        // admin 세션이나 user 세션 중 하나라도 있으면 접근 허용
+        if (session.getAttribute("admin") != null || session.getAttribute("user") != null) {
+            return true;
+        }
+        
+        // 둘 다 없으면 로그인 페이지로 리다이렉트
+        response.sendRedirect("/admin/login");
+        return false;
     }
 } 

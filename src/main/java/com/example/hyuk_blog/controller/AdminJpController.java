@@ -17,9 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.example.hyuk_blog.dto.UserDto;
 
 @Controller
-@RequestMapping("/admin/jp")
+@RequestMapping("/admin_jp")
 public class AdminJpController {
     
     @Autowired
@@ -42,7 +43,7 @@ public class AdminJpController {
         model.addAttribute("posts", posts);
         model.addAttribute("inquiryCount", inquiryService.getUnreadCount());
         model.addAttribute("inquiries", inquiryService.getAllInquiries());
-        model.addAttribute("adminPrefix", "/admin/jp");
+        model.addAttribute("adminPrefix", "/admin_jp");
         model.addAttribute("lang", "ja");
         return "admin/dashboard";
     }
@@ -55,7 +56,7 @@ public class AdminJpController {
         model.addAttribute("post", new PostDto());
         model.addAttribute("admin", admin);
         model.addAttribute("categories", Category.values());
-        model.addAttribute("formAction", "/admin/jp/post/new");
+        model.addAttribute("formAction", "/admin_jp/post/new");
         return "admin/post-form-jp";
     }
     
@@ -63,7 +64,7 @@ public class AdminJpController {
     @PostMapping("/post/new")
     public String createJpPost(@ModelAttribute PostDto postDto) {
         postService.savePost(postDto, "ja");
-        return "redirect:/admin/jp";
+        return "redirect:/admin_jp";
     }
     
     // 일본어 게시글 수정 폼
@@ -76,35 +77,52 @@ public class AdminJpController {
             model.addAttribute("post", post.get());
             model.addAttribute("admin", admin);
             model.addAttribute("categories", Category.values());
-            model.addAttribute("formAction", "/admin/jp/post/edit/" + id);
+            model.addAttribute("formAction", "/admin_jp/post/edit/" + id);
             return "admin/post-form-jp";
         }
-        return "redirect:/admin/jp";
+        return "redirect:/admin_jp";
     }
     
     // 일본어 게시글 수정
     @PostMapping("/post/edit/{id}")
     public String updateJpPost(@PathVariable Long id, @ModelAttribute PostDto postDto) {
         postService.updatePost(id, postDto, "ja");
-        return "redirect:/admin/jp";
+        return "redirect:/admin_jp";
     }
     
     // 일본어 게시글 삭제
     @PostMapping("/post/delete/{id}")
     public String deleteJpPost(@PathVariable Long id) {
         postService.deletePost(id, "ja");
-        return "redirect:/admin/jp";
+        return "redirect:/admin_jp";
     }
     
     // 일본어 게시글 미리보기
     @GetMapping("/post/preview/{id}")
-    public String previewJpPost(@PathVariable Long id, Model model) {
+    public String previewJpPost(@PathVariable Long id, Model model, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, "ja");
         if (post.isPresent()) {
+            // 미리보기에서는 published 상태와 관계없이 표시
+            UserDto user = (UserDto) session.getAttribute("user");
+            AdminDto admin = (AdminDto) session.getAttribute("admin");
+            boolean isLoggedIn = (user != null || admin != null);
+            
+            // 좋아요/댓글 수 조회 (미리보기에서는 0으로 설정)
+            long likeCount = 0;
+            boolean isLiked = false;
+            
             model.addAttribute("post", post.get());
+            model.addAttribute("lang", "ja");
+            model.addAttribute("likeCount", likeCount);
+            model.addAttribute("isLiked", isLiked);
+            model.addAttribute("postId", id);
+            model.addAttribute("user", user);
+            model.addAttribute("admin", admin);
+            model.addAttribute("isLoggedIn", isLoggedIn);
+            model.addAttribute("isPreview", true); // 미리보기 모드 표시
             return "post-detail";
         }
-        return "redirect:/admin/jp";
+        return "redirect:/admin_jp";
     }
 
     // 일본어 이력서 관리 폼 (GET)
@@ -121,7 +139,7 @@ public class AdminJpController {
     public String saveJpResume(@ModelAttribute com.example.hyuk_blog.entity.Resume resume, RedirectAttributes redirectAttributes) {
         resumeService.saveResume(resume);
         redirectAttributes.addFlashAttribute("message", "履歴書が保存されました！");
-        return "redirect:/admin/jp";
+        return "redirect:/admin_jp";
     }
 
     @GetMapping("/inquiry")
