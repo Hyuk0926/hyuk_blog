@@ -62,7 +62,13 @@ public class PostController {
     }
 
     @GetMapping("/jp")
-    public String jpIndex(Model model) {
+    public String jpIndex(@RequestParam(value = "lang", required = false) String lang, Model model) {
+        // lang 파라미터가 ko이면 index 페이지로 리다이렉트
+        if ("ko".equals(lang)) {
+            return "redirect:/index?lang=ko";
+        }
+        
+        // 기본적으로 일본어 포스트 표시
         List<PostDto> posts = postService.getAllPublishedPosts("ja");
         model.addAttribute("posts", posts);
         model.addAttribute("categories", Category.values());

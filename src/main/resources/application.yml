@@ -37,6 +37,8 @@ spring:
       max-request-size: 10MB
   thymeleaf:
     cache: false
+    mode: HTML
+    encoding: UTF-8
   mvc:
     throw-exception-if-no-handler-found: true
   web:
@@ -44,7 +46,13 @@ spring:
       add-mappings: true
       static-locations: classpath:/static/
       cache:
-        period: 0
+        period: 86400
+      chain:
+        strategy:
+          content:
+            enabled: true
+            paths: /**
+        cache: true
 
 # 개인정보 표시 설정 (운영 환경에서는 주소와 전화번호 숨김)
 app:

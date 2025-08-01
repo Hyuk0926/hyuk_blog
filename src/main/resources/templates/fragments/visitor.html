@@ -22,7 +22,7 @@
     }
     fetchVisitorStatsMini();
     
-    // 방문자 수 증가 요청 (IP 기준으로 하루에 한 번만 카운트)
+    // 방문자 수 증가 요청 (로그인한 사용자 기준으로 하루에 한 번만 카운트)
     fetch('/visitor/increase', {method:'POST'})
       .then(response => {
         if (response.ok) {
