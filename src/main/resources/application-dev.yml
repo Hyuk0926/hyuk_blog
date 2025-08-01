@@ -1,0 +1,33 @@
+## 개발 환경 설정
+## H2 데이터베이스 설정 (로컬 개발용)
+#spring:
+#  datasource:
+#    url: jdbc:h2:file:./data/hyuk_blog
+#    driverClassName: org.h2.Driver
+#    username: sa
+#    password: 
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#  jpa:
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    hibernate:
+#      ddl-auto: create-drop
+#    show-sql: true
+#  # Flyway 설정 (개발 환경에서 일시적으로 비활성화)
+#  flyway:
+#    enabled: false
+#    #baseline-on-migrate: true
+#    #out-of-order: true
+#    #default-schema: public
+#    #schemas: public
+#    #table: flyway_schema_history
+#  thymeleaf:
+#    cache: false
+
+## 개인정보 표시 설정 (개발 환경에서는 주소와 전화번호 표시)
+#app:
+#  show:
+#    address: true
+#    phone: true 

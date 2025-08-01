@@ -16,7 +16,7 @@
         </style>
     </head>
     <div class="container header-flex">
-        <a class="navbar-brand" th:href="@{${#locale.language == 'ja' ? '/jp' : '/index'}}" th:text="#{header.title}">Takahara's Blog</a>
+        <a class="navbar-brand" th:href="@{${#locale.language == 'ja' ? '/jp' : '/home'}}" th:text="#{header.title}">Takahara's Blog</a>
         <div class="header-right">
             <nav>
                 <ul class="navbar-nav">
@@ -30,11 +30,11 @@
                 <!-- 사용자 인증 상태에 따른 로그인/로그아웃 버튼 -->
                 <div class="auth-controls" th:if="${session.user != null}">
                     <span class="user-info" th:text="${session.user.nickname}">사용자</span>
-                    <a href="/user/logout" class="auth-btn logout-btn">로그아웃</a>
+                    <a href="/user/logout" class="auth-btn logout-btn" th:text="#{user.logout}">로그아웃</a>
                 </div>
                 <div class="auth-controls" th:if="${session.user == null}">
-                    <a href="/user/login" class="auth-btn login-btn">로그인</a>
-                    <a href="/user/register" class="auth-btn register-btn">회원가입</a>
+                    <a href="/user/login" class="auth-btn login-btn" th:text="#{user.login}">로그인</a>
+                    <a href="/user/register" class="auth-btn register-btn" th:text="#{user.register}">회원가입</a>
                 </div>
                 
                 <button id="darkModeToggle" class="control-btn dark-mode-btn" title="다크모드 전환">

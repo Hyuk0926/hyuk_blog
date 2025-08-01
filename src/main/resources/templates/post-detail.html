@@ -873,7 +873,7 @@
         
         <!-- 댓글 시스템 -->
         <div class="comment-section">
-            <h3 class="comment-title">댓글</h3>
+                            <h3 class="comment-title" th:text="#{comment.title}">댓글</h3>
             
             <!-- 댓글 목록 -->
             <div id="comment-list" class="comment-list">
@@ -883,14 +883,14 @@
             <!-- 댓글 작성 폼 -->
             <div class="comment-form" th:if="${isLoggedIn}">
                 <div class="comment-content-group">
-                    <textarea id="comment-content" placeholder="댓글을 입력하세요..." class="comment-textarea"></textarea>
-                    <button id="comment-submit" class="comment-submit-btn">댓글 작성</button>
+                                    <textarea id="comment-content" th:placeholder="#{comment.placeholder}" class="comment-textarea"></textarea>
+                <button id="comment-submit" class="comment-submit-btn" th:text="#{comment.submit}">댓글 작성</button>
                 </div>
             </div>
             
             <!-- 로그인 필요 메시지 -->
             <div class="comment-login-message" th:if="${!isLoggedIn}">
-                <p>댓글을 작성하려면 <a href="/user/login" class="login-link" id="comment-login-link">로그인</a>이 필요합니다.</p>
+                <p><span th:text="#{comment.login.required.prefix}">댓글을 작성하려면</span> <a href="/user/login" class="login-link" id="comment-login-link" th:text="#{user.login.link}">로그인</a><span th:text="#{comment.login.required.suffix}">이 필요합니다.</span></p>
             </div>
         </div>
         
