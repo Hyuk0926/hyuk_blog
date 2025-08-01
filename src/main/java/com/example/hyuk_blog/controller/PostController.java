@@ -108,7 +108,7 @@ public class PostController {
             model.addAttribute("isLoggedIn", isLoggedIn);
             return "post-detail";
         }
-        return "redirect:" + (lang.equals("ja") ? "/jp" : "/index");
+        return "redirect:" + (lang.equals("ja") ? "/jp" : "/index(lang=" + lang + ")");
     }
     
     private String getClientIpAddress(HttpServletRequest request) {
@@ -126,7 +126,8 @@ public class PostController {
     }
 
     @GetMapping("/projects")
-    public String projects() {
+    public String projects(@RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
+        model.addAttribute("lang", lang);
         return "projects";
     }
 

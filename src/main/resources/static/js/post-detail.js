@@ -228,9 +228,10 @@ function detectAndAddLanguageClass(codeElement) {
     codeElement.parentElement.className = `language-${language}`;
 }
 
-// 언어 변경 시 자연스러운 처리
+// 언어 변경 시 자연스러운 처리 (post-detail 페이지에서만)
 document.addEventListener('DOMContentLoaded', function() {
-    const langLinks = document.querySelectorAll('a[href*="lang="]');
+    // 헤더의 언어 전환 버튼만 선택 (KO/JP 버튼)
+    const langLinks = document.querySelectorAll('#langToggle a.post-lang-toggle');
     const currentPostId = window.location.pathname.split('/').pop().split('?')[0];
     
     langLinks.forEach(link => {
@@ -561,10 +562,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 ` : ''}
             </div>
-            <div class="comment-content">${comment.content}</div>
+            <div class="comment-content">${comment.content.replace(/\n/g, '<br>')}</div>
             ${canEdit ? `
             <div class="comment-edit-form">
-                <textarea class="comment-edit-textarea">${comment.content}</textarea>
+                <textarea class="comment-edit-textarea">${comment.content.replace(/<br\s*\/?>/gi, '\n')}</textarea>
                 <div class="comment-edit-buttons">
                     <button class="comment-edit-btn save">저장</button>
                     <button class="comment-edit-btn cancel">취소</button>
@@ -617,7 +618,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                                          if (data && data.success) {
                          editForm.classList.remove('active');
-                         commentDiv.querySelector('.comment-content').textContent = newContent;
+                         commentDiv.querySelector('.comment-content').innerHTML = newContent.replace(/\n/g, '<br>');
                          setTimeout(() => {
                              loadComments(); // 댓글 목록 새로고침
                          }, 100);
@@ -631,7 +632,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (cancelBtn) {
             cancelBtn.addEventListener('click', function() {
                 editForm.classList.remove('active');
-                editTextarea.value = comment.content;
+                editTextarea.value = comment.content.replace(/<br\s*\/?>/gi, '\n');
+            });
+        }
+        
+        // 댓글 편집 시 Enter 키 이벤트 처리
+        if (editTextarea && saveBtn) {
+            editTextarea.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    saveBtn.click();
+                }
+                // Shift+Enter는 기본 동작(줄바꿈)을 허용
             });
         }
         
@@ -761,11 +773,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 엔터키로 댓글 작성 (로그인한 사용자만)
     if (contentTextarea && submitBtn) {
-        contentTextarea.addEventListener('keypress', function(e) {
+        contentTextarea.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 submitBtn.click();
             }
+            // Shift+Enter는 기본 동작(줄바꿈)을 허용
         });
     }
     

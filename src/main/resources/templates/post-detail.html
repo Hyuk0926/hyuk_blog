@@ -449,6 +449,17 @@
             background: #0056b3;
         }
         
+        .comment-help-text {
+            margin-top: 8px;
+            color: #718096;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        .comment-help-text small {
+            color: inherit;
+        }
+        
         .comment-list {
             display: flex;
             flex-direction: column;
@@ -546,6 +557,8 @@
             border-radius: 6px;
             border-left: 3px solid #007bff;
             margin-top: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         
         .comment-edit-form {
@@ -716,8 +729,10 @@
         
         body.dark-mode .comment-edit-btn.cancel {
             background: #4a5568;
-            color: #e2e8f0;
-            border-color: #4a5568;
+        }
+        
+        body.dark-mode .comment-help-text {
+            color: #a0aec0;
         }
         
         body.dark-mode .comment-edit-btn.cancel:hover {
@@ -1018,7 +1033,7 @@
             </button>
         </div>
         <div class="post-navigation">
-            <a th:href="${lang == 'ja' ? '/jp' : '/index'}" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
+            <a th:href="${lang == 'ja' ? '/jp' : '/index?lang=' + lang}" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
         </div>
         
         <!-- 댓글 시스템 -->
@@ -1033,8 +1048,8 @@
             <!-- 댓글 작성 폼 -->
             <div class="comment-form" th:if="${isLoggedIn}">
                 <div class="comment-content-group">
-                                    <textarea id="comment-content" th:placeholder="#{comment.placeholder}" class="comment-textarea"></textarea>
-                <button id="comment-submit" class="comment-submit-btn" th:text="#{comment.submit}">댓글 작성</button>
+                    <textarea id="comment-content" th:placeholder="#{comment.placeholder}" class="comment-textarea"></textarea>
+                    <button id="comment-submit" class="comment-submit-btn" th:text="#{comment.submit}">댓글 작성</button>
                 </div>
             </div>
             
