@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-Requested-With': 'XMLHttpRequest',
                 'Cache-Control': 'no-cache'
             },
-            credentials: 'include'
+            credentials: 'same-origin'
         })
         .then(response => {
             console.log('Like response status:', response.status);
@@ -182,6 +182,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : 
                     '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
                 if (confirm(loginRequiredMessage)) {
+                    window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+                }
+                return null;
+            } else if (response.status === 403) {
+                // 권한이 없는 경우 (세션 만료 등)
+                console.error('Forbidden error in like request');
+                const lang = likeButton.getAttribute('data-lang') || 'ko';
+                const forbiddenMessage = lang === 'ja' ? 
+                    'セッションが期限切れです。再度ログインしてください。' : 
+                    '세션이 만료되었습니다. 다시 로그인해주세요.';
+                if (confirm(forbiddenMessage)) {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
                 }
                 return null;
@@ -324,9 +335,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 로그인 상태 확인 (댓글 폼이 있으면 로그인된 상태)
         const isLoggedIn = document.querySelector('.comment-form') !== null;
+        // admin 계정인지 확인 (ID가 1 또는 2인 경우)
+        const isAdmin = currentUserId && (currentUserId === 1 || currentUserId === 2);
         // 현재 사용자가 댓글 작성자인지 확인
         const isCommentAuthor = currentUserId && comment.userId && currentUserId === comment.userId;
-        console.log('댓글 생성 시 로그인 상태:', isLoggedIn, '댓글 작성자 여부:', isCommentAuthor, 'currentUserId:', currentUserId, 'comment.userId:', comment.userId);
+        // admin은 모든 댓글 삭제 가능, 일반 사용자는 자신의 댓글만 수정/삭제 가능
+        const canEdit = isLoggedIn && isCommentAuthor;
+        const canDelete = isLoggedIn && (isCommentAuthor || isAdmin);
+        console.log('댓글 생성 시 로그인 상태:', isLoggedIn, 'admin 여부:', isAdmin, '댓글 작성자 여부:', isCommentAuthor, 'currentUserId:', currentUserId, 'comment.userId:', comment.userId);
         
         commentDiv.innerHTML = `
             <div class="comment-header">
@@ -337,15 +353,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         ${(comment.isEdited || comment.edited) ? '<span class="edited-badge"> (수정됨)</span>' : ''}
                     </div>
                 </div>
-                ${isLoggedIn && isCommentAuthor ? `
+                ${canDelete ? `
                 <div class="comment-actions">
-                    <button class="comment-action-btn edit-btn">수정</button>
-                    <button class="comment-action-btn delete delete-btn">삭제</button>
+                    ${canEdit ? `<button class="comment-action-btn edit-btn">수정</button>` : ''}
+                    <button class="comment-action-btn delete delete-btn">${isAdmin && !isCommentAuthor ? '관리자 삭제' : '삭제'}</button>
                 </div>
                 ` : ''}
             </div>
             <div class="comment-content">${comment.content}</div>
-            ${isLoggedIn && isCommentAuthor ? `
+            ${canEdit ? `
             <div class="comment-edit-form">
                 <textarea class="comment-edit-textarea">${comment.content}</textarea>
                 <div class="comment-edit-buttons">
@@ -384,11 +400,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `content=${encodeURIComponent(newContent)}`
+                    body: `content=${encodeURIComponent(newContent)}`,
+                    credentials: 'same-origin'
                 })
                 .then(response => {
                     if (response.status === 401) {
                         alert('로그인이 필요합니다.');
+                        return null;
+                    } else if (response.status === 403) {
+                        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
                         return null;
                     }
                     return response.json();
@@ -424,11 +444,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/x-www-form-urlencoded',
-                        }
+                        },
+                        credentials: 'same-origin'
                     })
                     .then(response => {
                         if (response.status === 401) {
                             alert('로그인이 필요합니다.');
+                            return null;
+                        } else if (response.status === 403) {
+                            alert('세션이 만료되었습니다. 다시 로그인해주세요.');
                             return null;
                         }
                         return response.json();
@@ -478,7 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Cache-Control': 'no-cache'
             },
             body: formData,
-            credentials: 'include'
+            credentials: 'same-origin'
         })
         .then(response => {
             console.log('Comment response status:', response.status);
@@ -489,6 +513,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     'コメントを投稿するにはログインが必要です。ログインページに移動しますか？' : 
                     '댓글을 작성하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?';
                 if (confirm(loginMessage)) {
+                    window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+                }
+                return null;
+            } else if (response.status === 403) {
+                // 권한이 없는 경우 (세션 만료 등)
+                console.error('Forbidden error in comment request');
+                const lang = likeButton ? likeButton.getAttribute('data-lang') : 'ko';
+                const forbiddenMessage = lang === 'ja' ? 
+                    'セッションが期限切れです。再度ログインしてください。' : 
+                    '세션이 만료되었습니다. 다시 로그인해주세요.';
+                if (confirm(forbiddenMessage)) {
                     window.location.href = `/user/login?redirectUrl=${encodeURIComponent(window.location.pathname + window.location.search)}`;
                 }
                 return null;

@@ -206,14 +206,17 @@ public class CommentController {
         // user가 있으면 user ID 사용, 없으면 admin ID 사용
         Long userId = user != null ? user.getId() : admin.getId();
         
+        // admin 계정인 경우 모든 댓글 삭제 가능, 일반 사용자는 자신의 댓글만 삭제 가능
         boolean success = commentService.deleteComment(commentId, userId);
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         
         if (success) {
-            response.put("message", "댓글이 삭제되었습니다.");
+            String message = admin != null ? "관리자 권한으로 댓글이 삭제되었습니다." : "댓글이 삭제되었습니다.";
+            response.put("message", message);
         } else {
-            response.put("message", "댓글을 삭제할 권한이 없습니다.");
+            String message = admin != null ? "댓글 삭제에 실패했습니다." : "댓글을 삭제할 권한이 없습니다.";
+            response.put("message", message);
         }
         
         return ResponseEntity.ok(response);

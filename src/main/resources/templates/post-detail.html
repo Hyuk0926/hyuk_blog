@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/post.css">
     <link rel="stylesheet" href="/css/header.css">
+
     <!-- Prism.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
@@ -159,70 +160,33 @@
         .post-summary {
             margin: 32px auto 36px auto;
             max-width: 700px;
-            font-size: 1.13rem;
-            color: #222;
-            background: rgba(255,255,255,0.85);
-            border-radius: 14px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-            padding: 28px 32px 24px 32px;
-            position: relative;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            transition: background 0.3s, color 0.3s;
+            font-size: 1.1rem;
+            color: #4a5568;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 24px 28px;
+            font-weight: 400;
+            line-height: 1.6;
+            border-left: 4px solid #e2e8f0;
         }
         
-        /* 제목과 본문 구분선 추가 */
+        /* 제목과 본문 구분선 */
         .post-header {
-            border-bottom: 3px solid #e2e8f0;
-            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 20px;
             margin-bottom: 32px;
-            position: relative;
-        }
-        
-        .post-header::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
-            border-radius: 2px;
         }
         
         body.dark-mode .post-header {
-            border-bottom-color: #444;
+            border-bottom-color: #4a5568;
         }
         
-        body.dark-mode .post-header::after {
-            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
-        }
-        
-        /* 메타 정보 스타일 개선 */
+        /* 메타 정보 스타일 */
         .post-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-top: 16px;
-            font-size: 0.95rem;
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .post-meta span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .post-meta span:first-child::before {
-            content: '📅';
-            font-size: 1rem;
-        }
-        
-        .post-meta span:last-child::before {
-            content: '✏️';
-            font-size: 1rem;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #718096;
+            font-weight: 400;
         }
         
         body.dark-mode .post-meta {
@@ -235,28 +199,18 @@
             max-width: 700px;
             text-align: center;
         }
-        .post-summary::before {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
-            border-radius: 14px 14px 0 0;
-        }
+        
         .post-summary p {
             margin: 0;
-            font-size: 1.13rem;
+            font-size: 1.1rem;
             color: inherit;
-            font-weight: 500;
+            font-weight: 400;
         }
+        
         body.dark-mode .post-summary {
-            background: rgba(36, 41, 46, 0.95);
-            color: #f7fafc;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.22);
-        }
-        body.dark-mode .post-summary::before {
-            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
+            background: #2d3748;
+            color: #e2e8f0;
+            border-left-color: #4a5568;
         }
         .post-content {
             margin-bottom: 64px;
@@ -291,62 +245,47 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 24px;
-            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-            border: 2px solid #e9ecef;
-            border-radius: 50px;
+            padding: 10px 20px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            color: #495057;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #4a5568;
         }
         
         .like-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            border-color: #007bff;
-        }
-        
-        .like-button:active {
-            transform: translateY(0);
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
         
         .heart-icon {
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-            color: #6c757d;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            color: #a0aec0;
         }
         
         .heart-icon.liked {
-            color: #dc3545;
-            animation: heartBeat 0.6s ease-in-out;
-        }
-        
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.2); }
-            50% { transform: scale(1); }
-            75% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            color: #e53e3e;
         }
         
         .like-count {
-            font-weight: 700;
-            color: #495057;
+            font-weight: 500;
+            color: #4a5568;
         }
         
         /* 다크모드 */
         body.dark-mode .like-button {
-            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            background: #2d3748;
             border-color: #4a5568;
             color: #e2e8f0;
         }
         
         body.dark-mode .like-button:hover {
-            border-color: #ffe082;
+            background: #4a5568;
         }
         
         body.dark-mode .heart-icon {
@@ -370,49 +309,32 @@
         }
         
         .comment-title {
-            font-size: 1.75rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 600;
             color: #1a202c;
-            margin-bottom: 32px;
-            font-family: 'Montserrat', sans-serif;
-            position: relative;
-            padding-bottom: 12px;
-        }
-        
-        .comment-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
-            border-radius: 2px;
+            margin-bottom: 24px;
+            font-family: inherit;
         }
         
         .comment-form {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 
-                0 4px 20px rgba(0,0,0,0.08),
-                0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 32px;
             width: 100%;
             box-sizing: border-box;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            backdrop-filter: blur(10px);
         }
         
         .comment-login-message {
-            background: linear-gradient(145deg, #fff3cd 0%, #ffeaa7 100%);
+            background: #fff3cd;
             border: 1px solid #ffeaa7;
             color: #856404;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 16px;
+            border-radius: 6px;
             text-align: center;
             margin-bottom: 20px;
-            font-weight: 500;
+            font-weight: 400;
         }
         
         .comment-login-message .login-link {
@@ -457,47 +379,38 @@
         
         .comment-textarea {
             flex: 1;
-            padding: 16px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            min-height: 100px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-height: 80px;
             resize: vertical;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             background: #ffffff;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         
         .comment-textarea:focus {
             outline: none;
             border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-            transform: translateY(-1px);
         }
         
         .comment-submit-btn {
-            padding: 16px 28px;
-            background: linear-gradient(145deg, #007bff 0%, #0056b3 100%);
+            padding: 12px 20px;
+            background: #007bff;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
         }
         
         .comment-submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-            background: linear-gradient(145deg, #0056b3 0%, #004085 100%);
-        }
-        
-        .comment-submit-btn:active {
-            transform: translateY(0);
+            background: #0056b3;
         }
         
         .comment-list {
@@ -508,24 +421,17 @@
         }
         
         .comment-item {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 
-                0 4px 16px rgba(0,0,0,0.06),
-                0 1px 3px rgba(0,0,0,0.08);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
             width: 100%;
             box-sizing: border-box;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
         }
         
         .comment-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.1),
-                0 2px 4px rgba(0,0,0,0.1);
+            background: #f8fafc;
         }
         
         .comment-header {
@@ -542,16 +448,16 @@
         }
         
         .comment-nickname {
-            font-weight: 700;
+            font-weight: 600;
             color: #1a202c;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-family: inherit;
         }
         
         .comment-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #718096;
-            font-weight: 500;
+            font-weight: 400;
         }
         
         .comment-actions {
@@ -560,16 +466,20 @@
         }
         
         .comment-action-btn {
-            padding: 8px 16px;
-            border: 2px solid #e2e8f0;
-            background: #ffffff;
-            color: #4a5568;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            padding: 4px 8px;
+            border: 1px solid #e2e8f0;
+            background: transparent;
+            color: #718096;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
         
         .comment-action-btn:hover {
@@ -577,79 +487,64 @@
             border-color: #007bff;
             color: #007bff;
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
         }
         
         .comment-action-btn.delete {
             color: #e53e3e;
             border-color: #fed7d7;
-            background: #fff5f5;
         }
         
         .comment-action-btn.delete:hover {
             background: #fed7d7;
             border-color: #e53e3e;
             color: #c53030;
-            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.15);
         }
         
         .comment-content {
             color: #2d3748;
-            line-height: 1.7;
-            font-size: 0.95rem;
-            font-weight: 500;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            font-weight: 400;
             background: #f8fafc;
-            padding: 16px;
-            border-radius: 12px;
-            border-left: 4px solid #007bff;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #007bff;
+            margin-top: 12px;
         }
         
         .comment-edit-form {
             display: none;
-            margin-top: 16px;
+            margin-top: 12px;
             background: #f8fafc;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
         }
         
         .comment-edit-form.active {
             display: block;
-            animation: slideDown 0.3s ease;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         .comment-edit-textarea {
             width: 100%;
-            padding: 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            min-height: 100px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-height: 80px;
             resize: vertical;
             font-family: inherit;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             box-sizing: border-box;
             max-width: 100%;
             background: #ffffff;
-            line-height: 1.6;
-            transition: all 0.3s ease;
+            line-height: 1.5;
+            transition: all 0.2s ease;
         }
         
         .comment-edit-textarea:focus {
             outline: none;
             border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
         
         .comment-edit-buttons {
@@ -659,37 +554,34 @@
         }
         
         .comment-edit-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
         
         .comment-edit-btn.save {
-            background: linear-gradient(145deg, #007bff 0%, #0056b3 100%);
+            background: #007bff;
             color: white;
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
         }
         
         .comment-edit-btn.save:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+            background: #0056b3;
         }
         
         .comment-edit-btn.cancel {
             background: #e2e8f0;
             color: #4a5568;
-            border: 2px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
         }
         
         .comment-edit-btn.cancel:hover {
             background: #cbd5e0;
             border-color: #cbd5e0;
-            transform: translateY(-1px);
         }
         
         .edited-badge {
@@ -705,20 +597,13 @@
             color: #f7fafc;
         }
         
-        body.dark-mode .comment-title::after {
-            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
-        }
-        
         body.dark-mode .comment-form {
-            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            background: #2d3748;
             border-color: #4a5568;
-            box-shadow: 
-                0 4px 20px rgba(0,0,0,0.3),
-                0 1px 3px rgba(0,0,0,0.2);
         }
         
         body.dark-mode .comment-login-message {
-            background: linear-gradient(145deg, #742a2a 0%, #9b2c2c 100%);
+            background: #742a2a;
             border: 1px solid #f56565;
             color: #fed7d7;
         }
@@ -732,17 +617,12 @@
         }
         
         body.dark-mode .comment-item {
-            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            background: #2d3748;
             border-color: #4a5568;
-            box-shadow: 
-                0 4px 16px rgba(0,0,0,0.3),
-                0 1px 3px rgba(0,0,0,0.2);
         }
         
         body.dark-mode .comment-item:hover {
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.4),
-                0 2px 4px rgba(0,0,0,0.3);
+            background: #4a5568;
         }
         
         body.dark-mode .comment-input,
@@ -776,29 +656,26 @@
         }
         
         body.dark-mode .comment-action-btn {
-            background: #4a5568;
-            border-color: #718096;
-            color: #e2e8f0;
+            background: transparent;
+            border-color: #4a5568;
+            color: #a0aec0;
         }
         
         body.dark-mode .comment-action-btn:hover {
-            background: #718096;
+            background: #4a5568;
             border-color: #ffe082;
             color: #ffe082;
-            box-shadow: 0 2px 8px rgba(255, 224, 130, 0.15);
         }
         
         body.dark-mode .comment-action-btn.delete {
             color: #fc8181;
             border-color: #742a2a;
-            background: #2d1b1b;
         }
         
         body.dark-mode .comment-action-btn.delete:hover {
             background: #742a2a;
             border-color: #fc8181;
             color: #fed7d7;
-            box-shadow: 0 2px 8px rgba(252, 129, 129, 0.15);
         }
         
         body.dark-mode .comment-edit-btn.cancel {
@@ -898,91 +775,43 @@
     </div>
     
     <style>
-        /* 목록으로 돌아가기 버튼 스타일 개선 - 고딕 & 세련된 디자인 */
+        /* 목록으로 돌아가기 버튼 스타일 */
         .back-button {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
-            color: #ecf0f1;
+            gap: 6px;
+            padding: 10px 16px;
+            background: #ffffff;
+            color: #4a5568;
             text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-weight: 500;
             font-size: 0.9rem;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.3px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 3px 12px rgba(44, 62, 80, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
         }
         
         .back-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s;
+            content: '←';
+            font-size: 1rem;
+            font-weight: 400;
         }
         
         .back-button:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 
-                0 6px 20px rgba(44, 62, 80, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            background: linear-gradient(145deg, #34495e 0%, #2c3e50 100%);
-            color: #ffffff;
-        }
-        
-        .back-button:hover::before {
-            left: 100%;
-        }
-        
-        .back-button:active {
-            transform: translateY(-1px) scale(1.01);
-            box-shadow: 
-                0 3px 12px rgba(44, 62, 80, 0.3),
-                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
         
         /* 다크모드 */
         body.dark-mode .back-button {
-            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #e8e8e8;
-            box-shadow: 
-                0 3px 12px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
         }
         
         body.dark-mode .back-button:hover {
-            background: linear-gradient(145deg, #2d2d2d 0%, #1a1a1a 100%);
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-        
-        /* 화살표 아이콘 스타일 - 앞쪽에만 표시 */
-        .back-button::before {
-            content: '←';
-            position: static;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-right: 6px;
-            background: none;
-            width: auto;
-            height: auto;
-            left: auto;
-            transition: none;
+            background: #4a5568;
         }
         
         /* Footer와의 간격 확대 */
