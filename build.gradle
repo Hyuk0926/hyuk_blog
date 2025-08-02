@@ -46,13 +46,3 @@ tasks.named('test') {
     useJUnitPlatform()
     enabled = false
 }
-
-// flyway {
-//     url = 'jdbc:mysql://awseb-e-eipj6ckd2w-stack-awsebrdsdatabase-m0ru059s7ksh.cz86ig6e2h64.ap-northeast-2.rds.amazonaws.com:3306/hyuk_blog_db?useSSL=true&requireSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8'
-//     user = 'admin'
-//     password = 'Shka991204!'
-//     driver = 'com.mysql.cj.jdbc.Driver'
-//     locations = ['filesystem:src/main/resources/db/migration']
-//     baselineOnMigrate = true
-//     outOfOrder = true
-// }

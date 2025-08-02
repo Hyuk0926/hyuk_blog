@@ -52,24 +52,25 @@ public class SimpleEncryptor {
     }
     
     public static void main(String[] args) {
-        // 로컬 MySQL 비밀번호 암호화 예제
-        String originalPassword = "Shka991204!";
-        String encryptedPassword = encrypt(originalPassword);
-        System.out.println("=== 로컬 MySQL 비밀번호 ===");
-        System.out.println("Original Password: " + originalPassword);
-        System.out.println("Encrypted Password: " + encryptedPassword);
+        // 암호화 예제 (실제 비밀번호는 환경변수나 별도 파일에서 관리)
+        System.out.println("=== 비밀번호 암호화 예제 ===");
+        System.out.println("실제 사용 시에는 환경변수나 별도 설정 파일에서 비밀번호를 가져와야 합니다.");
         
-        // AWS RDS 비밀번호 암호화 예제 (실제 비밀번호로 변경 필요)
-        String awsPassword = "Shka991204!"; // 실제 AWS RDS 비밀번호로 변경
-        String encryptedAwsPassword = encrypt(awsPassword);
-        System.out.println("\n=== AWS RDS 비밀번호 ===");
-        System.out.println("Original Password: " + awsPassword);
-        System.out.println("Encrypted Password: " + encryptedAwsPassword);
-        System.out.println("application-prod.yml에서 사용할 값: ENC(" + encryptedAwsPassword + ")");
+        // 예시 비밀번호 (실제로는 사용하지 않음)
+        String examplePassword = "your_password_here";
+        String encryptedPassword = encrypt(examplePassword);
+        System.out.println("Example Password: " + examplePassword);
+        System.out.println("Encrypted Password: " + encryptedPassword);
+        System.out.println("application-prod.yml에서 사용할 값: ENC(" + encryptedPassword + ")");
         
         // 복호화 테스트
         String decryptedPassword = decrypt(encryptedPassword);
         System.out.println("\n=== 복호화 테스트 ===");
         System.out.println("Decrypted Password: " + decryptedPassword);
+        
+        System.out.println("\n=== 사용법 ===");
+        System.out.println("1. 실제 비밀번호를 환경변수로 설정");
+        System.out.println("2. 이 클래스의 main 메서드를 실행하여 암호화된 값 생성");
+        System.out.println("3. application-prod.yml에 ENC(암호화된값) 형태로 저장");
     }
 } 
