@@ -35,3 +35,26 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Application Properties ###
+src/main/resources/application-prod.yml
+src/main/resources/application-local.yml
+src/main/resources/application-secret.yml
+*.key
+*.pem
+*.p12
+*.jks
+
+### Environment Variables ###
+.env
+.env.local
+.env.production
+
+### Logs ###
+*.log
+logs/
+
+### Database ###
+*.db
+*.sqlite
+*.h2.db

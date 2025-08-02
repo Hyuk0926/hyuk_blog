@@ -36,8 +36,7 @@ public class JwtAuthService {
                 });
 
         log.info("관리자 계정 찾음: {}", admin.getUsername());
-        log.info("입력된 비밀번호: {}", loginRequest.getPassword());
-        log.info("저장된 비밀번호 해시: {}", admin.getPassword());
+        log.debug("비밀번호 검증 진행 중...");
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), admin.getPassword())) {
             log.error("비밀번호 불일치: {}", loginRequest.getUsername());
@@ -89,8 +88,7 @@ public class JwtAuthService {
         }
 
         log.info("사용자 계정 찾음: {}", user.getUsername());
-        log.info("입력된 비밀번호: {}", loginRequest.getPassword());
-        log.info("저장된 비밀번호 해시: {}", user.getPassword());
+        log.debug("비밀번호 검증 진행 중...");
 
         // 기존 사용자 계정들의 비밀번호 검증 (다양한 암호화 방식 지원)
         boolean passwordValid = false;

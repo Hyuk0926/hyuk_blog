@@ -4,6 +4,7 @@ import com.example.hyuk_blog.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -28,21 +29,29 @@ public class SecurityConfig {
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // 세션 활성화
             )
+            .securityContext(securityContext -> securityContext
+                .requireExplicitSave(false) // 세션 자동 저장
+            )
             .authorizeHttpRequests(authorize -> authorize
-                // JWT 인증 API 허용
-                .requestMatchers("/api/auth/**").permitAll()
                 // 정적 리소스 허용 (모든 정적 파일)
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/svg/**", "/cursor/**", "/favicon.ico").permitAll()
                 // 메인 페이지 허용
-                .requestMatchers("/", "/index", "/home", "/about", "/contact", "/projects", "/search").permitAll()
+                .requestMatchers("/", "/index", "/jp", "/home", "/about", "/contact", "/projects", "/search").permitAll()
                 // 게시글 조회 허용
                 .requestMatchers("/post/**", "/posts/**").permitAll()
-                // 사용자 인증 관련 페이지 허용 (로그인, 회원가입)
-                .requestMatchers("/user/login", "/user/register", "/user/check-username", "/user/check-nickname", "/user/check-email").permitAll()
+                // 사용자 인증 관련 페이지 허용 (로그인, 회원가입, 로그아웃)
+                .requestMatchers("/user/login", "/user/register", "/user/logout", "/user/check-username", "/user/check-nickname", "/user/check-email").permitAll()
                 // 관리자 로그인 페이지는 모든 사용자 접근 가능
                 .requestMatchers("/admin/login", "/admin").permitAll()
                 // 관리자 관련 모든 페이지는 인증된 사용자만 접근 (admin 계정 포함)
                 .requestMatchers("/admin/**", "/admin_jp/**", "/admin_kr/**").permitAll()
+                // API 엔드포인트 설정
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/comments/**").permitAll()
+                .requestMatchers("/api/like/**").permitAll()
+                .requestMatchers("/api/posts/**").permitAll()
+                .requestMatchers("/api/search/**").permitAll()
+                .requestMatchers("/visitor/**").permitAll()
                 // 나머지는 인증 필요
                 .anyRequest().authenticated()
             )

@@ -68,7 +68,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                requestURI.startsWith("/cursor/") || 
                requestURI.endsWith(".html") || 
                requestURI.equals("/favicon.ico") ||
-               requestURI.startsWith("/api/auth/");
+               requestURI.startsWith("/api/auth/") ||
+               requestURI.startsWith("/api/like/") ||
+               requestURI.startsWith("/api/comments/");
     }
 
     private String getJwtFromRequest(HttpServletRequest request) {
