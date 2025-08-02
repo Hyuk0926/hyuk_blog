@@ -1,6 +1,7 @@
 package com.example.hyuk_blog.service;
 
 import com.example.hyuk_blog.entity.Like;
+import com.example.hyuk_blog.entity.PostType;
 import com.example.hyuk_blog.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,41 +18,34 @@ public class LikeService {
     private LikeRepository likeRepository;
     
     @Transactional
-    public boolean toggleLike(Long postId, Long userId, String lang) {
-        boolean exists = likeRepository.existsByPostIdAndUserId(postId, userId);
+    public boolean toggleLike(Long postId, PostType postType, Long userId) {
+        boolean exists = likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType, userId);
         
         if (exists) {
             // 좋아요 취소
-            likeRepository.deleteByPostIdAndUserId(postId, userId);
+            likeRepository.deleteByPostIdAndPostTypeAndUserId(postId, postType, userId);
             return false;
         } else {
-            // 좋아요 추가 (detached entity 문제 완전 방지)
+            // 좋아요 추가
             Like like = new Like();
             like.setPostId(postId);
+            like.setPostType(postType);
             like.setUserId(userId);
             safeSave(like);
             return true;
         }
     }
     
-    public long getLikeCount(Long postId, String lang) {
-        return likeRepository.countByPostId(postId);
+    public long getLikeCount(Long postId, PostType postType) {
+        return likeRepository.countByPostIdAndPostType(postId, postType);
     }
     
-    public boolean isLikedByUser(Long postId, Long userId, String lang) {
-        return likeRepository.existsByPostIdAndUserId(postId, userId);
-    }
-    
-    /**
-     * Detached Entity 문제를 방지하기 위한 안전한 엔티티 처리 메서드
-     * 향후 다른 엔티티와의 관계가 추가될 때 사용
-     */
-    private Like ensureManagedEntity(Like like) {
-        if (like.getId() != null) {
-            // 이미 관리되는 엔티티인지 확인
-            return likeRepository.findById(like.getId()).orElse(like);
+    public boolean isLikedByUser(Long postId, PostType postType, Long userId) {
+        // userId가 null이면 좋아요하지 않은 것으로 처리
+        if (userId == null) {
+            return false;
         }
-        return like;
+        return likeRepository.existsByPostIdAndPostTypeAndUserId(postId, postType, userId);
     }
     
     /**
@@ -65,6 +59,7 @@ public class LikeService {
             // detached entity 오류 발생 시 새로운 엔티티로 재생성
             Like newLike = new Like();
             newLike.setPostId(like.getPostId());
+            newLike.setPostType(like.getPostType());
             newLike.setUserId(like.getUserId());
             return likeRepository.save(newLike);
         }

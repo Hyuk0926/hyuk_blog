@@ -16,25 +16,25 @@
         </style>
     </head>
     <div class="container header-flex">
-        <a class="navbar-brand" th:href="@{/}" th:text="#{header.title}">Takahara's Blog</a>
+        <a class="navbar-brand" th:href="@{${(lang != null ? lang : #locale.language) == 'ja' ? '/?lang=ja' : '/?lang=ko'}}" th:text="#{header.title}">Takahara's Blog</a>
         <div class="header-right">
             <nav>
                 <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/index(lang=${#locale.language})}" th:text="#{header.nav.knowledge}">지식모음</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/projects(lang=${#locale.language})}" th:text="#{header.nav.projects}">프로젝트</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/about(lang=${#locale.language})}" th:text="#{header.nav.resume}">이력</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/contact(lang=${#locale.language})}" th:text="#{header.nav.contact}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/index(lang=${lang != null ? lang : #locale.language})}" th:text="#{header.nav.knowledge}">지식모음</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/projects(lang=${lang != null ? lang : #locale.language})}" th:text="#{header.nav.projects}">프로젝트</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/about(lang=${lang != null ? lang : #locale.language})}" th:text="#{header.nav.resume}">이력</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/contact(lang=${lang != null ? lang : #locale.language})}" th:text="#{header.nav.contact}">Contact</a></li>
                 </ul>
             </nav>
             <div class="header-controls">
                 <!-- 사용자 인증 상태에 따른 로그인/로그아웃 버튼 -->
                 <div class="auth-controls" th:if="${session.user != null}">
-                    <span class="user-info" th:text="${session.user.nickname}">사용자</span>
-                    <a href="/user/logout" class="auth-btn logout-btn">로그아웃</a>
+                    <span class="user-info" th:text="${session.user.nickname + (#locale.language == 'ja' ? 'さん' : '님')}">사용자</span>
+                    <a href="/user/logout" class="auth-btn logout-btn" th:text="#{user.logout}">로그아웃</a>
                 </div>
                 <div class="auth-controls" th:if="${session.user == null}">
-                    <a href="/user/login" class="auth-btn login-btn">로그인</a>
-                    <a href="/user/register" class="auth-btn register-btn">회원가입</a>
+                    <a href="/user/login" class="auth-btn login-btn" th:text="#{user.login}">로그인</a>
+                    <a href="/user/register" class="auth-btn register-btn" th:text="#{user.register}">회원가입</a>
                 </div>
                 
                 <button id="darkModeToggle" class="control-btn dark-mode-btn" title="다크모드 전환">
@@ -46,9 +46,9 @@
                     </span>
                 </button>
                 <div id="langToggle" class="lang-toggle">
-                    <a id="lang-ko" class="lang-btn" th:classappend="${#locale.language == 'ko' ? 'active' : ''}" th:href="@{?lang=ko}">KO</a>
+                    <a id="lang-ko" class="lang-btn post-lang-toggle" th:classappend="${#locale.language == 'ko' ? 'active' : ''}" th:href="@{?lang=ko}">KO</a>
                     <span class="lang-separator">|</span>
-                    <a id="lang-jp" class="lang-btn" th:classappend="${#locale.language == 'ja' ? 'active' : ''}" th:href="@{?lang=ja}">JP</a>
+                    <a id="lang-jp" class="lang-btn post-lang-toggle" th:classappend="${#locale.language == 'ja' ? 'active' : ''}" th:href="@{?lang=ja}">JP</a>
                 </div>
             </div>
         </div>

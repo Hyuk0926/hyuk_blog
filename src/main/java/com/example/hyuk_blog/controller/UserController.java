@@ -1,7 +1,10 @@
 package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.dto.UserDto;
+import com.example.hyuk_blog.dto.JwtResponseDto;
+import com.example.hyuk_blog.dto.JwtLoginRequestDto;
 import com.example.hyuk_blog.service.UserService;
+import com.example.hyuk_blog.service.JwtAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,9 @@ public class UserController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private JwtAuthService jwtAuthService;
     
     // 로그인 페이지
     @GetMapping("/login")
@@ -37,6 +43,19 @@ public class UserController {
             // 로그인 성공 - 기존 admin 세션 제거
             session.removeAttribute("admin");
             session.setAttribute("user", user.get());
+            
+            // JWT 토큰 생성 (선택사항)
+            try {
+                JwtLoginRequestDto loginRequest = new JwtLoginRequestDto();
+                loginRequest.setUsername(username);
+                loginRequest.setPassword(password);
+                JwtResponseDto jwtResponse = jwtAuthService.userLogin(loginRequest);
+                session.setAttribute("jwtToken", jwtResponse.getToken());
+            } catch (Exception e) {
+                // JWT 토큰 생성 실패는 로그인을 막지 않음
+                System.err.println("JWT 토큰 생성 실패: " + e.getMessage());
+                // JWT 토큰이 없어도 세션 기반 로그인은 정상 작동
+            }
             
             // 리다이렉트 URL이 있으면 해당 페이지로, 없으면 메인 페이지로
             if (redirectUrl != null && !redirectUrl.isEmpty()) {
@@ -74,8 +93,12 @@ public class UserController {
         }
         
         try {
-            userService.register(username, password, nickname, email);
-            redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다. 로그인해주세요.");
+            // 사용자 등록
+            UserDto registeredUser = userService.register(username, password, nickname, email);
+            
+            // 회원가입 성공 메시지
+            redirectAttributes.addFlashAttribute("message", "회원가입이 완료되었습니다! 로그인해주세요.");
+            
             return "redirect:/user/login";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
@@ -83,10 +106,13 @@ public class UserController {
         }
     }
     
+
+    
     // 로그아웃
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.removeAttribute("user");
+        session.removeAttribute("jwtToken"); // JWT 토큰도 제거
         return "redirect:/";
     }
     

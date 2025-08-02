@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+            <title th:text="#{user.register.title}">회원가입</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <style>
@@ -325,8 +325,8 @@
 <body>
     <div class="register-container">
         <div class="register-header">
-            <h1 class="register-title">회원가입</h1>
-            <p class="register-subtitle">좋아요와 댓글 기능을 사용하려면 회원가입이 필요합니다</p>
+            <h1 class="register-title" th:text="#{user.register.title}">회원가입</h1>
+            <p class="register-subtitle" th:text="#{user.register.subtitle}">좋아요와 댓글 기능을 사용하려면 회원가입이 필요합니다</p>
         </div>
         
         <div th:if="${error}" class="error-message" th:text="${error}">
@@ -335,73 +335,81 @@
         
         <form action="/user/register" method="post" id="registerForm">
             <div class="form-group">
-                <label for="username" class="form-label">아이디 <span class="required">*</span></label>
+                <label for="username" class="form-label" th:text="#{user.register.id} + ' ' + #{user.register.required}">아이디 <span class="required">*</span></label>
                 <div class="input-group">
                     <input type="text" id="username" name="username" class="form-input" required 
                            pattern="[a-zA-Z0-9_]{4,20}" 
-                           title="4-20자의 영문, 숫자, 언더스코어만 사용 가능합니다"
-                           placeholder="4-20자의 영문, 숫자, 언더스코어">
-                    <button type="button" class="check-button" id="username-check-btn">중복확인</button>
+                           th:title="#{user.register.id.title}"
+                           th:placeholder="#{user.register.id.placeholder}">
+                    <button type="button" class="check-button" id="username-check-btn" th:text="#{user.register.duplicate.check}">중복확인</button>
                 </div>
                 <div id="username-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
-                <label for="password" class="form-label">비밀번호 <span class="required">*</span></label>
+                <label for="password" class="form-label" th:text="#{user.register.password} + ' ' + #{user.register.required}">비밀번호 <span class="required">*</span></label>
                 <div class="input-group" style="position: relative;">
                     <input type="password" id="password" name="password" class="form-input" required 
                            minlength="6" 
-                           title="최소 6자 이상 입력해주세요"
-                           placeholder="최소 6자 이상">
-                    <div class="capslock-warning" id="password-capslock">Caps Lock이 켜져 있습니다</div>
+                           th:title="#{user.register.password.title}"
+                           th:placeholder="#{user.register.password.placeholder}">
+                    <div class="capslock-warning" id="password-capslock" th:text="#{user.register.capslock.warning}">Caps Lock이 켜져 있습니다</div>
                 </div>
                 <div id="password-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
-                <label for="confirmPassword" class="form-label">비밀번호 확인 <span class="required">*</span></label>
+                <label for="confirmPassword" class="form-label" th:text="#{user.register.password.confirm} + ' ' + #{user.register.required}">비밀번호 확인 <span class="required">*</span></label>
                 <div class="input-group" style="position: relative;">
                     <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" required
-                           placeholder="비밀번호를 다시 입력하세요">
-                    <div class="capslock-warning" id="confirmPassword-capslock">Caps Lock이 켜져 있습니다</div>
+                           th:placeholder="#{user.register.password.confirm.placeholder}">
+                    <div class="capslock-warning" id="confirmPassword-capslock" th:text="#{user.register.capslock.warning}">Caps Lock이 켜져 있습니다</div>
                 </div>
                 <div id="confirmPassword-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
-                <label for="nickname" class="form-label">닉네임 <span class="required">*</span></label>
+                <label for="nickname" class="form-label" th:text="#{user.register.nickname} + ' ' + #{user.register.required}">닉네임 <span class="required">*</span></label>
                 <div class="input-group">
                     <input type="text" id="nickname" name="nickname" class="form-input" required 
                            minlength="2" maxlength="20" 
-                           title="2-20자의 닉네임을 입력해주세요"
-                           placeholder="2-20자의 닉네임">
-                    <button type="button" class="check-button" id="nickname-check-btn">중복확인</button>
+                           th:title="#{user.register.nickname.title}"
+                           th:placeholder="#{user.register.nickname.placeholder}">
+                    <button type="button" class="check-button" id="nickname-check-btn" th:text="#{user.register.duplicate.check}">중복확인</button>
                 </div>
                 <div id="nickname-validation" class="validation-message"></div>
             </div>
             
             <div class="form-group">
-                <label for="email" class="form-label">이메일</label>
+                <label for="email" class="form-label" th:text="#{user.register.email}">이메일</label>
                 <div class="input-group">
                     <input type="email" id="email" name="email" class="form-input" 
-                           title="올바른 이메일 형식을 입력해주세요"
-                           placeholder="example@email.com">
-                    <button type="button" class="check-button" id="email-check-btn">중복확인</button>
+                           th:title="#{user.register.email.title}"
+                           th:placeholder="#{user.register.email.placeholder}">
+                    <button type="button" class="check-button" id="email-check-btn" th:text="#{user.register.duplicate.check}">중복확인</button>
                 </div>
                 <div id="email-validation" class="validation-message"></div>
             </div>
             
-            <button type="submit" class="register-button" id="submitBtn">회원가입</button>
+                            <button type="submit" class="register-button" id="submitBtn" th:text="#{user.register.button}">회원가입</button>
         </form>
         
         <div class="login-link">
-            <p>이미 계정이 있으신가요? <a href="/user/login">로그인</a></p>
+            <p><span th:text="#{user.account.exists}">이미 계정이 있으신가요?</span> <a href="/user/login" th:text="#{user.login.link}">로그인</a></p>
         </div>
         
         <div class="back-link">
-            <a href="/">← 메인 페이지로 돌아가기</a>
+            <a href="/">← <span th:text="#{user.register.back.to.main}">메인 페이지로 돌아가기</span></a>
         </div>
     </div>
+    
+    <script th:inline="javascript">
+        // 국제화 메시지를 JavaScript에서 사용할 수 있도록 전역 변수로 설정
+        window.i18nMessages = {
+            emailRequired: /*[[#{user.register.email.required}]]*/ '이메일 입력 필요',
+            duplicateCheck: /*[[#{user.register.duplicate.check}]]*/ '중복확인'
+        };
+    </script>
     
     <script src="/js/user-utils.js"></script>
     <script src="/js/user-register.js"></script>

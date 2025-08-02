@@ -1,9 +1,11 @@
 package com.example.hyuk_blog.controller;
 
 import com.example.hyuk_blog.service.VisitorService;
+import com.example.hyuk_blog.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 
 @RestController
@@ -13,10 +15,17 @@ public class VisitorController {
     private VisitorService visitorService;
 
     @PostMapping("/increase")
-    public void increase(HttpServletRequest request) {
-        String ipAddress = getClientIpAddress(request);
-        String userAgent = request.getHeader("User-Agent");
-        visitorService.increaseCount(ipAddress, userAgent);
+    public void increase(HttpServletRequest request, HttpSession session) {
+        // 세션에서 로그인한 사용자 정보 가져오기
+        UserDto user = (UserDto) session.getAttribute("user");
+        String userId = null;
+        
+        if (user != null) {
+            userId = user.getId().toString();
+        }
+        
+        // 로그인한 사용자만 카운트
+        visitorService.increaseCount(userId);
     }
 
     @GetMapping("/stats/daily")

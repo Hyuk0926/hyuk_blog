@@ -2,7 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.3'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.flywaydb.flyway' version '9.22.3'
+    // id 'org.flywaydb.flyway' version '9.22.3'
 }
 
 group = 'com.example'
@@ -19,13 +19,22 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
+    // implementation 'org.flywaydb:flyway-core'
+    // implementation 'org.flywaydb:flyway-mysql'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'mysql:mysql-connector-java:8.0.33'
+    
+    // JWT 관련 의존성
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
@@ -36,14 +45,4 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
     enabled = false
-}
-
-flyway {
-    url = 'jdbc:mysql://awseb-e-eipj6ckd2w-stack-awsebrdsdatabase-m0ru059s7ksh.cz86ig6e2h64.ap-northeast-2.rds.amazonaws.com:3306/hyuk_blog_db?useSSL=true&requireSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8'
-    user = 'admin'
-    password = 'Shka991204!'
-    driver = 'com.mysql.cj.jdbc.Driver'
-    locations = ['filesystem:src/main/resources/db/migration']
-    baselineOnMigrate = true
-    outOfOrder = true
 }

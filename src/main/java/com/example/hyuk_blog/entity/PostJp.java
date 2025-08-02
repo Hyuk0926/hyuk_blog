@@ -1,11 +1,10 @@
 package com.example.hyuk_blog.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 @Table(name = "posts_jp")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class PostJp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +36,9 @@ public class PostJp {
     @Column(length = 50)
     private Category category;
 
+//    @Column(name = "encrypted_id", unique = true, nullable = true)
+//    private String encryptedId;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -45,4 +46,30 @@ public class PostJp {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+//    @PrePersist
+//    protected void onCreate() {
+//        if (encryptedId == null && this.id != null) {
+//            this.encryptedId = generateEncryptedId();
+//        }
+//    }
+//
+//    private String generateEncryptedId() {
+//        // JP_id_제목 형식으로 암호화 (일본어 제목 안전 처리)
+//        String safeTitle = "untitled";
+//        if (this.title != null && !this.title.trim().isEmpty()) {
+//            // 일본어 제목에서 영숫자만 추출하고 나머지는 언더스코어로 변경
+//            safeTitle = this.title.replaceAll("[^a-zA-Z0-9]", "_")
+//                                 .replaceAll("_+", "_")  // 연속된 언더스코어를 하나로
+//                                 .replaceAll("^_|_$", ""); // 앞뒤 언더스코어 제거
+//            if (safeTitle.isEmpty()) {
+//                safeTitle = "untitled";
+//            }
+//        }
+//
+//        String rawId = "JP_" + this.id + "_" + safeTitle;
+//
+//        // Base64 인코딩으로 URL 안전한 문자열 생성
+//        return java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(rawId.getBytes());
+//    }
 } 

@@ -17,41 +17,31 @@ public class VisitorService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private Map<String, Integer> dailyCounts; // yyyy-MM-dd -> count
     private Map<String, Integer> monthlyCounts; // yyyy-MM -> count
-    private Map<String, Set<String>> dailyVisitors; // yyyy-MM-dd -> Set<IP>
+    private Map<String, Set<String>> dailyVisitors; // yyyy-MM-dd -> Set<UserId>
 
     public VisitorService() {
         objectMapper.registerModule(new JavaTimeModule());
         loadCounts();
     }
 
-    public synchronized boolean increaseCount(String ipAddress) {
-        return increaseCount(ipAddress, null);
-    }
-
-    public synchronized boolean increaseCount(String ipAddress, String userAgent) {
+    public synchronized boolean increaseCount(String userId) {
+        if (userId == null || userId.isEmpty()) {
+            return false; // 로그인하지 않은 사용자는 카운트하지 않음
+        }
+        
         String today = LocalDate.now().toString();
         String month = YearMonth.now().toString();
         
-        // IP와 User-Agent를 조합하여 더 정확한 방문자 식별
-        String visitorKey = ipAddress;
-        if (userAgent != null && !userAgent.isEmpty()) {
-            // User-Agent의 주요 부분만 사용 (브라우저 정보)
-            String browserInfo = extractBrowserInfo(userAgent);
-            if (browserInfo != null) {
-                visitorKey = ipAddress + "|" + browserInfo;
-            }
-        }
-        
-        // 오늘 방문한 방문자 목록 가져오기
+        // 오늘 방문한 사용자 목록 가져오기
         Set<String> todayVisitors = dailyVisitors.getOrDefault(today, new HashSet<>());
         
-        // 이미 오늘 방문한 방문자인지 확인
-        if (todayVisitors.contains(visitorKey)) {
-            return false; // 이미 방문한 방문자
+        // 이미 오늘 방문한 사용자인지 확인
+        if (todayVisitors.contains(userId)) {
+            return false; // 이미 방문한 사용자
         }
         
         // 새로운 방문자로 추가
-        todayVisitors.add(visitorKey);
+        todayVisitors.add(userId);
         dailyVisitors.put(today, todayVisitors);
         
         // 카운트 증가
@@ -61,6 +51,8 @@ public class VisitorService {
         saveCounts();
         return true; // 새로운 방문자
     }
+
+
 
     public synchronized int getTodayCount() {
         String today = LocalDate.now().toString();
@@ -157,27 +149,5 @@ public class VisitorService {
         }
     }
 
-    /**
-     * User-Agent에서 브라우저 정보를 추출
-     */
-    private String extractBrowserInfo(String userAgent) {
-        if (userAgent == null || userAgent.isEmpty()) {
-            return null;
-        }
-        
-        // 주요 브라우저 정보만 추출
-        String[] browsers = {"Chrome", "Firefox", "Safari", "Edge", "Opera"};
-        for (String browser : browsers) {
-            if (userAgent.contains(browser)) {
-                return browser;
-            }
-        }
-        
-        // 모바일 브라우저 확인
-        if (userAgent.contains("Mobile")) {
-            return "Mobile";
-        }
-        
-        return "Other";
-    }
+
 } 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,65 +8,96 @@
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/post.css">
     <link rel="stylesheet" href="/css/header.css">
+
     <!-- Prism.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
     <style>
-        /* 코드 복사 버튼 스타일 */
+        /* 코드 복사 버튼 스타일 - 심플한 투명/반투명 디자인 */
         .code-block-wrapper {
             position: relative;
         }
         .copy-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ffffff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 12px;
-            font-size: 0.9rem;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            color: #a0aec0;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.8rem;
             cursor: pointer;
-            opacity: 0.85;
+            opacity: 0.3;
             z-index: 2;
-            transition: background 0.2s, opacity 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            font-weight: 500;
+            min-width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .code-block-wrapper:hover .copy-btn {
+            opacity: 1;
+            transform: translateY(0);
         }
         .copy-btn:hover {
-            background: #0056b3;
-            opacity: 1;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        .copy-btn:active {
+            transform: translateY(0);
+            transition: all 0.1s ease;
+        }
+        .copy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         body.dark-mode .copy-btn {
-            background: #23272a;
-            color: #ffe082;
-            border: 1px solid #444;
+            background: rgba(0, 0, 0, 0.25);
+            color: #718096;
+            border-color: rgba(255, 255, 255, 0.08);
         }
         body.dark-mode .copy-btn:hover {
-            background: #444;
+            background: rgba(0, 0, 0, 0.4);
+            color: #e2e8f0;
+            border-color: rgba(255, 255, 255, 0.15);
         }
-        /* Toast 알림 스타일 */
+        /* Toast 알림 스타일 - 심플하고 부드러운 디자인 */
         .copy-toast {
             position: fixed;
-            right: 32px;
-            bottom: 32px;
-            background: #222;
-            color: #fff;
-            padding: 12px 24px;
+            right: 24px;
+            bottom: 24px;
+            background: rgba(34, 34, 34, 0.9);
+            backdrop-filter: blur(12px);
+            color: #ffffff;
+            padding: 12px 20px;
             border-radius: 8px;
-            font-size: 1rem;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-            opacity: 0.95;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            opacity: 0;
             z-index: 9999;
             pointer-events: none;
-            animation: fadeInOut 1.5s;
+            animation: copyToastFade 2s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(20px); }
-            10% { opacity: 0.95; transform: translateY(0); }
-            90% { opacity: 0.95; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(20px); }
+        @keyframes copyToastFade {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            15% { opacity: 1; transform: translateY(0) scale(1); }
+            85% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-10px) scale(0.95); }
         }
         body.dark-mode .copy-toast {
-            background: #333;
-            color: #ffe082;
+            background: rgba(0, 0, 0, 0.8);
+            color: #e2e8f0;
+            border-color: rgba(255, 255, 255, 0.1);
         }
         .post-detail-image {
             max-width: 700px;
@@ -114,7 +145,7 @@
             color: #ffe082 !important;
             background: #23272a !important;
         }
-        /* 코드 블록(박스) */
+        /* 코드 블록(박스) - 개선된 스타일 */
         .post-content pre {
             background: #23272a;
             color: #ffe082;
@@ -126,6 +157,12 @@
             margin: 16px 0;
             box-shadow: 0 2px 12px rgba(0,0,0,0.10);
             border: 1px solid #444;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .post-content pre:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
         }
         /* 코드 블록 내부 <code>는 배경/패딩/테두리 없음 */
         .post-content pre code {
@@ -159,70 +196,33 @@
         .post-summary {
             margin: 32px auto 36px auto;
             max-width: 700px;
-            font-size: 1.13rem;
-            color: #222;
-            background: rgba(255,255,255,0.85);
-            border-radius: 14px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-            padding: 28px 32px 24px 32px;
-            position: relative;
-            font-weight: 500;
-            letter-spacing: 0.01em;
-            transition: background 0.3s, color 0.3s;
+            font-size: 1.1rem;
+            color: #4a5568;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 24px 28px;
+            font-weight: 400;
+            line-height: 1.6;
+            border-left: 4px solid #e2e8f0;
         }
         
-        /* 제목과 본문 구분선 추가 */
+        /* 제목과 본문 구분선 */
         .post-header {
-            border-bottom: 3px solid #e2e8f0;
-            padding-bottom: 24px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 20px;
             margin-bottom: 32px;
-            position: relative;
-        }
-        
-        .post-header::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
-            border-radius: 2px;
         }
         
         body.dark-mode .post-header {
-            border-bottom-color: #444;
+            border-bottom-color: #4a5568;
         }
         
-        body.dark-mode .post-header::after {
-            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
-        }
-        
-        /* 메타 정보 스타일 개선 */
+        /* 메타 정보 스타일 */
         .post-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-top: 16px;
-            font-size: 0.95rem;
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .post-meta span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .post-meta span:first-child::before {
-            content: '📅';
-            font-size: 1rem;
-        }
-        
-        .post-meta span:last-child::before {
-            content: '✏️';
-            font-size: 1rem;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #718096;
+            font-weight: 400;
         }
         
         body.dark-mode .post-meta {
@@ -235,28 +235,18 @@
             max-width: 700px;
             text-align: center;
         }
-        .post-summary::before {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
-            border-radius: 14px 14px 0 0;
-        }
+        
         .post-summary p {
             margin: 0;
-            font-size: 1.13rem;
+            font-size: 1.1rem;
             color: inherit;
-            font-weight: 500;
+            font-weight: 400;
         }
+        
         body.dark-mode .post-summary {
-            background: rgba(36, 41, 46, 0.95);
-            color: #f7fafc;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.22);
-        }
-        body.dark-mode .post-summary::before {
-            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
+            background: #2d3748;
+            color: #e2e8f0;
+            border-left-color: #4a5568;
         }
         .post-content {
             margin-bottom: 64px;
@@ -291,62 +281,47 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 12px 24px;
-            background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-            border: 2px solid #e9ecef;
-            border-radius: 50px;
+            padding: 10px 20px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            color: #495057;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #4a5568;
         }
         
         .like-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            border-color: #007bff;
-        }
-        
-        .like-button:active {
-            transform: translateY(0);
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
         
         .heart-icon {
-            font-size: 1.5rem;
-            transition: all 0.3s ease;
-            color: #6c757d;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            color: #a0aec0;
         }
         
         .heart-icon.liked {
-            color: #dc3545;
-            animation: heartBeat 0.6s ease-in-out;
-        }
-        
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.2); }
-            50% { transform: scale(1); }
-            75% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            color: #e53e3e;
         }
         
         .like-count {
-            font-weight: 700;
-            color: #495057;
+            font-weight: 500;
+            color: #4a5568;
         }
         
         /* 다크모드 */
         body.dark-mode .like-button {
-            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            background: #2d3748;
             border-color: #4a5568;
             color: #e2e8f0;
         }
         
         body.dark-mode .like-button:hover {
-            border-color: #ffe082;
+            background: #4a5568;
         }
         
         body.dark-mode .heart-icon {
@@ -370,49 +345,32 @@
         }
         
         .comment-title {
-            font-size: 1.75rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 600;
             color: #1a202c;
-            margin-bottom: 32px;
-            font-family: 'Montserrat', sans-serif;
-            position: relative;
-            padding-bottom: 12px;
-        }
-        
-        .comment-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
-            border-radius: 2px;
+            margin-bottom: 24px;
+            font-family: inherit;
         }
         
         .comment-form {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 16px;
-            padding: 28px;
-            box-shadow: 
-                0 4px 20px rgba(0,0,0,0.08),
-                0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 40px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 32px;
             width: 100%;
             box-sizing: border-box;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            backdrop-filter: blur(10px);
         }
         
         .comment-login-message {
-            background: linear-gradient(145deg, #fff3cd 0%, #ffeaa7 100%);
+            background: #fff3cd;
             border: 1px solid #ffeaa7;
             color: #856404;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 16px;
+            border-radius: 6px;
             text-align: center;
             margin-bottom: 20px;
-            font-weight: 500;
+            font-weight: 400;
         }
         
         .comment-login-message .login-link {
@@ -457,47 +415,49 @@
         
         .comment-textarea {
             flex: 1;
-            padding: 16px 18px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            min-height: 100px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-height: 80px;
             resize: vertical;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             background: #ffffff;
-            line-height: 1.6;
+            line-height: 1.5;
         }
         
         .comment-textarea:focus {
             outline: none;
             border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-            transform: translateY(-1px);
         }
         
         .comment-submit-btn {
-            padding: 16px 28px;
-            background: linear-gradient(145deg, #007bff 0%, #0056b3 100%);
+            padding: 12px 20px;
+            background: #007bff;
             color: white;
             border: none;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
         }
         
         .comment-submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
-            background: linear-gradient(145deg, #0056b3 0%, #004085 100%);
+            background: #0056b3;
         }
         
-        .comment-submit-btn:active {
-            transform: translateY(0);
+        .comment-help-text {
+            margin-top: 8px;
+            color: #718096;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+        
+        .comment-help-text small {
+            color: inherit;
         }
         
         .comment-list {
@@ -508,24 +468,17 @@
         }
         
         .comment-item {
-            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 
-                0 4px 16px rgba(0,0,0,0.06),
-                0 1px 3px rgba(0,0,0,0.08);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
             width: 100%;
             box-sizing: border-box;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
         }
         
         .comment-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.1),
-                0 2px 4px rgba(0,0,0,0.1);
+            background: #f8fafc;
         }
         
         .comment-header {
@@ -542,16 +495,16 @@
         }
         
         .comment-nickname {
-            font-weight: 700;
+            font-weight: 600;
             color: #1a202c;
-            font-size: 1rem;
-            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-family: inherit;
         }
         
         .comment-date {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #718096;
-            font-weight: 500;
+            font-weight: 400;
         }
         
         .comment-actions {
@@ -560,16 +513,20 @@
         }
         
         .comment-action-btn {
-            padding: 8px 16px;
-            border: 2px solid #e2e8f0;
-            background: #ffffff;
-            color: #4a5568;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            padding: 4px 8px;
+            border: 1px solid #e2e8f0;
+            background: transparent;
+            color: #718096;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
         
         .comment-action-btn:hover {
@@ -577,79 +534,66 @@
             border-color: #007bff;
             color: #007bff;
             transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
         }
         
         .comment-action-btn.delete {
             color: #e53e3e;
             border-color: #fed7d7;
-            background: #fff5f5;
         }
         
         .comment-action-btn.delete:hover {
             background: #fed7d7;
             border-color: #e53e3e;
             color: #c53030;
-            box-shadow: 0 2px 8px rgba(229, 62, 62, 0.15);
         }
         
         .comment-content {
             color: #2d3748;
-            line-height: 1.7;
-            font-size: 0.95rem;
-            font-weight: 500;
+            line-height: 1.6;
+            font-size: 0.9rem;
+            font-weight: 400;
             background: #f8fafc;
-            padding: 16px;
-            border-radius: 12px;
-            border-left: 4px solid #007bff;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #007bff;
+            margin-top: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         
         .comment-edit-form {
             display: none;
-            margin-top: 16px;
+            margin-top: 12px;
             background: #f8fafc;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            padding: 16px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
         }
         
         .comment-edit-form.active {
             display: block;
-            animation: slideDown 0.3s ease;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         .comment-edit-textarea {
             width: 100%;
-            padding: 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            min-height: 100px;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-height: 80px;
             resize: vertical;
             font-family: inherit;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             box-sizing: border-box;
             max-width: 100%;
             background: #ffffff;
-            line-height: 1.6;
-            transition: all 0.3s ease;
+            line-height: 1.5;
+            transition: all 0.2s ease;
         }
         
         .comment-edit-textarea:focus {
             outline: none;
             border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
         
         .comment-edit-buttons {
@@ -659,37 +603,34 @@
         }
         
         .comment-edit-btn {
-            padding: 10px 20px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
         
         .comment-edit-btn.save {
-            background: linear-gradient(145deg, #007bff 0%, #0056b3 100%);
+            background: #007bff;
             color: white;
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
         }
         
         .comment-edit-btn.save:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+            background: #0056b3;
         }
         
         .comment-edit-btn.cancel {
             background: #e2e8f0;
             color: #4a5568;
-            border: 2px solid #e2e8f0;
+            border: 1px solid #e2e8f0;
         }
         
         .comment-edit-btn.cancel:hover {
             background: #cbd5e0;
             border-color: #cbd5e0;
-            transform: translateY(-1px);
         }
         
         .edited-badge {
@@ -705,20 +646,13 @@
             color: #f7fafc;
         }
         
-        body.dark-mode .comment-title::after {
-            background: linear-gradient(90deg, #ffe082 0%, #00c6ff 100%);
-        }
-        
         body.dark-mode .comment-form {
-            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            background: #2d3748;
             border-color: #4a5568;
-            box-shadow: 
-                0 4px 20px rgba(0,0,0,0.3),
-                0 1px 3px rgba(0,0,0,0.2);
         }
         
         body.dark-mode .comment-login-message {
-            background: linear-gradient(145deg, #742a2a 0%, #9b2c2c 100%);
+            background: #742a2a;
             border: 1px solid #f56565;
             color: #fed7d7;
         }
@@ -732,17 +666,12 @@
         }
         
         body.dark-mode .comment-item {
-            background: linear-gradient(145deg, #2d3748 0%, #1a202c 100%);
+            background: #2d3748;
             border-color: #4a5568;
-            box-shadow: 
-                0 4px 16px rgba(0,0,0,0.3),
-                0 1px 3px rgba(0,0,0,0.2);
         }
         
         body.dark-mode .comment-item:hover {
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.4),
-                0 2px 4px rgba(0,0,0,0.3);
+            background: #4a5568;
         }
         
         body.dark-mode .comment-input,
@@ -776,35 +705,34 @@
         }
         
         body.dark-mode .comment-action-btn {
-            background: #4a5568;
-            border-color: #718096;
-            color: #e2e8f0;
+            background: transparent;
+            border-color: #4a5568;
+            color: #a0aec0;
         }
         
         body.dark-mode .comment-action-btn:hover {
-            background: #718096;
+            background: #4a5568;
             border-color: #ffe082;
             color: #ffe082;
-            box-shadow: 0 2px 8px rgba(255, 224, 130, 0.15);
         }
         
         body.dark-mode .comment-action-btn.delete {
             color: #fc8181;
             border-color: #742a2a;
-            background: #2d1b1b;
         }
         
         body.dark-mode .comment-action-btn.delete:hover {
             background: #742a2a;
             border-color: #fc8181;
             color: #fed7d7;
-            box-shadow: 0 2px 8px rgba(252, 129, 129, 0.15);
         }
         
         body.dark-mode .comment-edit-btn.cancel {
             background: #4a5568;
-            color: #e2e8f0;
-            border-color: #4a5568;
+        }
+        
+        body.dark-mode .comment-help-text {
+            color: #a0aec0;
         }
         
         body.dark-mode .comment-edit-btn.cancel:hover {
@@ -839,9 +767,246 @@
         body.dark-mode .modal-btn.cancel:hover {
             background: #718096;
         }
+        
+        /* 알림 메시지 스타일 */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        .notification-message {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 0.9rem;
+            color: #2d3748;
+            backdrop-filter: blur(12px);
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: #718096;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-close:hover {
+            background: #f7fafc;
+            color: #4a5568;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        body.dark-mode .notification-message {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .notification-close {
+            color: #a0aec0;
+        }
+        
+        body.dark-mode .notification-close:hover {
+            background: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        /* 로그인 확인 모달 스타일 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            animation: modalSlideIn 0.3s ease-out;
+            border: 1px solid #e2e8f0;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .modal-header {
+            padding: 20px 24px 0 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1a202c;
+            font-family: inherit;
+        }
+        
+        .modal-body {
+            padding: 20px 24px;
+        }
+        
+        .modal-body p {
+            margin: 0;
+            font-size: 1rem;
+            color: #4a5568;
+            line-height: 1.6;
+            font-family: inherit;
+        }
+        
+        .modal-footer {
+            padding: 0 24px 20px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            border: 1px solid transparent;
+        }
+        
+        .modal-btn.cancel {
+            background: #f7fafc;
+            color: #4a5568;
+            border-color: #e2e8f0;
+        }
+        
+        .modal-btn.cancel:hover {
+            background: #edf2f7;
+            border-color: #cbd5e0;
+        }
+        
+        .modal-btn.confirm {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .modal-btn.confirm:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+        
+        /* 다크모드 */
+        body.dark-mode .modal-content {
+            background: #2d3748;
+            border-color: #4a5568;
+        }
+        
+        body.dark-mode .modal-header {
+            border-bottom-color: #4a5568;
+        }
+        
+        body.dark-mode .modal-title {
+            color: #f7fafc;
+        }
+        
+        body.dark-mode .modal-body p {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .modal-btn.cancel {
+            background: #4a5568;
+            color: #e2e8f0;
+            border-color: #4a5568;
+        }
+        
+        body.dark-mode .modal-btn.cancel:hover {
+            background: #718096;
+            border-color: #718096;
+        }
     </style>
 </head>
 <body>
+    <!-- 알림 메시지 컨테이너 -->
+    <div id="notification-container" class="notification-container" style="display: none;">
+        <div class="notification-message">
+            <span id="notification-text"></span>
+            <button class="notification-close" onclick="closeNotification()">×</button>
+        </div>
+    </div>
+    
+    <!-- 로그인 확인 모달 -->
+    <div id="login-confirm-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">로그인 필요</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn cancel" onclick="closeLoginModal()">취소</button>
+                <button class="modal-btn confirm" onclick="confirmLogin()">확인</button>
+            </div>
+        </div>
+    </div>
+    
     <div th:replace="~{fragments/header :: header}"></div>
     <div class="post-detail-container">
         <div class="post-header">
@@ -860,20 +1025,26 @@
             <div th:utext="${lang == 'ja' ? post.contentJa : post.contentKo}"></div>
         </div>
         
-        <!-- 좋아요 버튼 -->
-        <div class="like-section">
+        <!-- 미리보기 모드 표시 -->
+        <div class="preview-notice" th:if="${isPreview}" style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 16px; border-radius: 8px; margin: 20px auto; max-width: 700px; text-align: center; font-weight: 500;">
+            <span th:text="${lang == 'ja' ? 'プレビューモード' : '미리보기 모드'}">미리보기 모드</span>
+        </div>
+        
+        <!-- 좋아요 버튼 (미리보기 모드에서는 비활성화) -->
+        <div class="like-section" th:unless="${isPreview}">
             <button class="like-button" th:data-post-id="${post.id}" th:data-lang="${lang}">
                 <span class="heart-icon" th:class="${isLiked ? 'heart-icon liked' : 'heart-icon'}" th:text="${isLiked ? '♥' : '♡'}">♡</span>
                 <span class="like-count" th:text="${likeCount}">0</span>
             </button>
         </div>
         <div class="post-navigation">
-            <a href="/index" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
+            <a th:if="${isPreview}" th:href="${lang == 'ja' ? '/admin_jp' : '/admin'}" class="back-button" th:text="${lang == 'ja' ? '관리자 페이지로 돌아가기' : '관리자 페이지로 돌아가기'}">관리자 페이지로 돌아가기</a>
+            <a th:unless="${isPreview}" th:href="${lang == 'ja' ? '/jp' : '/index?lang=' + lang}" class="back-button" th:text="#{post.button.back_to_list}">목록으로 돌아가기</a>
         </div>
         
-        <!-- 댓글 시스템 -->
-        <div class="comment-section">
-            <h3 class="comment-title">댓글</h3>
+        <!-- 댓글 시스템 (미리보기 모드에서는 비활성화) -->
+        <div class="comment-section" th:unless="${isPreview}">
+                            <h3 class="comment-title" th:text="#{comment.title}">댓글</h3>
             
             <!-- 댓글 목록 -->
             <div id="comment-list" class="comment-list">
@@ -883,14 +1054,14 @@
             <!-- 댓글 작성 폼 -->
             <div class="comment-form" th:if="${isLoggedIn}">
                 <div class="comment-content-group">
-                    <textarea id="comment-content" placeholder="댓글을 입력하세요..." class="comment-textarea"></textarea>
-                    <button id="comment-submit" class="comment-submit-btn">댓글 작성</button>
+                    <textarea id="comment-content" th:placeholder="#{comment.placeholder}" class="comment-textarea"></textarea>
+                    <button id="comment-submit" class="comment-submit-btn" th:text="#{comment.submit}">댓글 작성</button>
                 </div>
             </div>
             
             <!-- 로그인 필요 메시지 -->
             <div class="comment-login-message" th:if="${!isLoggedIn}">
-                <p>댓글을 작성하려면 <a href="/user/login" class="login-link" id="comment-login-link">로그인</a>이 필요합니다.</p>
+                <p><span th:text="#{comment.login.required.prefix}">댓글을 작성하려면</span> <a href="/user/login" class="login-link" id="comment-login-link" th:text="#{user.login.link}">로그인</a><span th:text="#{comment.login.required.suffix}">이 필요합니다.</span></p>
             </div>
         </div>
         
@@ -898,91 +1069,43 @@
     </div>
     
     <style>
-        /* 목록으로 돌아가기 버튼 스타일 개선 - 고딕 & 세련된 디자인 */
+        /* 목록으로 돌아가기 버튼 스타일 */
         .back-button {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
-            color: #ecf0f1;
+            gap: 6px;
+            padding: 10px 16px;
+            background: #ffffff;
+            color: #4a5568;
             text-decoration: none;
-            border-radius: 10px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-weight: 500;
             font-size: 0.9rem;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.3px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 
-                0 3px 12px rgba(44, 62, 80, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
         }
         
         .back-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.6s;
+            content: '←';
+            font-size: 1rem;
+            font-weight: 400;
         }
         
         .back-button:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 
-                0 6px 20px rgba(44, 62, 80, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            background: linear-gradient(145deg, #34495e 0%, #2c3e50 100%);
-            color: #ffffff;
-        }
-        
-        .back-button:hover::before {
-            left: 100%;
-        }
-        
-        .back-button:active {
-            transform: translateY(-1px) scale(1.01);
-            box-shadow: 
-                0 3px 12px rgba(44, 62, 80, 0.3),
-                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: #f7fafc;
+            border-color: #cbd5e0;
         }
         
         /* 다크모드 */
         body.dark-mode .back-button {
-            background: linear-gradient(145deg, #1a1a1a 0%, #2d2d2d 100%);
-            color: #e8e8e8;
-            box-shadow: 
-                0 3px 12px rgba(0, 0, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: #2d3748;
+            color: #e2e8f0;
+            border-color: #4a5568;
         }
         
         body.dark-mode .back-button:hover {
-            background: linear-gradient(145deg, #2d2d2d 0%, #1a1a1a 100%);
-            box-shadow: 
-                0 6px 20px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-        
-        /* 화살표 아이콘 스타일 - 앞쪽에만 표시 */
-        .back-button::before {
-            content: '←';
-            position: static;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-right: 6px;
-            background: none;
-            width: auto;
-            height: auto;
-            left: auto;
-            transition: none;
+            background: #4a5568;
         }
         
         /* Footer와의 간격 확대 */
@@ -994,7 +1117,23 @@
             margin-top: 40px;
             margin-bottom: 20px;
         }
+        
+        /* 미리보기 알림 다크모드 스타일 */
+        body.dark-mode .preview-notice {
+            background: #742a2a;
+            border: 1px solid #f56565;
+            color: #fed7d7;
+        }
     </style>
+    
+    <script th:inline="javascript">
+        // 국제화 메시지를 JavaScript에서 사용할 수 있도록 전역 변수로 설정
+        window.i18nMessages = {
+            likeLoginRequired: /*[[${lang == 'ja' ? 'いいね機能を使用するにはログインが必要です。ログインページに移動しますか？' : '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?'}]]*/ '좋아요 기능을 사용하려면 로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?',
+            likeServerError: /*[[${lang == 'ja' ? 'サーバーエラーが発生しました。' : '서버 오류가 발생했습니다.'}]]*/ '서버 오류가 발생했습니다.',
+            likeError: /*[[${lang == 'ja' ? 'いいね処理中にエラーが発生しました' : '좋아요 처리 중 오류 발생'}]]*/ '좋아요 처리 중 오류 발생'
+        };
+    </script>
     
     <script src="/js/post-detail.js"></script>
     

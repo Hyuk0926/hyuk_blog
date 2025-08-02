@@ -61,20 +61,53 @@ public class PostController {
         return "index";
     }
 
+    @GetMapping("/jp")
+    public String jpIndex(@RequestParam(value = "lang", required = false) String lang, Model model) {
+        // lang 파라미터가 ko이면 index 페이지로 리다이렉트
+        if ("ko".equals(lang)) {
+            return "redirect:/index?lang=ko";
+        }
+        
+        // 기본적으로 일본어 포스트 표시
+        List<PostDto> posts = postService.getAllPublishedPosts("ja");
+        model.addAttribute("posts", posts);
+        model.addAttribute("categories", Category.values());
+        model.addAttribute("lang", "ja");
+        return "index";
+    }
+
     @GetMapping("/post/{id}")
     public String postDetail(@PathVariable Long id, @RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model, HttpServletRequest request, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, lang);
-        if (post.isPresent() && post.get().isPublished()) {
-            long likeCount = likeService.getLikeCount(id, lang);
-            
+        if (post.isPresent()) {
             // user 또는 admin 세션 확인
             UserDto user = (UserDto) session.getAttribute("user");
             AdminDto admin = (AdminDto) session.getAttribute("admin");
             boolean isLoggedIn = (user != null || admin != null);
             
-            // 좋아요 상태 확인 (user 또는 admin ID 사용)
+            // 관리자가 아니고 게시글이 공개되지 않은 경우 리다이렉트
+            if (!post.get().isPublished() && admin == null) {
+                return "redirect:" + (lang.equals("ja") ? "/jp" : "/index?lang=" + lang);
+            }
+            
+            // 게시글 타입에 따라 좋아요/댓글 수 조회
             Long userId = user != null ? user.getId() : (admin != null ? admin.getId() : null);
-            boolean isLiked = likeService.isLikedByUser(id, userId, lang);
+            long likeCount = 0;
+            boolean isLiked = false;
+            
+            if (lang.equals("ja")) {
+                // 일본어 게시글
+                likeCount = likeService.getLikeCount(id, com.example.hyuk_blog.entity.PostType.JP);
+                if (userId != null) {
+                    isLiked = likeService.isLikedByUser(id, com.example.hyuk_blog.entity.PostType.JP, userId);
+                }
+            } else {
+                // 한국어 게시글
+                likeCount = likeService.getLikeCount(id, com.example.hyuk_blog.entity.PostType.KR);
+                if (userId != null) {
+                    isLiked = likeService.isLikedByUser(id, com.example.hyuk_blog.entity.PostType.KR, userId);
+                }
+            }
             
             model.addAttribute("post", post.get());
             model.addAttribute("lang", lang);
@@ -86,7 +119,7 @@ public class PostController {
             model.addAttribute("isLoggedIn", isLoggedIn);
             return "post-detail";
         }
-        return "redirect:/";
+        return "redirect:" + (lang.equals("ja") ? "/jp" : "/index?lang=" + lang);
     }
     
     private String getClientIpAddress(HttpServletRequest request) {
@@ -104,7 +137,8 @@ public class PostController {
     }
 
     @GetMapping("/projects")
-    public String projects() {
+    public String projects(@RequestParam(value = "lang", required = false, defaultValue = "ko") String lang, Model model) {
+        model.addAttribute("lang", lang);
         return "projects";
     }
 

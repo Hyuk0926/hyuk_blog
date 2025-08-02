@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+            <title th:text="#{user.login.title}">로그인</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
     <style>
@@ -246,8 +246,8 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1 class="login-title">로그인</h1>
-            <p class="login-subtitle">좋아요와 댓글을 작성하려면 로그인이 필요합니다</p>
+            <h1 class="login-title" th:text="#{user.login.title}">로그인</h1>
+            <p class="login-subtitle" th:text="#{user.login.subtitle}">좋아요와 댓글을 작성하려면 로그인이 필요합니다</p>
         </div>
         
         <div th:if="${error}" class="error-message" th:text="${error}">
@@ -262,28 +262,28 @@
             <input type="hidden" name="redirectUrl" th:value="${param.redirectUrl}">
             
             <div class="form-group">
-                <label for="username" class="form-label">아이디</label>
+                <label for="username" class="form-label" th:text="#{user.login.id}">아이디</label>
                 <input type="text" id="username" name="username" class="form-input" required>
             </div>
             
             <div class="form-group">
-                <label for="password" class="form-label">비밀번호</label>
+                <label for="password" class="form-label" th:text="#{user.login.password}">비밀번호</label>
                 <div style="position:relative;">
                     <input type="password" id="password" name="password" class="form-input" required autocomplete="current-password" style="padding-right:40px; ime-mode:disabled;">
                     <span id="togglePassword" title="비밀번호 보기" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:1.3rem; color:#888;">𝄐</span>
                 </div>
-                <div id="capsLockMsg" style="color:#dc3545; font-size:0.95rem; margin-top:6px; display:none;">CapsLock이 켜져 있습니다!</div>
+                <div id="capsLockMsg" style="color:#dc3545; font-size:0.95rem; margin-top:6px; display:none;" th:text="#{user.login.capslock.warning}">CapsLock이 켜져 있습니다!</div>
             </div>
             
-            <button type="submit" class="login-button">로그인</button>
+                            <button type="submit" class="login-button" th:text="#{user.login.button}">로그인</button>
         </form>
         
         <div class="register-link">
-            <p>계정이 없으신가요? <a href="/user/register">회원가입</a></p>
+            <p><span th:text="#{user.account.not.exists}">계정이 없으신가요?</span> <a href="/user/register" th:text="#{user.register.link}">회원가입</a></p>
         </div>
         
         <div class="back-link">
-            <a href="/">← 메인 페이지로 돌아가기</a>
+            <a href="/">← <span th:text="#{user.login.back.to.main}">메인 페이지로 돌아가기</span></a>
         </div>
     </div>
     

@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 이메일 필드 초기 상태 설정
     if (!email.value.trim()) {
         emailCheckBtn.disabled = true;
-        emailCheckBtn.textContent = '이메일 입력 필요';
+        emailCheckBtn.textContent = window.i18nMessages ? window.i18nMessages.emailRequired : '이메일 입력 필요';
         emailCheckBtn.style.background = 'linear-gradient(145deg, #555555 0%, #333333 100%)';
     }
     
@@ -124,14 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!value) {
             // 이메일이 비어있으면 중복확인 버튼 비활성화
             emailCheckBtn.disabled = true;
-            emailCheckBtn.textContent = '이메일 입력 필요';
+            emailCheckBtn.textContent = window.i18nMessages ? window.i18nMessages.emailRequired : '이메일 입력 필요';
             emailCheckBtn.style.background = 'linear-gradient(145deg, #555555 0%, #333333 100%)';
             // 체크 상태 초기화
             delete emailCheckBtn.dataset.checked;
         } else {
             // 이메일이 입력되면 중복확인 버튼 활성화
             emailCheckBtn.disabled = false;
-            emailCheckBtn.textContent = '중복확인';
+            emailCheckBtn.textContent = window.i18nMessages ? window.i18nMessages.duplicateCheck : '중복확인';
             emailCheckBtn.style.background = 'linear-gradient(145deg, #666666 0%, #444444 100%)';
             // 체크 상태 초기화
             delete emailCheckBtn.dataset.checked;

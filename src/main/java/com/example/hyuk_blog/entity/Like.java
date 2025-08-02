@@ -12,8 +12,12 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "post_id", nullable = false)
+    @Column(name = "post_id")
     private Long postId;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "post_type", length = 10)
+    private PostType postType;
     
     @Column(name = "user_id")
     private Long userId;
@@ -33,6 +37,7 @@ public class Like {
         Like copy = new Like();
         copy.setId(this.id);
         copy.setPostId(this.postId);
+        copy.setPostType(this.postType);
         copy.setUserId(this.userId);
         copy.setCreatedAt(this.createdAt);
         return copy;

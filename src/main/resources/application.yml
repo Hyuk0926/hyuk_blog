@@ -1,0 +1,57 @@
+server:
+  port: 5000
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/hyuk_blog_db
+    username: root
+    password: ENC(CzuAGRkXOyiECqlkyIio0w==)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        enable_lazy_load_no_trans: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  thymeleaf:
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: true
+      static-locations: classpath:/static/
+      cache:
+        period: 86400
+      chain:
+        strategy:
+          content:
+            enabled: true
+            paths: /**
+        cache: true
+
+# JWT 설정
+jwt:
+  secret: hyukBlogJwtSecretKey2024ForDevelopmentOnlyChangeInProduction
+  expiration: 86400000  # 24시간 (밀리초) 
+
+# 암호화 설정
+encryption:
+  enabled: true
+  algorithm: AES
+
+# 로깅 설정
+logging:
+  level:
+    com.example.hyuk_blog: INFO
+    org.springframework.security: WARN 

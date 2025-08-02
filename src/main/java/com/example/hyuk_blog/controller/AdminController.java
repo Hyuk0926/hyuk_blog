@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import com.example.hyuk_blog.dto.UserDto;
 
 @Controller
 @RequestMapping("/admin")
@@ -104,10 +105,27 @@ public class AdminController {
     
     // 게시글 미리보기
     @GetMapping("/post/preview/{id}")
-    public String previewPost(@PathVariable Long id, Model model) {
+    public String previewPost(@PathVariable Long id, Model model, HttpSession session) {
         Optional<PostDto> post = postService.getPostById(id, "ko");
         if (post.isPresent()) {
+            // 미리보기에서는 published 상태와 관계없이 표시
+            UserDto user = (UserDto) session.getAttribute("user");
+            AdminDto admin = (AdminDto) session.getAttribute("admin");
+            boolean isLoggedIn = (user != null || admin != null);
+            
+            // 좋아요/댓글 수 조회 (미리보기에서는 0으로 설정)
+            long likeCount = 0;
+            boolean isLiked = false;
+            
             model.addAttribute("post", post.get());
+            model.addAttribute("lang", "ko");
+            model.addAttribute("likeCount", likeCount);
+            model.addAttribute("isLiked", isLiked);
+            model.addAttribute("postId", id);
+            model.addAttribute("user", user);
+            model.addAttribute("admin", admin);
+            model.addAttribute("isLoggedIn", isLoggedIn);
+            model.addAttribute("isPreview", true); // 미리보기 모드 표시
             return "post-detail";
         }
         return "redirect:/admin";

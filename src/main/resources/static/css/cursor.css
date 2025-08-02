@@ -1,0 +1,97 @@
+/* 커스텀 커서 기본 설정 - 임시 비활성화 */
+/*
+body {
+    cursor: none;
+}
+*/
+
+/* 이미지 프리로딩 */
+body::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    z-index: -1;
+    background-image: 
+        url('/cursor/default.cur'),
+        url('/cursor/pointer.cur'),
+        url('/cursor/loading.cur'),
+        url('/cursor/text.cur'),
+        url('/cursor/move.cur'),
+        url('/cursor/horizontal.cur'),
+        url('/cursor/vertical.cur'),
+        url('/cursor/unavailable.cur'),
+        url('/cursor/wait.cur');
+}
+
+/* 커스텀 커서 스타일 - 임시 비활성화 */
+/*
+.custom-cursor {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    background: url('/cursor/default.cur') no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.2s ease;
+    transform: translate(-50%, -50%);
+}
+*/
+
+/* 다양한 커서 상태 */
+.custom-cursor.pointer {
+    background: url('/cursor/pointer.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.loading {
+    background: url('/cursor/loading.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.text {
+    background: url('/cursor/text.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.move {
+    background: url('/cursor/move.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.horizontal {
+    background: url('/cursor/horizontal.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.vertical {
+    background: url('/cursor/vertical.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.unavailable {
+    background: url('/cursor/unavailable.cur') no-repeat center;
+    background-size: contain;
+}
+
+.custom-cursor.wait {
+    background: url('/cursor/wait.cur') no-repeat center;
+    background-size: contain;
+}
+
+/* 호버 시 커서 확대 */
+.custom-cursor.hover {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* 모바일에서는 커스텀 커서 숨기고 기본 커서 사용 */
+@media (max-width: 768px) {
+    body {
+        cursor: auto;
+    }
+    .custom-cursor {
+        display: none !important;
+    }
+} 
