@@ -125,32 +125,44 @@ public class DataLoader implements CommandLineRunner {
         long adminCount = adminRepository.count();
         System.out.println("총 관리자 계정 수: " + adminCount);
         
+        // 암호화되지 않은 admin 계정들을 자동으로 암호화
         adminRepository.findAll().forEach(admin -> {
             System.out.println("기존 관리자 계정: " + admin.getUsername() + " (ID: " + admin.getId() + ")");
             
-            // BCrypt로 암호화되지 않은 경우 경고만 출력
+            // BCrypt로 암호화되지 않은 경우 자동 암호화
             if (!admin.getPassword().startsWith("$2a$")) {
                 System.out.println("경고: " + admin.getUsername() + " 계정의 비밀번호가 암호화되지 않았습니다.");
-                System.out.println("환경 변수를 설정하여 비밀번호를 업데이트하세요:");
-                System.out.println("ADMIN_USERNAME=" + admin.getUsername());
-                System.out.println("ADMIN_PASSWORD=your_secure_password");
+                
+                // 환경 변수로 특정 비밀번호가 설정되어 있는지 확인
+                String envUsername = System.getenv("ADMIN_USERNAME");
+                String envPassword = System.getenv("ADMIN_PASSWORD");
+                
+                if (envUsername != null && envPassword != null && envUsername.equals(admin.getUsername())) {
+                    // 환경 변수로 설정된 비밀번호 사용
+                    admin.setPassword(passwordEncoder.encode(envPassword));
+                    adminRepository.save(admin);
+                    System.out.println(admin.getUsername() + " 계정 비밀번호를 환경 변수 값으로 암호화하여 업데이트 완료");
+                    System.out.println("환경 변수로 설정된 비밀번호로 로그인할 수 있습니다.");
+                } else {
+                    // 기존 평문 비밀번호를 그대로 사용하여 암호화 (기존 비밀번호 유지)
+                    String currentPassword = admin.getPassword();
+                    
+                    // 비밀번호를 BCrypt로 암호화하여 업데이트
+                    admin.setPassword(passwordEncoder.encode(currentPassword));
+                    adminRepository.save(admin);
+                    System.out.println(admin.getUsername() + " 계정 비밀번호를 암호화하여 업데이트 완료");
+                    System.out.println("기존 비밀번호가 암호화되어 저장되었습니다.");
+                    System.out.println("기존 비밀번호로 로그인할 수 있습니다.");
+                    System.out.println("보안을 위해 환경 변수를 설정하여 비밀번호를 변경하는 것을 권장합니다:");
+                    System.out.println("ADMIN_USERNAME=" + admin.getUsername());
+                    System.out.println("ADMIN_PASSWORD=your_secure_password");
+                }
+            } else {
+                System.out.println(admin.getUsername() + " 계정의 비밀번호는 이미 암호화되어 있습니다.");
             }
         });
         
-        // 환경 변수로 설정된 비밀번호가 있으면 해당 계정 업데이트
-        String adminUsername = System.getenv("ADMIN_USERNAME");
-        String adminPassword = System.getenv("ADMIN_PASSWORD");
-        
-        if (adminUsername != null && adminPassword != null) {
-            final String finalAdminUsername = adminUsername;
-            final String finalAdminPassword = adminPassword;
-            
-            adminRepository.findByUsername(finalAdminUsername).ifPresent(admin -> {
-                admin.setPassword(passwordEncoder.encode(finalAdminPassword));
-                adminRepository.save(admin);
-                System.out.println(finalAdminUsername + " 계정 비밀번호를 환경 변수 값으로 업데이트 완료");
-            });
-        }
+
     }
     
     private void updateExistingUserPasswords() {

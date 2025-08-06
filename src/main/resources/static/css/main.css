@@ -4,11 +4,10 @@ body {
     min-height: 100vh;
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
     background: #f5f7fa;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     overflow-x: hidden;
     transition: background 0.5s ease, color 0.5s ease; /* 다크/라이트 모드 전환 부드럽게 */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Hero Section */
@@ -17,7 +16,8 @@ body {
 .hero-section {
     /* 기존 스타일 유지 */
     text-align: center;
-    width: 100%; /* 화면 가로 전체를 덮도록 설정 */
+    width: 100vw; /* 뷰포트 너비 전체를 사용 */
+    margin-left: calc(-50vw + 50%); /* 중앙 정렬을 위한 마진 조정 */
     padding: 0; /* 패딩 제거 */
     min-height: 400px;
     display: flex;
@@ -56,8 +56,8 @@ body.dark-mode .hero-section {
 /* Page Layout */
 .page-container {
     display: flex;
-    max-width: 1200px;
     width: 100%;
+    max-width: 1400px;
     margin: 0 auto;
     padding: 0 24px 32px 24px;
     gap: 32px;
@@ -235,7 +235,7 @@ body.dark-mode .hero-section {
 /* Admin Link */
 .admin-link {
     width: 100%;
-    max-width: 1100px;
+    max-width: 1300px;
     padding: 0 24px 40px 24px;
     text-align: center;
 }
@@ -275,7 +275,8 @@ body.dark-mode .search-button { color: #a0aec0; transition: color 0.5s ease; }
 body.dark-mode .post-card { background: #1a202c; border-color: #2d3748; transition: background 0.5s ease, border-color 0.5s ease; }
 body.dark-mode .post-title { color: #edf2f7; transition: color 0.5s ease; }
 body.dark-mode .post-summary { color: #a0aec0; transition: color 0.5s ease; }
-body.dark-mode .post-meta { border-top-color: #2d3748; transition: border-color 0.5s ease; }
+body.dark-mode .post-meta { border-top-color: #2d3748; color: #a0aec0; transition: border-color 0.5s ease, color 0.5s ease; }
+body.dark-mode .post-content { background: transparent; transition: background 0.5s ease; }
 body.dark-mode .no-posts { background: #2d3748; border-color: #4a5568; color: #a0aec0; transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease; }
 
 body.dark-mode {
@@ -286,13 +287,65 @@ body.dark-mode .page-container {
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
+/* Footer Styles */
+.site-footer {
+    background: #ffffff;
+    color: #333;
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid #e2e8f0;
+    width: 100%;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.footer-sns {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.sns-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.sns-btn:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
 body.dark-mode footer,
 body.dark-mode .footer,
-body.dark-mode #footer {
+body.dark-mode #footer,
+body.dark-mode .site-footer {
     background: #1a202c !important;
     color: #e0e0e0 !important;
     border-top: 1px solid #23272b;
     transition: background 0.5s, color 0.5s, border-color 0.5s;
+}
+
+body.dark-mode .sns-btn {
+    background: #2d3748;
+    color: #e2e8f0;
+}
+
+body.dark-mode .sns-btn:hover {
+    background: #4a5568;
 }
 
 body.dark-mode .admin-button {
